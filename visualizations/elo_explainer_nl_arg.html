@@ -60,6 +60,9 @@
   }
   .panel {
     min-width: 0;
+    width: 70%;
+    max-width: 700px;
+    margin: 0 auto;
   }
   .panel + .panel {
     border-top: 1px solid var(--gridline);
@@ -79,6 +82,18 @@
 
   .chart-wrap { position: relative; }
   svg { display: block; width: 100%; height: auto; overflow: visible; }
+  /* Squeeze both panels ~30% shorter than their natural aspect ratio without
+     leaving reserved whitespace: the wrap's own box is set to the shorter
+     ratio, and the svg is stretched non-uniformly (preserveAspectRatio="none")
+     to fill it exactly. */
+  #chartWrapLeft  { aspect-ratio: 420 / 227; }
+  #chartWrapRight { aspect-ratio: 620 / 336; }
+  #chartWrapLeft svg, #chartWrapRight svg {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+  }
 
   /* ---- left panel: one match ---- */
   .team-box { fill: var(--surface-1); stroke-width: 1.5; }
@@ -228,7 +243,7 @@
         <div class="panel__head">One match: Netherlands 🇳🇱 vs Argentina 🇦🇷</div>
         <div class="panel__sub">2022 World Cup quarterfinal, worked through by hand</div>
         <div class="chart-wrap" id="chartWrapLeft">
-          <svg id="chartLeft" viewBox="0 0 420 325" preserveAspectRatio="xMidYMid meet"></svg>
+          <svg id="chartLeft" viewBox="0 0 420 325" preserveAspectRatio="none"></svg>
           <div class="tooltip" id="tooltipLeft"></div>
         </div>
       </div>
@@ -241,7 +256,7 @@
           <div class="legend__item"><span class="legend__swatch legend__swatch--foreign"></span>Foreign-coached</div>
         </div>
         <div class="chart-wrap" id="chartWrapRight">
-          <svg id="chartRight" viewBox="0 0 620 480" preserveAspectRatio="xMidYMid meet"></svg>
+          <svg id="chartRight" viewBox="0 0 620 480" preserveAspectRatio="none"></svg>
           <div class="tooltip" id="tooltipRight"></div>
         </div>
       </div>
@@ -379,7 +394,7 @@ function text(attrs, content) {
     rowNl.appendChild(Object.assign(document.createElement("span"), { className: "tooltip__val", textContent: ((1 - P_ARG) * 100).toFixed(1) + "%" }));
     tooltip.appendChild(rowNl);
 
-    positionTooltip(svg, wrap, tooltip, W, iconColX + iconW / 2, iconColTop);
+    positionTooltip(svg, wrap, tooltip, W, H, iconColX + iconW / 2, iconColTop);
   }
   function hideTooltip() { tooltip.style.opacity = 0; }
 
@@ -390,12 +405,15 @@ function text(attrs, content) {
   svg.appendChild(text({ x: iconColX + 16, y: legendY + 25, class: "col-sub" }, "Netherlands advances"));
 })();
 
-function positionTooltip(svg, wrap, tooltip, W, cx, topY) {
+function positionTooltip(svg, wrap, tooltip, W, H, cx, topY) {
   const svgRect = svg.getBoundingClientRect();
   const wrapRect = wrap.getBoundingClientRect();
-  const scale = svgRect.width / W;
-  const px = svgRect.left - wrapRect.left + cx * scale;
-  const py = svgRect.top - wrapRect.top + topY * scale - 10;
+  // The svg is stretched non-uniformly (preserveAspectRatio="none") to hit a
+  // shorter aspect ratio, so x and y need their own scale factors.
+  const xScale = svgRect.width / W;
+  const yScale = svgRect.height / H;
+  const px = svgRect.left - wrapRect.left + cx * xScale;
+  const py = svgRect.top - wrapRect.top + topY * yScale - 10;
   tooltip.style.opacity = 0;
   tooltip.style.left = '0px';
   tooltip.style.top = '0px';
@@ -566,7 +584,7 @@ function positionTooltip(svg, wrap, tooltip, W, cx, topY) {
     pctRow.textContent = "simulated share of teams still in at this stage that are foreign-coached";
     tooltip.appendChild(pctRow);
 
-    positionTooltip(svg, wrap, tooltip, W, cx, topY);
+    positionTooltip(svg, wrap, tooltip, W, H, cx, topY);
   }
   function hideTooltip() { tooltip.style.opacity = 0; }
 })();
