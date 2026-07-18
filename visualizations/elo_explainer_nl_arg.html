@@ -54,17 +54,16 @@
 
   .panels {
     display: flex;
+    flex-direction: column;
     gap: 20px;
     margin-top: 14px;
-    align-items: stretch;
   }
   .panel {
-    flex: 1 1 0;
     min-width: 0;
   }
   .panel + .panel {
-    border-left: 1px solid var(--gridline);
-    padding-left: 20px;
+    border-top: 1px solid var(--gridline);
+    padding-top: 20px;
   }
   .panel__head {
     font-size: 12.5px;
