@@ -222,6 +222,8 @@
     <iframe id="iframe-scatter" src="expected_vs_real_scatter.html" height="1100" scrolling="no" title="Simulated vs. actual round scatter plot"></iframe>
   </div>
 </section>
+
+<script>
 // Listen for height messages from embedded visualizations and resize iframes
 window.addEventListener('message', (e) => {
   try {
@@ -236,8 +238,6 @@ window.addEventListener('message', (e) => {
   }
 }, false);
 </script>
-</section>
-  </section>
 
   <div class="foot">
     Built by <a href="https://lpompe.github.io">Lucas Pompe</a> &mdash;

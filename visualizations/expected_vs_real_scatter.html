@@ -209,7 +209,8 @@
 </head>
 <body>
 <div class="viz-root">
-  <div class="card__head">
+  <div class="card">
+    <div class="card__head">
       <div style="flex: 1; min-width: 280px; margin-bottom: 8px;">
         <h1>Simulated vs. actual: how far did teams really get?</h1>
         <p class="subtitle">Every dot is one team in one World Cup (1998&ndash;2022, 32-team era). X: the round Elo alone predicted, on average, across 20,000 re-bracketed replays of that specific year. Y: the round they actually reached.</p>
@@ -240,6 +241,7 @@
     <div class="foot">
       Points are jittered slightly within each real-round row so overlapping teams stay visible; the dashed line marks perfect calibration (expected = actual). Above the line: teams that overperformed their Elo-implied odds. Below: teams that underperformed. Simulation: pre-coach Elo ratings, per-year re-bracketed Monte Carlo (compute_expected_rounds.py). Correlation between expected and real round: 0.49.
     </div>
+  </div>
 </div>
 
 <script>
