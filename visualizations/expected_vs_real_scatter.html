@@ -98,7 +98,6 @@
     box-shadow: 0 4px 16px rgba(0,0,0,0.12);
     pointer-events: none;
     opacity: 0;
-    transform: translate(-50%, -100%);
     transition: opacity 0.08s ease;
     white-space: nowrap;
     z-index: 5;
@@ -678,13 +677,34 @@ function render(data) {
     realRow.innerHTML = "Actually reached: <b>" + ROUND_LABELS[p.real_round] + "</b>";
     tooltip.appendChild(realRow);
 
+    // ---- clamped positioning ----
     const rect = sizer.getBoundingClientRect();
     const wrapRect = wrap.getBoundingClientRect();
     const scale = rect.width / W;
-    const px = rect.left - wrapRect.left + p.px * scale;
-    const py = rect.top - wrapRect.top + p.py * scale - 10;
-    tooltip.style.left = px + "px";
-    tooltip.style.top = py + "px";
+
+    // dot centre in wrap-relative px
+    const dotX = rect.left - wrapRect.left + p.px * scale;
+    const dotY = rect.top  - wrapRect.top  + p.py * scale;
+
+    // measure tooltip (it's invisible but in DOM)
+    const tw = tooltip.offsetWidth;
+    const th = tooltip.offsetHeight;
+    const GAP = 10;
+    const PAD = 6; // min distance from wrap edge
+
+    // ideal: centred above the dot
+    let left = dotX - tw / 2;
+    let top  = dotY - th - GAP;
+
+    // clamp horizontally
+    const wrapW = wrapRect.width;
+    left = Math.max(PAD, Math.min(left, wrapW - tw - PAD));
+
+    // if it clips above the chart, flip below the dot
+    if (top < PAD) top = dotY + GAP;
+
+    tooltip.style.left = left + "px";
+    tooltip.style.top  = top  + "px";
     tooltip.style.opacity = 1;
   }
   function hideTooltip() { tooltip.style.opacity = 0; }
