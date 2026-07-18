@@ -713,3 +713,22 @@ function render(data) {
 </script>
 </body>
 </html>
+
+<script>
+function postHeight_scatter(){
+  const h = document.documentElement.scrollHeight || document.body.scrollHeight;
+  try{ parent.postMessage({type: 'vizHeight', id: 'iframe-scatter', height: h}, '*'); }catch(e){}
+}
+// send height after chart code runs, also on load/resize
+window.addEventListener('load', ()=>{ postHeight_scatter(); setTimeout(postHeight_scatter,500); });
+window.addEventListener('resize', postHeight_scatter);
+
+// If the visualization updates size dynamically, send height when relevant events occur.
+// As a fallback, poll briefly for size changes.
+let _lastH = 0;
+const _poll = setInterval(()=>{
+  const h = document.documentElement.scrollHeight || document.body.scrollHeight;
+  if (h !== _lastH){ _lastH = h; postHeight_scatter(); }
+}, 400);
+setTimeout(()=>clearInterval(_poll), 8000);
+</script>

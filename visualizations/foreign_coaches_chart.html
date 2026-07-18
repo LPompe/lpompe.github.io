@@ -583,3 +583,12 @@ toggleBtn.addEventListener("click", () => {
 </script>
 </body>
 </html>
+
+<script>
+function postHeight_foreign(){
+  const h = document.documentElement.scrollHeight || document.body.scrollHeight;
+  try{ parent.postMessage({type: 'vizHeight', id: 'iframe-foreign', height: h}, '*'); }catch(e){}
+}
+window.addEventListener('load', ()=>{ postHeight_foreign(); setTimeout(postHeight_foreign,250); });
+window.addEventListener('resize', postHeight_foreign);
+</script>
