@@ -147,6 +147,7 @@
   .viz-frame iframe {
     display: block;
     width: 100%;
+    height: auto;
     border: none;
   }
 
@@ -195,7 +196,6 @@
     <iframe id="iframe-foreign" src="foreign_coaches_chart.html" height="820" scrolling="no" title="Foreign vs domestic coaches chart"></iframe>
   </div>
 </section>
-  </section>
 
   <hr class="divider">
 
@@ -222,8 +222,7 @@
   <div class="viz-frame">
     <iframe id="iframe-scatter" src="expected_vs_real_scatter.html" height="1100" scrolling="no" title="Simulated vs. actual round scatter plot"></iframe>
   </div>
-
-<script>
+</section>
 // Listen for height messages from embedded visualizations and resize iframes
 window.addEventListener('message', (e) => {
   try {
