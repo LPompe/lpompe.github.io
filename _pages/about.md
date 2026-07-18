@@ -1,11 +1,8 @@
 ---
-permalink: /
+permalink: /about-jekyll/
 title: "About me"
 excerpt: "About me"
 author_profile: true
-redirect_from: 
-  - /about/
-  - /about.html
 ---
 
 You found me! I'm a first year PhD student at the institute of Neuroinformatics at the university of Zurich and ETH Zurich, supervised by [Prof. Valerio Mante](https://www.ini.uzh.ch/en/institute/people?uname=valerio). I'm primarily interested in basic methods research in the intersection between computational neuroscience and machine learning. Currently, I'm working on comparing cortical learning and reinforcement learning. I'm always open to collaborate, send me a tweet!
