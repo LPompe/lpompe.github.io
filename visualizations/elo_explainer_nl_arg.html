@@ -397,15 +397,18 @@ function positionTooltip(svg, wrap, tooltip, W, cx, topY) {
   const scale = svgRect.width / W;
   const px = svgRect.left - wrapRect.left + cx * scale;
   const py = svgRect.top - wrapRect.top + topY * scale - 10;
-  // Clamp tooltip so it stays inside the chart-wrap horizontally and vertically.
   tooltip.style.opacity = 0;
   tooltip.style.left = '0px';
   tooltip.style.top = '0px';
   const tRect = tooltip.getBoundingClientRect();
   const tW = tRect.width, tH = tRect.height;
   const margin = 8;
-  let left = px - tW / 2;
-  left = Math.max(margin, Math.min(left, wrapRect.width - tW - margin));
+  // Clamp against the full viewport rather than just this panel's chart-wrap --
+  // the tooltip can be wider than the (narrower, split) panel it's anchored in.
+  const viewportW = document.documentElement.clientWidth;
+  let absLeft = wrapRect.left + px - tW / 2;
+  absLeft = Math.max(margin, Math.min(absLeft, viewportW - tW - margin));
+  let left = absLeft - wrapRect.left;
   let top = py - tH - 8;
   if (top < margin) top = py + 12; // flip below if not enough space above
   tooltip.style.left = left + 'px';
