@@ -126,7 +126,7 @@
     box-shadow: 0 4px 16px rgba(0,0,0,0.12);
     pointer-events: none;
     opacity: 0;
-    transform: translate(-50%, -100%);
+    transform: none;
     transition: opacity 0.08s ease;
     white-space: nowrap;
     z-index: 5;
@@ -516,8 +516,19 @@ function render(modeKey) {
     const scale = svgRect.width / W;
     const px = svgRect.left - wrapRect.left + x * scale;
     const py = svgRect.top - wrapRect.top + yPos(d.total) * scale - 10;
-    tooltip.style.left = px + "px";
-    tooltip.style.top = py + "px";
+    // Clamp tooltip position within wrap
+    tooltip.style.opacity = 0;
+    tooltip.style.left = '0px';
+    tooltip.style.top = '0px';
+    const tRect = tooltip.getBoundingClientRect();
+    const tW = tRect.width, tH = tRect.height;
+    const margin = 8;
+    let left = px - tW / 2;
+    left = Math.max(margin, Math.min(left, wrapRect.width - tW - margin));
+    let top = py - tH - 8;
+    if (top < margin) top = py + 12;
+    tooltip.style.left = left + 'px';
+    tooltip.style.top = top + 'px';
     tooltip.style.opacity = 1;
   }
   function hideTooltip() {
