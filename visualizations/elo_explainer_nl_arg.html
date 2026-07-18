@@ -574,7 +574,8 @@ function positionTooltip(svg, wrap, tooltip, W, cx, topY) {
 
 <script>
 function postHeight_elo(){
-  const h = document.documentElement.scrollHeight || document.body.scrollHeight;
+  const root = document.querySelector('.viz-root');
+  const h = root ? Math.ceil(root.getBoundingClientRect().height) : (document.documentElement.scrollHeight || document.body.scrollHeight);
   try{ parent.postMessage({type: 'vizHeight', id: 'iframe-elo', height: h}, '*'); }catch(e){}
 }
 window.addEventListener('load', ()=>{ postHeight_elo(); setTimeout(postHeight_elo,250); });
