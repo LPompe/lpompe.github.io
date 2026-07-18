@@ -94,6 +94,22 @@
     margin: 0 auto;
   }
 
+  /* layout with left text column and main content shifted right */
+  .layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 0;
+  }
+  .left-col {
+    padding: 48px 12px 20px 20px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .content { padding-left: 0; }
+
   .section-header {
     margin-bottom: 16px;
   }
@@ -167,9 +183,14 @@
   </ul>
 </nav>
 
+<div class="layout">
+  <aside class="left-col" id="viz-left-col">
+    <!-- Left column: add your explanatory text here -->
+  </aside>
+  <div class="content">
 
-<!-- ── 1. Foreign coaches ── -->
-<section class="section" id="foreign">
+  <!-- ── 1. Foreign coaches ── -->
+  <section class="section" id="foreign">
   <div class="section-header">
     <p class="section-num">01 &mdash; Bar chart</p>
     <h2 class="section-title">Foreign vs. Domestic Coaches at the World Cup</h2>
@@ -179,11 +200,12 @@
     <iframe id="iframe-foreign" src="foreign_coaches_chart.html" height="820" scrolling="no" title="Foreign vs domestic coaches chart"></iframe>
   </div>
 </section>
+  </section>
 
-<hr class="divider">
+  <hr class="divider">
 
-<!-- ── 2. Bracket ── -->
-<section class="section" id="bracket">
+  <!-- ── 2. Bracket ── -->
+  <section class="section" id="bracket">
   <div class="section-header">
     <p class="section-num">02 &mdash; Bracket</p>
     <h2 class="section-title">World Cup Bracket Chart</h2>
@@ -237,11 +259,15 @@ window.addEventListener('message', (e) => {
 }, false);
 </script>
 </section>
+  </section>
 
-<div class="foot">
-  Built by <a href="https://lpompe.github.io">Lucas Pompe</a> &mdash;
-  Data: Elo ratings from <a href="https://eloratings.net">eloratings.net</a>, Maddison Project Database 2023
-</div>
+  <div class="foot">
+    Built by <a href="https://lpompe.github.io">Lucas Pompe</a> &mdash;
+    Data: Elo ratings from <a href="https://eloratings.net">eloratings.net</a>, Maddison Project Database 2023
+  </div>
+
+  </div> <!-- .content -->
+</div> <!-- .layout -->
 
 </body>
 </html>
