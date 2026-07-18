@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Foreign vs. domestic coaches at the FIFA World Cup, 1978–2022</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1:      #fcfcfb;
+    --page-plane:     #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --gridline:       #e1e0d9;
+    --baseline:       #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+    --series-domestic: #bd6b4a;
+    --series-foreign:  #c9a227;
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .viz-root {
+    background: var(--page-plane);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--text-primary);
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+  }
+  .card {
+    width: 100%;
+    max-width: 860px;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 28px 20px;
+  }
+  .card__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+  h1 {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+  }
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+  .legend__item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+  }
+  .legend__swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 2.5px;
+    flex-shrink: 0;
+  }
+  .legend__swatch--domestic { background: var(--series-domestic); }
+  .legend__swatch--foreign  { background: var(--series-foreign); }
+
+  .chart-wrap {
+    position: relative;
+    margin-top: 18px;
+  }
+  svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+  .tick-label {
+    font-size: 11px;
+    fill: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  .axis-line { stroke: var(--baseline); stroke-width: 1; }
+  .grid-line { stroke: var(--gridline); stroke-width: 1; }
+
+  .area-domestic { fill: var(--series-domestic); fill-opacity: 0.55; }
+  .area-foreign  { fill: var(--series-foreign); fill-opacity: 0.6; }
+  .line-domestic { stroke: var(--series-domestic); stroke-width: 2; fill: none; }
+  .line-total     { stroke: var(--series-foreign); stroke-width: 2; fill: none; }
+
+  .crosshair {
+    stroke: var(--text-muted);
+    stroke-width: 1;
+    stroke-dasharray: 2 3;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .hover-dot {
+    r: 4;
+    stroke: var(--surface-1);
+    stroke-width: 2;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .hover-dot--domestic { fill: var(--series-domestic); }
+  .hover-dot--foreign  { fill: var(--series-foreign); }
+
+  .hit-col { fill: transparent; }
+
+  .tooltip {
+    position: absolute;
+    top: 0; left: 0;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 12.5px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, -100%);
+    transition: opacity 0.08s ease;
+    white-space: nowrap;
+    z-index: 5;
+  }
+  .tooltip__year {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+  .tooltip__row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: space-between;
+    margin-top: 3px;
+  }
+  .tooltip__key {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-secondary);
+  }
+  .tooltip__keyline {
+    width: 10px;
+    height: 2px;
+    border-radius: 1px;
+    flex-shrink: 0;
+  }
+  .tooltip__keyline--domestic { background: var(--series-domestic); }
+  .tooltip__keyline--foreign  { background: var(--series-foreign); }
+  .tooltip__val {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+    margin-left: 14px;
+  }
+  .tooltip__pct {
+    color: var(--text-muted);
+    font-size: 11px;
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid var(--gridline);
+  }
+
+  .foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 6px;
+    padding-top: 12px;
+    border-top: 1px solid var(--gridline);
+    font-size: 11px;
+    color: var(--text-muted);
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .controls__label {
+    font-size: 11.5px;
+    color: var(--text-muted);
+  }
+  .segmented {
+    display: inline-flex;
+    background: var(--page-plane);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 2px;
+    gap: 2px;
+  }
+  .segmented__btn {
+    appearance: none;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background 0.12s ease, color 0.12s ease;
+  }
+  .segmented__btn:hover { color: var(--text-primary); }
+  .segmented__btn.is-active {
+    background: var(--surface-1);
+    color: var(--text-primary);
+    box-shadow: 0 1px 2px rgba(11,11,11,0.08);
+  }
+
+  .table-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-family: inherit;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .table-toggle:hover { color: var(--text-primary); border-color: var(--text-muted); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 14px;
+    font-size: 12px;
+    display: none;
+  }
+  table.is-visible { display: table; }
+  th, td {
+    text-align: right;
+    padding: 6px 8px;
+    font-variant-numeric: tabular-nums;
+    border-bottom: 1px solid var(--gridline);
+  }
+  th:first-child, td:first-child { text-align: left; }
+  th {
+    color: var(--text-muted);
+    font-weight: 500;
+    font-size: 11px;
+  }
+  td { color: var(--text-secondary); }
+  td:first-child { color: var(--text-primary); font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="viz-root">
+  <div class="card">
+    <div class="card__head">
+      <div>
+        <h1>Foreign vs. domestic coaches at the World Cup</h1>
+        <p class="subtitle">Nationality of the head coach for every team that reached the tournament, 1978&ndash;2022</p>
+      </div>
+      <div class="legend">
+        <div class="legend__item"><span class="legend__swatch legend__swatch--domestic"></span>Domestic-born coach</div>
+        <div class="legend__item"><span class="legend__swatch legend__swatch--foreign"></span>Foreign-born coach</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <span class="controls__label">Coverage</span>
+      <div class="segmented" role="tablist" aria-label="Which teams to include">
+        <button class="segmented__btn is-active" id="btnQualified" role="tab" aria-selected="true">Qualified teams only</button>
+        <button class="segmented__btn" id="btnAll" role="tab" aria-selected="false">Include non-qualifiers</button>
+      </div>
+    </div>
+
+    <div class="chart-wrap" id="chartWrap">
+      <svg id="chart" viewBox="0 0 800 340" preserveAspectRatio="xMidYMid meet"></svg>
+      <div class="tooltip" id="tooltip"></div>
+    </div>
+
+    <div class="foot">
+      <span>Source: World Cup coach data compiled from Wikipedia, 1978&ndash;2022 (12 tournaments)</span>
+      <button class="table-toggle" id="tableToggle">Show table</button>
+    </div>
+
+    <table id="dataTable">
+      <thead>
+        <tr><th>Year</th><th>Teams</th><th>Domestic</th><th>Foreign</th><th>% foreign</th></tr>
+      </thead>
+      <tbody id="dataTableBody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+// "Qualified teams only" — one coach per team per cycle, the one who actually
+// took them to the tournament. Totals equal the fixed field size (16/24/32).
+const DATA_QUALIFIED = [
+  {"year":1978,"domestic":14,"foreign":2,"total":16,"pct_foreign":12.5},
+  {"year":1982,"domestic":20,"foreign":4,"total":24,"pct_foreign":16.7},
+  {"year":1986,"domestic":19,"foreign":5,"total":24,"pct_foreign":20.8},
+  {"year":1990,"domestic":20,"foreign":4,"total":24,"pct_foreign":16.7},
+  {"year":1994,"domestic":17,"foreign":7,"total":24,"pct_foreign":29.2},
+  {"year":1998,"domestic":22,"foreign":10,"total":32,"pct_foreign":31.2},
+  {"year":2002,"domestic":24,"foreign":8,"total":32,"pct_foreign":25.0},
+  {"year":2006,"domestic":17,"foreign":15,"total":32,"pct_foreign":46.9},
+  {"year":2010,"domestic":20,"foreign":12,"total":32,"pct_foreign":37.5},
+  {"year":2014,"domestic":18,"foreign":14,"total":32,"pct_foreign":43.8},
+  {"year":2018,"domestic":19,"foreign":13,"total":32,"pct_foreign":40.6},
+  {"year":2022,"domestic":23,"foreign":9,"total":32,"pct_foreign":28.1}
+];
+
+// "Include non-qualifiers" — every coaching stint across every entrant that
+// attempted to qualify for that cycle, including teams that didn't make it
+// (a team that changed coaches mid-campaign contributes one count per coach).
+const DATA_ALL = [
+  {"year":1978,"domestic":88,"foreign":32,"total":120,"pct_foreign":26.7},
+  {"year":1982,"domestic":94,"foreign":22,"total":116,"pct_foreign":19.0},
+  {"year":1986,"domestic":81,"foreign":25,"total":106,"pct_foreign":23.6},
+  {"year":1990,"domestic":104,"foreign":36,"total":140,"pct_foreign":25.7},
+  {"year":1994,"domestic":102,"foreign":44,"total":146,"pct_foreign":30.1},
+  {"year":1998,"domestic":111,"foreign":53,"total":164,"pct_foreign":32.3},
+  {"year":2002,"domestic":112,"foreign":51,"total":163,"pct_foreign":31.3},
+  {"year":2006,"domestic":110,"foreign":57,"total":167,"pct_foreign":34.1},
+  {"year":2010,"domestic":101,"foreign":53,"total":154,"pct_foreign":34.4},
+  {"year":2014,"domestic":103,"foreign":51,"total":154,"pct_foreign":33.1},
+  {"year":2018,"domestic":77,"foreign":61,"total":138,"pct_foreign":44.2},
+  {"year":2022,"domestic":92,"foreign":59,"total":151,"pct_foreign":39.1}
+];
+
+const MODES = {
+  qualified: {
+    data: DATA_QUALIFIED,
+    yMax: 36,
+    yTicks: [0, 8, 16, 24, 32],
+    subtitle: "Nationality of the head coach for every team that reached the tournament, 1978–2022",
+    unit: "teams",
+    tableHeadCount: "Teams"
+  },
+  all: {
+    data: DATA_ALL,
+    yMax: 180,
+    yTicks: [0, 40, 80, 120, 160],
+    subtitle: "Every national-team coaching stint during each World Cup cycle, including teams that didn’t qualify — a team that changed coaches counts once per coach, 1978–2022",
+    unit: "coaching stints",
+    tableHeadCount: "Stints"
+  }
+};
+
+let currentMode = "qualified";
+
+const svgNS = "http://www.w3.org/2000/svg";
+const svg = document.getElementById("chart");
+const tooltip = document.getElementById("tooltip");
+const wrap = document.getElementById("chartWrap");
+const subtitleEl = document.querySelector(".subtitle");
+const tbody = document.getElementById("dataTableBody");
+const tableCountHead = document.querySelector("#dataTable thead th:nth-child(2)");
+
+const W = 800, H = 340;
+const M = { top: 14, right: 16, bottom: 30, left: 34 };
+const plotW = W - M.left - M.right;
+const plotH = H - M.top - M.bottom;
+
+function el(tag, attrs) {
+  const e = document.createElementNS(svgNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  return e;
+}
+
+function render(modeKey) {
+  currentMode = modeKey;
+  const mode = MODES[modeKey];
+  const DATA = mode.data;
+  const n = DATA.length;
+  const xStep = plotW / (n - 1);
+  const yMax = mode.yMax;
+
+  function xPos(i) { return M.left + i * xStep; }
+  function yPos(v) { return M.top + plotH * (1 - v / yMax); }
+
+  svg.innerHTML = "";
+  subtitleEl.textContent = mode.subtitle;
+  tableCountHead.textContent = mode.tableHeadCount;
+
+  // ---- gridlines + y ticks ----
+  mode.yTicks.forEach(t => {
+    svg.appendChild(el("line", {
+      class: "grid-line", x1: M.left, x2: W - M.right, y1: yPos(t), y2: yPos(t)
+    }));
+    const label = el("text", {
+      class: "tick-label", x: M.left - 8, y: yPos(t) + 4, "text-anchor": "end"
+    });
+    label.textContent = t;
+    svg.appendChild(label);
+  });
+
+  // baseline
+  svg.appendChild(el("line", {
+    class: "axis-line", x1: M.left, x2: W - M.right, y1: yPos(0), y2: yPos(0)
+  }));
+
+  // x ticks
+  DATA.forEach((d, i) => {
+    const label = el("text", {
+      class: "tick-label", x: xPos(i), y: H - M.bottom + 18, "text-anchor": "middle"
+    });
+    label.textContent = d.year;
+    svg.appendChild(label);
+  });
+
+  // ---- stacked area paths ----
+  function areaPath(getTop, getBottom) {
+    let d = "";
+    DATA.forEach((pt, i) => {
+      const x = xPos(i), y = yPos(getTop(pt));
+      d += (i === 0 ? "M" : "L") + x + "," + y + " ";
+    });
+    for (let i = n - 1; i >= 0; i--) {
+      const x = xPos(i), y = yPos(getBottom(DATA[i]));
+      d += "L" + x + "," + y + " ";
+    }
+    d += "Z";
+    return d;
+  }
+  function linePath(getV) {
+    let d = "";
+    DATA.forEach((pt, i) => {
+      const x = xPos(i), y = yPos(getV(pt));
+      d += (i === 0 ? "M" : "L") + x + "," + y + " ";
+    });
+    return d;
+  }
+
+  svg.appendChild(el("path", { class: "area-domestic", d: areaPath(p => p.domestic, p => 0) }));
+  svg.appendChild(el("path", { class: "area-foreign",  d: areaPath(p => p.total, p => p.domestic) }));
+  svg.appendChild(el("path", { class: "line-domestic", d: linePath(p => p.domestic) }));
+  svg.appendChild(el("path", { class: "line-total",     d: linePath(p => p.total) }));
+
+  // ---- hover layer ----
+  const crosshair = el("line", { class: "crosshair", y1: M.top, y2: H - M.bottom });
+  svg.appendChild(crosshair);
+
+  const dotDomestic = el("circle", { class: "hover-dot hover-dot--domestic" });
+  const dotForeign  = el("circle", { class: "hover-dot hover-dot--foreign" });
+  svg.appendChild(dotDomestic);
+  svg.appendChild(dotForeign);
+
+  function showTooltip(i) {
+    const d = DATA[i];
+    const x = xPos(i);
+
+    crosshair.setAttribute("x1", x);
+    crosshair.setAttribute("x2", x);
+    crosshair.style.opacity = 1;
+
+    dotDomestic.setAttribute("cx", x);
+    dotDomestic.setAttribute("cy", yPos(d.domestic));
+    dotDomestic.style.opacity = 1;
+
+    dotForeign.setAttribute("cx", x);
+    dotForeign.setAttribute("cy", yPos(d.total));
+    dotForeign.style.opacity = 1;
+
+    tooltip.innerHTML = "";
+    const yearEl = document.createElement("div");
+    yearEl.className = "tooltip__year";
+    yearEl.textContent = d.year + " World Cup — " + d.total + " " + mode.unit;
+    tooltip.appendChild(yearEl);
+
+    const rowDom = document.createElement("div");
+    rowDom.className = "tooltip__row";
+    const keyDom = document.createElement("span");
+    keyDom.className = "tooltip__key";
+    const lineDom = document.createElement("span");
+    lineDom.className = "tooltip__keyline tooltip__keyline--domestic";
+    keyDom.appendChild(lineDom);
+    keyDom.appendChild(document.createTextNode("Domestic"));
+    const valDom = document.createElement("span");
+    valDom.className = "tooltip__val";
+    valDom.textContent = d.domestic;
+    rowDom.appendChild(keyDom);
+    rowDom.appendChild(valDom);
+    tooltip.appendChild(rowDom);
+
+    const rowFor = document.createElement("div");
+    rowFor.className = "tooltip__row";
+    const keyFor = document.createElement("span");
+    keyFor.className = "tooltip__key";
+    const lineFor = document.createElement("span");
+    lineFor.className = "tooltip__keyline tooltip__keyline--foreign";
+    keyFor.appendChild(lineFor);
+    keyFor.appendChild(document.createTextNode("Foreign"));
+    const valFor = document.createElement("span");
+    valFor.className = "tooltip__val";
+    valFor.textContent = d.foreign;
+    rowFor.appendChild(keyFor);
+    rowFor.appendChild(valFor);
+    tooltip.appendChild(rowFor);
+
+    const pct = document.createElement("div");
+    pct.className = "tooltip__pct";
+    pct.textContent = d.pct_foreign + "% of coaches were foreign-born";
+    tooltip.appendChild(pct);
+
+    const svgRect = svg.getBoundingClientRect();
+    const wrapRect = wrap.getBoundingClientRect();
+    const scale = svgRect.width / W;
+    const px = svgRect.left - wrapRect.left + x * scale;
+    const py = svgRect.top - wrapRect.top + yPos(d.total) * scale - 10;
+    tooltip.style.left = px + "px";
+    tooltip.style.top = py + "px";
+    tooltip.style.opacity = 1;
+  }
+  function hideTooltip() {
+    crosshair.style.opacity = 0;
+    dotDomestic.style.opacity = 0;
+    dotForeign.style.opacity = 0;
+    tooltip.style.opacity = 0;
+  }
+
+  DATA.forEach((d, i) => {
+    const left = i === 0 ? M.left : (xPos(i - 1) + xPos(i)) / 2;
+    const right = i === n - 1 ? W - M.right : (xPos(i) + xPos(i + 1)) / 2;
+    const rect = el("rect", {
+      class: "hit-col",
+      x: left, y: M.top, width: right - left, height: plotH,
+      "data-i": i
+    });
+    rect.addEventListener("pointerenter", () => showTooltip(i));
+    rect.addEventListener("pointermove", () => showTooltip(i));
+    rect.addEventListener("pointerleave", hideTooltip);
+    rect.addEventListener("focus", () => showTooltip(i));
+    rect.addEventListener("blur", hideTooltip);
+    rect.setAttribute("tabindex", "0");
+    svg.appendChild(rect);
+  });
+
+  // ---- table view ----
+  tbody.innerHTML = "";
+  DATA.forEach(d => {
+    const tr = document.createElement("tr");
+    const cells = [d.year, d.total, d.domestic, d.foreign, d.pct_foreign + "%"];
+    cells.forEach(val => {
+      const td = document.createElement("td");
+      td.textContent = val;
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+}
+
+render("qualified");
+
+// ---- coverage toggle ----
+const btnQualified = document.getElementById("btnQualified");
+const btnAll = document.getElementById("btnAll");
+function setMode(modeKey) {
+  render(modeKey);
+  btnQualified.classList.toggle("is-active", modeKey === "qualified");
+  btnQualified.setAttribute("aria-selected", modeKey === "qualified");
+  btnAll.classList.toggle("is-active", modeKey === "all");
+  btnAll.setAttribute("aria-selected", modeKey === "all");
+}
+btnQualified.addEventListener("click", () => setMode("qualified"));
+btnAll.addEventListener("click", () => setMode("all"));
+
+// ---- table toggle ----
+const toggleBtn = document.getElementById("tableToggle");
+const table = document.getElementById("dataTable");
+toggleBtn.addEventListener("click", () => {
+  const showing = table.classList.toggle("is-visible");
+  toggleBtn.textContent = showing ? "Hide table" : "Show table";
+});
+</script>
+</body>
+</html>

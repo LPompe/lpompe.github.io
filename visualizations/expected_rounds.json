@@ -1,0 +1,2018 @@
+[
+  {
+    "year": 1998,
+    "team": "Argentina",
+    "coach": "Daniel Passarella",
+    "foreign": false,
+    "elo_before_coach": 1915.0,
+    "real_round": 3,
+    "expected_round": 2.29
+  },
+  {
+    "year": 1998,
+    "team": "Austria",
+    "coach": "Herbert Prohaska",
+    "foreign": false,
+    "elo_before_coach": 1765.0,
+    "real_round": 1,
+    "expected_round": 1.655
+  },
+  {
+    "year": 1998,
+    "team": "Belgium",
+    "coach": "Georges Leekens",
+    "foreign": false,
+    "elo_before_coach": 1823.0,
+    "real_round": 1,
+    "expected_round": 1.855
+  },
+  {
+    "year": 1998,
+    "team": "Brazil",
+    "coach": "Mário Zagallo",
+    "foreign": false,
+    "elo_before_coach": 1963.0,
+    "real_round": 5,
+    "expected_round": 2.576
+  },
+  {
+    "year": 1998,
+    "team": "Bulgaria",
+    "coach": "Hristo Bonev",
+    "foreign": false,
+    "elo_before_coach": 1772.0,
+    "real_round": 1,
+    "expected_round": 1.678
+  },
+  {
+    "year": 1998,
+    "team": "Cameroon",
+    "coach": "Claude Le Roy",
+    "foreign": true,
+    "elo_before_coach": 1684.0,
+    "real_round": 1,
+    "expected_round": 1.44
+  },
+  {
+    "year": 1998,
+    "team": "Chile",
+    "coach": "Nelson Acosta",
+    "foreign": true,
+    "elo_before_coach": 1772.0,
+    "real_round": 2,
+    "expected_round": 1.671
+  },
+  {
+    "year": 1998,
+    "team": "Colombia",
+    "coach": "Hernán Darío Gómez",
+    "foreign": false,
+    "elo_before_coach": 1943.0,
+    "real_round": 1,
+    "expected_round": 2.437
+  },
+  {
+    "year": 1998,
+    "team": "Croatia",
+    "coach": "Miroslav Blažević",
+    "foreign": false,
+    "elo_before_coach": 1874.0,
+    "real_round": 4,
+    "expected_round": 2.075
+  },
+  {
+    "year": 1998,
+    "team": "Denmark",
+    "coach": "Bo Johansson",
+    "foreign": true,
+    "elo_before_coach": 1893.0,
+    "real_round": 3,
+    "expected_round": 2.154
+  },
+  {
+    "year": 1998,
+    "team": "England",
+    "coach": "Glenn Hoddle",
+    "foreign": false,
+    "elo_before_coach": 1944.0,
+    "real_round": 2,
+    "expected_round": 2.46
+  },
+  {
+    "year": 1998,
+    "team": "FR Yugoslavia",
+    "coach": "Slobodan Santrač",
+    "foreign": false,
+    "elo_before_coach": 1969.0,
+    "real_round": 2,
+    "expected_round": 2.605
+  },
+  {
+    "year": 1998,
+    "team": "France",
+    "coach": "Aimé Jacquet",
+    "foreign": false,
+    "elo_before_coach": 1995.0,
+    "real_round": 6,
+    "expected_round": 2.788
+  },
+  {
+    "year": 1998,
+    "team": "Germany",
+    "coach": "Berti Vogts",
+    "foreign": false,
+    "elo_before_coach": 2058.0,
+    "real_round": 3,
+    "expected_round": 3.234
+  },
+  {
+    "year": 1998,
+    "team": "Iran",
+    "coach": "Jalal Talebi",
+    "foreign": false,
+    "elo_before_coach": 1803.0,
+    "real_round": 1,
+    "expected_round": 1.771
+  },
+  {
+    "year": 1998,
+    "team": "Italy",
+    "coach": "Cesare Maldini",
+    "foreign": false,
+    "elo_before_coach": 1986.0,
+    "real_round": 3,
+    "expected_round": 2.707
+  },
+  {
+    "year": 1998,
+    "team": "Jamaica",
+    "coach": "Renê Simões",
+    "foreign": true,
+    "elo_before_coach": 1645.0,
+    "real_round": 1,
+    "expected_round": 1.362
+  },
+  {
+    "year": 1998,
+    "team": "Japan",
+    "coach": "Takeshi Okada",
+    "foreign": false,
+    "elo_before_coach": 1744.0,
+    "real_round": 1,
+    "expected_round": 1.582
+  },
+  {
+    "year": 1998,
+    "team": "Mexico",
+    "coach": "Manuel Lapuente",
+    "foreign": false,
+    "elo_before_coach": 1855.0,
+    "real_round": 2,
+    "expected_round": 2.002
+  },
+  {
+    "year": 1998,
+    "team": "Morocco",
+    "coach": "Henri Michel",
+    "foreign": true,
+    "elo_before_coach": 1665.0,
+    "real_round": 1,
+    "expected_round": 1.405
+  },
+  {
+    "year": 1998,
+    "team": "Netherlands",
+    "coach": "Guus Hiddink",
+    "foreign": false,
+    "elo_before_coach": 1990.0,
+    "real_round": 4,
+    "expected_round": 2.761
+  },
+  {
+    "year": 1998,
+    "team": "Nigeria",
+    "coach": "Bora Milutinović",
+    "foreign": true,
+    "elo_before_coach": 1735.0,
+    "real_round": 2,
+    "expected_round": 1.568
+  },
+  {
+    "year": 1998,
+    "team": "Norway",
+    "coach": "Egil Olsen",
+    "foreign": false,
+    "elo_before_coach": 1902.0,
+    "real_round": 2,
+    "expected_round": 2.205
+  },
+  {
+    "year": 1998,
+    "team": "Paraguay",
+    "coach": "Paulo César Carpegiani",
+    "foreign": true,
+    "elo_before_coach": 1812.0,
+    "real_round": 2,
+    "expected_round": 1.813
+  },
+  {
+    "year": 1998,
+    "team": "Romania",
+    "coach": "Anghel Iordănescu",
+    "foreign": false,
+    "elo_before_coach": 1894.0,
+    "real_round": 2,
+    "expected_round": 2.172
+  },
+  {
+    "year": 1998,
+    "team": "Saudi Arabia",
+    "coach": "Carlos Alberto Parreira",
+    "foreign": true,
+    "elo_before_coach": 1636.0,
+    "real_round": 1,
+    "expected_round": 1.352
+  },
+  {
+    "year": 1998,
+    "team": "Scotland",
+    "coach": "Craig Brown",
+    "foreign": false,
+    "elo_before_coach": 1738.0,
+    "real_round": 1,
+    "expected_round": 1.566
+  },
+  {
+    "year": 1998,
+    "team": "South Africa",
+    "coach": "Philippe Troussier",
+    "foreign": true,
+    "elo_before_coach": 1636.0,
+    "real_round": 1,
+    "expected_round": 1.344
+  },
+  {
+    "year": 1998,
+    "team": "South Korea",
+    "coach": "Cha Bum-kun",
+    "foreign": false,
+    "elo_before_coach": 1666.0,
+    "real_round": 1,
+    "expected_round": 1.409
+  },
+  {
+    "year": 1998,
+    "team": "Spain",
+    "coach": "Javier Clemente",
+    "foreign": false,
+    "elo_before_coach": 1927.0,
+    "real_round": 1,
+    "expected_round": 2.352
+  },
+  {
+    "year": 1998,
+    "team": "Tunisia",
+    "coach": "Henryk Kasperczak",
+    "foreign": true,
+    "elo_before_coach": 1661.0,
+    "real_round": 1,
+    "expected_round": 1.397
+  },
+  {
+    "year": 1998,
+    "team": "United States",
+    "coach": "Steve Sampson",
+    "foreign": false,
+    "elo_before_coach": 1614.0,
+    "real_round": 1,
+    "expected_round": 1.315
+  },
+  {
+    "year": 2002,
+    "team": "Argentina",
+    "coach": "Marcelo Bielsa",
+    "foreign": false,
+    "elo_before_coach": 1893.0,
+    "real_round": 1,
+    "expected_round": 2.194
+  },
+  {
+    "year": 2002,
+    "team": "Belgium",
+    "coach": "Robert Waseige",
+    "foreign": false,
+    "elo_before_coach": 1821.0,
+    "real_round": 2,
+    "expected_round": 1.878
+  },
+  {
+    "year": 2002,
+    "team": "Brazil",
+    "coach": "Luiz Felipe Scolari",
+    "foreign": false,
+    "elo_before_coach": 2091.0,
+    "real_round": 6,
+    "expected_round": 3.505
+  },
+  {
+    "year": 2002,
+    "team": "Cameroon",
+    "coach": "Winfried Schäfer",
+    "foreign": true,
+    "elo_before_coach": 1591.0,
+    "real_round": 1,
+    "expected_round": 1.289
+  },
+  {
+    "year": 2002,
+    "team": "China PR",
+    "coach": "Bora Milutinović",
+    "foreign": true,
+    "elo_before_coach": 1699.0,
+    "real_round": 1,
+    "expected_round": 1.486
+  },
+  {
+    "year": 2002,
+    "team": "Costa Rica",
+    "coach": "Alexandre Guimarães",
+    "foreign": false,
+    "elo_before_coach": 1611.0,
+    "real_round": 1,
+    "expected_round": 1.317
+  },
+  {
+    "year": 2002,
+    "team": "Croatia",
+    "coach": "Mirko Jozić",
+    "foreign": false,
+    "elo_before_coach": 1874.0,
+    "real_round": 1,
+    "expected_round": 2.079
+  },
+  {
+    "year": 2002,
+    "team": "Denmark",
+    "coach": "Morten Olsen",
+    "foreign": false,
+    "elo_before_coach": 1882.0,
+    "real_round": 2,
+    "expected_round": 2.118
+  },
+  {
+    "year": 2002,
+    "team": "Ecuador",
+    "coach": "Hernán Darío Gómez",
+    "foreign": true,
+    "elo_before_coach": 1727.0,
+    "real_round": 1,
+    "expected_round": 1.57
+  },
+  {
+    "year": 2002,
+    "team": "England",
+    "coach": "Sven-Göran Eriksson",
+    "foreign": true,
+    "elo_before_coach": 1974.0,
+    "real_round": 3,
+    "expected_round": 2.644
+  },
+  {
+    "year": 2002,
+    "team": "France",
+    "coach": "Roger Lemerre",
+    "foreign": false,
+    "elo_before_coach": 2002.0,
+    "real_round": 1,
+    "expected_round": 2.826
+  },
+  {
+    "year": 2002,
+    "team": "Germany",
+    "coach": "Rudi Völler",
+    "foreign": false,
+    "elo_before_coach": 2058.0,
+    "real_round": 5,
+    "expected_round": 3.216
+  },
+  {
+    "year": 2002,
+    "team": "Italy",
+    "coach": "Giovanni Trapattoni",
+    "foreign": false,
+    "elo_before_coach": 1971.0,
+    "real_round": 2,
+    "expected_round": 2.601
+  },
+  {
+    "year": 2002,
+    "team": "Japan",
+    "coach": "Philippe Troussier",
+    "foreign": true,
+    "elo_before_coach": 1744.0,
+    "real_round": 2,
+    "expected_round": 1.614
+  },
+  {
+    "year": 2002,
+    "team": "Mexico",
+    "coach": "Javier Aguirre",
+    "foreign": false,
+    "elo_before_coach": 1847.0,
+    "real_round": 2,
+    "expected_round": 1.966
+  },
+  {
+    "year": 2002,
+    "team": "Nigeria",
+    "coach": "Festus Onigbinde",
+    "foreign": false,
+    "elo_before_coach": 1703.0,
+    "real_round": 1,
+    "expected_round": 1.506
+  },
+  {
+    "year": 2002,
+    "team": "Paraguay",
+    "coach": "Cesare Maldini",
+    "foreign": true,
+    "elo_before_coach": 1742.0,
+    "real_round": 2,
+    "expected_round": 1.604
+  },
+  {
+    "year": 2002,
+    "team": "Poland",
+    "coach": "Jerzy Engel",
+    "foreign": false,
+    "elo_before_coach": 1805.0,
+    "real_round": 1,
+    "expected_round": 1.81
+  },
+  {
+    "year": 2002,
+    "team": "Portugal",
+    "coach": "António Oliveira",
+    "foreign": false,
+    "elo_before_coach": 1806.0,
+    "real_round": 1,
+    "expected_round": 1.81
+  },
+  {
+    "year": 2002,
+    "team": "Republic of Ireland",
+    "coach": "Mick McCarthy",
+    "foreign": false,
+    "elo_before_coach": 1864.0,
+    "real_round": 2,
+    "expected_round": 2.055
+  },
+  {
+    "year": 2002,
+    "team": "Russia",
+    "coach": "Oleg Romantsev",
+    "foreign": false,
+    "elo_before_coach": 1921.0,
+    "real_round": 1,
+    "expected_round": 2.327
+  },
+  {
+    "year": 2002,
+    "team": "Saudi Arabia",
+    "coach": "Nasser Al-Johar",
+    "foreign": false,
+    "elo_before_coach": 1646.0,
+    "real_round": 1,
+    "expected_round": 1.376
+  },
+  {
+    "year": 2002,
+    "team": "Senegal",
+    "coach": "Bruno Metsu",
+    "foreign": true,
+    "elo_before_coach": 1698.0,
+    "real_round": 3,
+    "expected_round": 1.5
+  },
+  {
+    "year": 2002,
+    "team": "Slovenia",
+    "coach": "Srečko Katanec",
+    "foreign": false,
+    "elo_before_coach": 1745.0,
+    "real_round": 1,
+    "expected_round": 1.611
+  },
+  {
+    "year": 2002,
+    "team": "South Africa",
+    "coach": "Jomo Sono",
+    "foreign": false,
+    "elo_before_coach": 1636.0,
+    "real_round": 1,
+    "expected_round": 1.367
+  },
+  {
+    "year": 2002,
+    "team": "South Korea",
+    "coach": "Guus Hiddink",
+    "foreign": true,
+    "elo_before_coach": 1750.0,
+    "real_round": 4,
+    "expected_round": 1.623
+  },
+  {
+    "year": 2002,
+    "team": "Spain",
+    "coach": "José Antonio Camacho",
+    "foreign": false,
+    "elo_before_coach": 2039.0,
+    "real_round": 3,
+    "expected_round": 3.056
+  },
+  {
+    "year": 2002,
+    "team": "Sweden",
+    "coach": "Lars Lagerbäck & Tommy Söderberg",
+    "foreign": false,
+    "elo_before_coach": 1906.0,
+    "real_round": 2,
+    "expected_round": 2.229
+  },
+  {
+    "year": 2002,
+    "team": "Tunisia",
+    "coach": "Ammar Souayah",
+    "foreign": false,
+    "elo_before_coach": 1632.0,
+    "real_round": 1,
+    "expected_round": 1.351
+  },
+  {
+    "year": 2002,
+    "team": "Turkey",
+    "coach": "Şenol Güneş",
+    "foreign": false,
+    "elo_before_coach": 1757.0,
+    "real_round": 4,
+    "expected_round": 1.638
+  },
+  {
+    "year": 2002,
+    "team": "United States",
+    "coach": "Bruce Arena",
+    "foreign": false,
+    "elo_before_coach": 1759.0,
+    "real_round": 3,
+    "expected_round": 1.658
+  },
+  {
+    "year": 2002,
+    "team": "Uruguay",
+    "coach": "Víctor Púa",
+    "foreign": false,
+    "elo_before_coach": 1893.0,
+    "real_round": 1,
+    "expected_round": 2.175
+  },
+  {
+    "year": 2006,
+    "team": "Angola",
+    "coach": "Luis Oliveira Gonçalves",
+    "foreign": false,
+    "elo_before_coach": 1564.0,
+    "real_round": 1,
+    "expected_round": 1.278
+  },
+  {
+    "year": 2006,
+    "team": "Argentina",
+    "coach": "José Pekerman",
+    "foreign": false,
+    "elo_before_coach": 2020.0,
+    "real_round": 3,
+    "expected_round": 3.008
+  },
+  {
+    "year": 2006,
+    "team": "Australia",
+    "coach": "Guus Hiddink",
+    "foreign": true,
+    "elo_before_coach": 1798.0,
+    "real_round": 2,
+    "expected_round": 1.828
+  },
+  {
+    "year": 2006,
+    "team": "Brazil",
+    "coach": "Carlos Alberto Parreira",
+    "foreign": false,
+    "elo_before_coach": 1867.0,
+    "real_round": 3,
+    "expected_round": 2.11
+  },
+  {
+    "year": 2006,
+    "team": "Costa Rica",
+    "coach": "Alexandre Guimarães",
+    "foreign": false,
+    "elo_before_coach": 1611.0,
+    "real_round": 1,
+    "expected_round": 1.353
+  },
+  {
+    "year": 2006,
+    "team": "Croatia",
+    "coach": "Zlatko Kranjčar",
+    "foreign": false,
+    "elo_before_coach": 1881.0,
+    "real_round": 1,
+    "expected_round": 2.193
+  },
+  {
+    "year": 2006,
+    "team": "Czech Republic",
+    "coach": "Karel Brückner",
+    "foreign": false,
+    "elo_before_coach": 1843.0,
+    "real_round": 1,
+    "expected_round": 1.98
+  },
+  {
+    "year": 2006,
+    "team": "Ecuador",
+    "coach": "Luis Fernando Suárez",
+    "foreign": true,
+    "elo_before_coach": 1727.0,
+    "real_round": 2,
+    "expected_round": 1.596
+  },
+  {
+    "year": 2006,
+    "team": "England",
+    "coach": "Sven-Göran Eriksson",
+    "foreign": true,
+    "elo_before_coach": 1974.0,
+    "real_round": 3,
+    "expected_round": 2.721
+  },
+  {
+    "year": 2006,
+    "team": "France",
+    "coach": "Raymond Domenech",
+    "foreign": false,
+    "elo_before_coach": 2093.0,
+    "real_round": 5,
+    "expected_round": 3.573
+  },
+  {
+    "year": 2006,
+    "team": "Germany",
+    "coach": "Jürgen Klinsmann",
+    "foreign": false,
+    "elo_before_coach": 1869.0,
+    "real_round": 4,
+    "expected_round": 2.112
+  },
+  {
+    "year": 2006,
+    "team": "Ghana",
+    "coach": "Ratomir Dujković",
+    "foreign": true,
+    "elo_before_coach": 1616.0,
+    "real_round": 2,
+    "expected_round": 1.353
+  },
+  {
+    "year": 2006,
+    "team": "Iran",
+    "coach": "Branko Ivanković",
+    "foreign": true,
+    "elo_before_coach": 1637.0,
+    "real_round": 1,
+    "expected_round": 1.394
+  },
+  {
+    "year": 2006,
+    "team": "Italy",
+    "coach": "Marcello Lippi",
+    "foreign": false,
+    "elo_before_coach": 2009.0,
+    "real_round": 6,
+    "expected_round": 2.941
+  },
+  {
+    "year": 2006,
+    "team": "Ivory Coast",
+    "coach": "Henri Michel",
+    "foreign": true,
+    "elo_before_coach": 1766.0,
+    "real_round": 1,
+    "expected_round": 1.728
+  },
+  {
+    "year": 2006,
+    "team": "Japan",
+    "coach": "Zico",
+    "foreign": true,
+    "elo_before_coach": 1848.0,
+    "real_round": 1,
+    "expected_round": 2.024
+  },
+  {
+    "year": 2006,
+    "team": "Mexico",
+    "coach": "Ricardo La Volpe",
+    "foreign": true,
+    "elo_before_coach": 1832.0,
+    "real_round": 2,
+    "expected_round": 1.963
+  },
+  {
+    "year": 2006,
+    "team": "Netherlands",
+    "coach": "Marco van Basten",
+    "foreign": false,
+    "elo_before_coach": 1959.0,
+    "real_round": 2,
+    "expected_round": 2.631
+  },
+  {
+    "year": 2006,
+    "team": "Paraguay",
+    "coach": "Aníbal Ruiz",
+    "foreign": true,
+    "elo_before_coach": 1730.0,
+    "real_round": 1,
+    "expected_round": 1.617
+  },
+  {
+    "year": 2006,
+    "team": "Poland",
+    "coach": "Paweł Janas",
+    "foreign": false,
+    "elo_before_coach": 1735.0,
+    "real_round": 1,
+    "expected_round": 1.625
+  },
+  {
+    "year": 2006,
+    "team": "Portugal",
+    "coach": "Luiz Felipe Scolari",
+    "foreign": true,
+    "elo_before_coach": 1977.0,
+    "real_round": 4,
+    "expected_round": 2.716
+  },
+  {
+    "year": 2006,
+    "team": "Saudi Arabia",
+    "coach": "Marcos Paquetá",
+    "foreign": true,
+    "elo_before_coach": 1697.0,
+    "real_round": 1,
+    "expected_round": 1.518
+  },
+  {
+    "year": 2006,
+    "team": "Serbia and Montenegro",
+    "coach": "Ilija Petković",
+    "foreign": false,
+    "elo_before_coach": 1813.0,
+    "real_round": 1,
+    "expected_round": 1.899
+  },
+  {
+    "year": 2006,
+    "team": "South Korea",
+    "coach": "Dick Advocaat",
+    "foreign": true,
+    "elo_before_coach": 1735.0,
+    "real_round": 1,
+    "expected_round": 1.631
+  },
+  {
+    "year": 2006,
+    "team": "Spain",
+    "coach": "Luis Aragonés",
+    "foreign": false,
+    "elo_before_coach": 1963.0,
+    "real_round": 2,
+    "expected_round": 2.627
+  },
+  {
+    "year": 2006,
+    "team": "Sweden",
+    "coach": "Lars Lagerbäck",
+    "foreign": false,
+    "elo_before_coach": 1866.0,
+    "real_round": 2,
+    "expected_round": 2.116
+  },
+  {
+    "year": 2006,
+    "team": "Switzerland",
+    "coach": "Köbi Kuhn",
+    "foreign": false,
+    "elo_before_coach": 1873.0,
+    "real_round": 2,
+    "expected_round": 2.133
+  },
+  {
+    "year": 2006,
+    "team": "Togo",
+    "coach": "Otto Pfister",
+    "foreign": true,
+    "elo_before_coach": 1488.0,
+    "real_round": 1,
+    "expected_round": 1.183
+  },
+  {
+    "year": 2006,
+    "team": "Trinidad and Tobago",
+    "coach": "Leo Beenhakker",
+    "foreign": true,
+    "elo_before_coach": 1567.0,
+    "real_round": 1,
+    "expected_round": 1.276
+  },
+  {
+    "year": 2006,
+    "team": "Tunisia",
+    "coach": "Roger Lemerre",
+    "foreign": true,
+    "elo_before_coach": 1618.0,
+    "real_round": 1,
+    "expected_round": 1.355
+  },
+  {
+    "year": 2006,
+    "team": "Ukraine",
+    "coach": "Oleg Blokhin",
+    "foreign": false,
+    "elo_before_coach": 1790.0,
+    "real_round": 3,
+    "expected_round": 1.818
+  },
+  {
+    "year": 2006,
+    "team": "United States",
+    "coach": "Bruce Arena",
+    "foreign": false,
+    "elo_before_coach": 1759.0,
+    "real_round": 1,
+    "expected_round": 1.698
+  },
+  {
+    "year": 2010,
+    "team": "Algeria",
+    "coach": "Rabah Saâdane",
+    "foreign": false,
+    "elo_before_coach": 1640.0,
+    "real_round": 1,
+    "expected_round": 1.384
+  },
+  {
+    "year": 2010,
+    "team": "Argentina",
+    "coach": "Diego Maradona",
+    "foreign": false,
+    "elo_before_coach": 1922.0,
+    "real_round": 3,
+    "expected_round": 2.374
+  },
+  {
+    "year": 2010,
+    "team": "Australia",
+    "coach": "Pim Verbeek",
+    "foreign": true,
+    "elo_before_coach": 1798.0,
+    "real_round": 1,
+    "expected_round": 1.817
+  },
+  {
+    "year": 2010,
+    "team": "Brazil",
+    "coach": "Carlos Dunga",
+    "foreign": false,
+    "elo_before_coach": 2034.0,
+    "real_round": 3,
+    "expected_round": 3.14
+  },
+  {
+    "year": 2010,
+    "team": "Cameroon",
+    "coach": "Paul Le Guen",
+    "foreign": true,
+    "elo_before_coach": 1804.0,
+    "real_round": 1,
+    "expected_round": 1.845
+  },
+  {
+    "year": 2010,
+    "team": "Chile",
+    "coach": "Marcelo Bielsa",
+    "foreign": true,
+    "elo_before_coach": 1788.0,
+    "real_round": 2,
+    "expected_round": 1.776
+  },
+  {
+    "year": 2010,
+    "team": "Denmark",
+    "coach": "Morten Olsen",
+    "foreign": false,
+    "elo_before_coach": 1882.0,
+    "real_round": 1,
+    "expected_round": 2.159
+  },
+  {
+    "year": 2010,
+    "team": "England",
+    "coach": "Fabio Capello",
+    "foreign": true,
+    "elo_before_coach": 1972.0,
+    "real_round": 2,
+    "expected_round": 2.698
+  },
+  {
+    "year": 2010,
+    "team": "France",
+    "coach": "Raymond Domenech",
+    "foreign": false,
+    "elo_before_coach": 2093.0,
+    "real_round": 1,
+    "expected_round": 3.588
+  },
+  {
+    "year": 2010,
+    "team": "Germany",
+    "coach": "Joachim Löw",
+    "foreign": false,
+    "elo_before_coach": 1895.0,
+    "real_round": 4,
+    "expected_round": 2.239
+  },
+  {
+    "year": 2010,
+    "team": "Ghana",
+    "coach": "Milovan Rajevac",
+    "foreign": true,
+    "elo_before_coach": 1616.0,
+    "real_round": 3,
+    "expected_round": 1.34
+  },
+  {
+    "year": 2010,
+    "team": "Greece",
+    "coach": "Otto Rehhagel",
+    "foreign": true,
+    "elo_before_coach": 1688.0,
+    "real_round": 1,
+    "expected_round": 1.494
+  },
+  {
+    "year": 2010,
+    "team": "Honduras",
+    "coach": "Reinaldo Rueda",
+    "foreign": true,
+    "elo_before_coach": 1599.0,
+    "real_round": 1,
+    "expected_round": 1.313
+  },
+  {
+    "year": 2010,
+    "team": "Italy",
+    "coach": "Marcello Lippi",
+    "foreign": false,
+    "elo_before_coach": 2009.0,
+    "real_round": 1,
+    "expected_round": 2.945
+  },
+  {
+    "year": 2010,
+    "team": "Ivory Coast",
+    "coach": "Sven-Göran Eriksson",
+    "foreign": true,
+    "elo_before_coach": 1766.0,
+    "real_round": 1,
+    "expected_round": 1.703
+  },
+  {
+    "year": 2010,
+    "team": "Japan",
+    "coach": "Takeshi Okada",
+    "foreign": false,
+    "elo_before_coach": 1789.0,
+    "real_round": 2,
+    "expected_round": 1.797
+  },
+  {
+    "year": 2010,
+    "team": "Mexico",
+    "coach": "Javier Aguirre",
+    "foreign": false,
+    "elo_before_coach": 1838.0,
+    "real_round": 2,
+    "expected_round": 1.978
+  },
+  {
+    "year": 2010,
+    "team": "Netherlands",
+    "coach": "Bert van Marwijk",
+    "foreign": false,
+    "elo_before_coach": 1994.0,
+    "real_round": 5,
+    "expected_round": 2.821
+  },
+  {
+    "year": 2010,
+    "team": "New Zealand",
+    "coach": "Ricki Herbert",
+    "foreign": false,
+    "elo_before_coach": 1596.0,
+    "real_round": 1,
+    "expected_round": 1.319
+  },
+  {
+    "year": 2010,
+    "team": "Nigeria",
+    "coach": "Lars Lagerbäck",
+    "foreign": true,
+    "elo_before_coach": 1764.0,
+    "real_round": 1,
+    "expected_round": 1.696
+  },
+  {
+    "year": 2010,
+    "team": "North Korea",
+    "coach": "Kim Jong-hun",
+    "foreign": false,
+    "elo_before_coach": 1537.0,
+    "real_round": 1,
+    "expected_round": 1.229
+  },
+  {
+    "year": 2010,
+    "team": "Paraguay",
+    "coach": "Gerardo Martino",
+    "foreign": true,
+    "elo_before_coach": 1779.0,
+    "real_round": 3,
+    "expected_round": 1.751
+  },
+  {
+    "year": 2010,
+    "team": "Portugal",
+    "coach": "Carlos Queiroz",
+    "foreign": false,
+    "elo_before_coach": 1915.0,
+    "real_round": 2,
+    "expected_round": 2.337
+  },
+  {
+    "year": 2010,
+    "team": "Serbia",
+    "coach": "Radomir Antić",
+    "foreign": false,
+    "elo_before_coach": 1813.0,
+    "real_round": 1,
+    "expected_round": 1.873
+  },
+  {
+    "year": 2010,
+    "team": "Slovakia",
+    "coach": "Vladimír Weiss Sr.",
+    "foreign": false,
+    "elo_before_coach": 1670.0,
+    "real_round": 2,
+    "expected_round": 1.446
+  },
+  {
+    "year": 2010,
+    "team": "Slovenia",
+    "coach": "Matjaž Kek",
+    "foreign": false,
+    "elo_before_coach": 1745.0,
+    "real_round": 1,
+    "expected_round": 1.643
+  },
+  {
+    "year": 2010,
+    "team": "South Africa",
+    "coach": "Carlos Alberto Parreira",
+    "foreign": true,
+    "elo_before_coach": 1640.0,
+    "real_round": 1,
+    "expected_round": 1.393
+  },
+  {
+    "year": 2010,
+    "team": "South Korea",
+    "coach": "Huh Jung-moo",
+    "foreign": false,
+    "elo_before_coach": 1743.0,
+    "real_round": 2,
+    "expected_round": 1.644
+  },
+  {
+    "year": 2010,
+    "team": "Spain",
+    "coach": "Vicente del Bosque",
+    "foreign": false,
+    "elo_before_coach": 1965.0,
+    "real_round": 6,
+    "expected_round": 2.649
+  },
+  {
+    "year": 2010,
+    "team": "Switzerland",
+    "coach": "Ottmar Hitzfeld",
+    "foreign": true,
+    "elo_before_coach": 1800.0,
+    "real_round": 1,
+    "expected_round": 1.839
+  },
+  {
+    "year": 2010,
+    "team": "United States",
+    "coach": "Bob Bradley",
+    "foreign": false,
+    "elo_before_coach": 1824.0,
+    "real_round": 2,
+    "expected_round": 1.909
+  },
+  {
+    "year": 2010,
+    "team": "Uruguay",
+    "coach": "Óscar Tabárez",
+    "foreign": false,
+    "elo_before_coach": 1811.0,
+    "real_round": 4,
+    "expected_round": 1.865
+  },
+  {
+    "year": 2014,
+    "team": "Algeria",
+    "coach": "Vahid Halilhodžić",
+    "foreign": true,
+    "elo_before_coach": 1539.0,
+    "real_round": 2,
+    "expected_round": 1.202
+  },
+  {
+    "year": 2014,
+    "team": "Argentina",
+    "coach": "Alejandro Sabella",
+    "foreign": false,
+    "elo_before_coach": 1921.0,
+    "real_round": 5,
+    "expected_round": 2.341
+  },
+  {
+    "year": 2014,
+    "team": "Australia",
+    "coach": "Ange Postecoglou",
+    "foreign": false,
+    "elo_before_coach": 1775.0,
+    "real_round": 1,
+    "expected_round": 1.695
+  },
+  {
+    "year": 2014,
+    "team": "Belgium",
+    "coach": "Marc Wilmots",
+    "foreign": false,
+    "elo_before_coach": 1837.0,
+    "real_round": 3,
+    "expected_round": 1.932
+  },
+  {
+    "year": 2014,
+    "team": "Bosnia and Herzegovina",
+    "coach": "Safet Sušić",
+    "foreign": false,
+    "elo_before_coach": 1785.0,
+    "real_round": 1,
+    "expected_round": 1.73
+  },
+  {
+    "year": 2014,
+    "team": "Brazil",
+    "coach": "Luiz Felipe Scolari",
+    "foreign": false,
+    "elo_before_coach": 2109.0,
+    "real_round": 4,
+    "expected_round": 3.714
+  },
+  {
+    "year": 2014,
+    "team": "Cameroon",
+    "coach": "Volker Finke",
+    "foreign": true,
+    "elo_before_coach": 1694.0,
+    "real_round": 1,
+    "expected_round": 1.467
+  },
+  {
+    "year": 2014,
+    "team": "Chile",
+    "coach": "Jorge Sampaoli",
+    "foreign": true,
+    "elo_before_coach": 1886.0,
+    "real_round": 2,
+    "expected_round": 2.149
+  },
+  {
+    "year": 2014,
+    "team": "Colombia",
+    "coach": "José Pékerman",
+    "foreign": true,
+    "elo_before_coach": 1778.0,
+    "real_round": 3,
+    "expected_round": 1.707
+  },
+  {
+    "year": 2014,
+    "team": "Costa Rica",
+    "coach": "Jorge Luis Pinto",
+    "foreign": true,
+    "elo_before_coach": 1724.0,
+    "real_round": 3,
+    "expected_round": 1.551
+  },
+  {
+    "year": 2014,
+    "team": "Croatia",
+    "coach": "Niko Kovač",
+    "foreign": false,
+    "elo_before_coach": 1838.0,
+    "real_round": 1,
+    "expected_round": 1.924
+  },
+  {
+    "year": 2014,
+    "team": "Ecuador",
+    "coach": "Reinaldo Rueda",
+    "foreign": true,
+    "elo_before_coach": 1700.0,
+    "real_round": 1,
+    "expected_round": 1.484
+  },
+  {
+    "year": 2014,
+    "team": "England",
+    "coach": "Roy Hodgson",
+    "foreign": false,
+    "elo_before_coach": 2001.0,
+    "real_round": 1,
+    "expected_round": 2.862
+  },
+  {
+    "year": 2014,
+    "team": "France",
+    "coach": "Didier Deschamps",
+    "foreign": false,
+    "elo_before_coach": 1861.0,
+    "real_round": 3,
+    "expected_round": 2.033
+  },
+  {
+    "year": 2014,
+    "team": "Germany",
+    "coach": "Joachim Löw",
+    "foreign": false,
+    "elo_before_coach": 1895.0,
+    "real_round": 6,
+    "expected_round": 2.209
+  },
+  {
+    "year": 2014,
+    "team": "Ghana",
+    "coach": "James Kwesi Appiah",
+    "foreign": false,
+    "elo_before_coach": 1687.0,
+    "real_round": 1,
+    "expected_round": 1.46
+  },
+  {
+    "year": 2014,
+    "team": "Greece",
+    "coach": "Fernando Santos",
+    "foreign": true,
+    "elo_before_coach": 1735.0,
+    "real_round": 2,
+    "expected_round": 1.565
+  },
+  {
+    "year": 2014,
+    "team": "Honduras",
+    "coach": "Luis Fernando Suárez",
+    "foreign": true,
+    "elo_before_coach": 1714.0,
+    "real_round": 1,
+    "expected_round": 1.522
+  },
+  {
+    "year": 2014,
+    "team": "Iran",
+    "coach": "Carlos Queiroz",
+    "foreign": true,
+    "elo_before_coach": 1842.0,
+    "real_round": 1,
+    "expected_round": 1.954
+  },
+  {
+    "year": 2014,
+    "team": "Italy",
+    "coach": "Cesare Prandelli",
+    "foreign": false,
+    "elo_before_coach": 1936.0,
+    "real_round": 1,
+    "expected_round": 2.433
+  },
+  {
+    "year": 2014,
+    "team": "Ivory Coast",
+    "coach": "Sabri Lamouchi",
+    "foreign": true,
+    "elo_before_coach": 1739.0,
+    "real_round": 1,
+    "expected_round": 1.584
+  },
+  {
+    "year": 2014,
+    "team": "Japan",
+    "coach": "Alberto Zaccheroni",
+    "foreign": true,
+    "elo_before_coach": 1678.0,
+    "real_round": 1,
+    "expected_round": 1.434
+  },
+  {
+    "year": 2014,
+    "team": "Mexico",
+    "coach": "Miguel Herrera",
+    "foreign": false,
+    "elo_before_coach": 1898.0,
+    "real_round": 2,
+    "expected_round": 2.227
+  },
+  {
+    "year": 2014,
+    "team": "Netherlands",
+    "coach": "Louis van Gaal",
+    "foreign": false,
+    "elo_before_coach": 2043.0,
+    "real_round": 4,
+    "expected_round": 3.196
+  },
+  {
+    "year": 2014,
+    "team": "Nigeria",
+    "coach": "Stephen Keshi",
+    "foreign": false,
+    "elo_before_coach": 1713.0,
+    "real_round": 2,
+    "expected_round": 1.519
+  },
+  {
+    "year": 2014,
+    "team": "Portugal",
+    "coach": "Paulo Bento",
+    "foreign": false,
+    "elo_before_coach": 1876.0,
+    "real_round": 1,
+    "expected_round": 2.115
+  },
+  {
+    "year": 2014,
+    "team": "Russia",
+    "coach": "Fabio Capello",
+    "foreign": true,
+    "elo_before_coach": 1921.0,
+    "real_round": 1,
+    "expected_round": 2.349
+  },
+  {
+    "year": 2014,
+    "team": "South Korea",
+    "coach": "Hong Myung-bo",
+    "foreign": false,
+    "elo_before_coach": 1765.0,
+    "real_round": 1,
+    "expected_round": 1.669
+  },
+  {
+    "year": 2014,
+    "team": "Spain",
+    "coach": "Vicente del Bosque",
+    "foreign": false,
+    "elo_before_coach": 1965.0,
+    "real_round": 1,
+    "expected_round": 2.64
+  },
+  {
+    "year": 2014,
+    "team": "Switzerland",
+    "coach": "Ottmar Hitzfeld",
+    "foreign": true,
+    "elo_before_coach": 1800.0,
+    "real_round": 2,
+    "expected_round": 1.786
+  },
+  {
+    "year": 2014,
+    "team": "United States",
+    "coach": "Jürgen Klinsmann",
+    "foreign": true,
+    "elo_before_coach": 1785.0,
+    "real_round": 2,
+    "expected_round": 1.731
+  },
+  {
+    "year": 2014,
+    "team": "Uruguay",
+    "coach": "Óscar Tabárez",
+    "foreign": false,
+    "elo_before_coach": 1811.0,
+    "real_round": 2,
+    "expected_round": 1.816
+  },
+  {
+    "year": 2018,
+    "team": "Argentina",
+    "coach": "Jorge Sampaoli",
+    "foreign": false,
+    "elo_before_coach": 2018.0,
+    "real_round": 2,
+    "expected_round": 2.987
+  },
+  {
+    "year": 2018,
+    "team": "Australia",
+    "coach": "Bert van Marwijk",
+    "foreign": true,
+    "elo_before_coach": 1708.0,
+    "real_round": 1,
+    "expected_round": 1.531
+  },
+  {
+    "year": 2018,
+    "team": "Belgium",
+    "coach": "Roberto Martínez",
+    "foreign": true,
+    "elo_before_coach": 1851.0,
+    "real_round": 4,
+    "expected_round": 2.037
+  },
+  {
+    "year": 2018,
+    "team": "Brazil",
+    "coach": "Tite",
+    "foreign": false,
+    "elo_before_coach": 2138.0,
+    "real_round": 3,
+    "expected_round": 3.893
+  },
+  {
+    "year": 2018,
+    "team": "Colombia",
+    "coach": "José Pékerman",
+    "foreign": true,
+    "elo_before_coach": 1778.0,
+    "real_round": 2,
+    "expected_round": 1.744
+  },
+  {
+    "year": 2018,
+    "team": "Costa Rica",
+    "coach": "Óscar Ramírez",
+    "foreign": false,
+    "elo_before_coach": 1711.0,
+    "real_round": 1,
+    "expected_round": 1.538
+  },
+  {
+    "year": 2018,
+    "team": "Croatia",
+    "coach": "Zlatko Dalić",
+    "foreign": false,
+    "elo_before_coach": 1818.0,
+    "real_round": 5,
+    "expected_round": 1.872
+  },
+  {
+    "year": 2018,
+    "team": "Denmark",
+    "coach": "Åge Hareide",
+    "foreign": true,
+    "elo_before_coach": 1778.0,
+    "real_round": 2,
+    "expected_round": 1.743
+  },
+  {
+    "year": 2018,
+    "team": "Egypt",
+    "coach": "Héctor Cúper",
+    "foreign": true,
+    "elo_before_coach": 1627.0,
+    "real_round": 1,
+    "expected_round": 1.345
+  },
+  {
+    "year": 2018,
+    "team": "England",
+    "coach": "Gareth Southgate",
+    "foreign": false,
+    "elo_before_coach": 1931.0,
+    "real_round": 4,
+    "expected_round": 2.428
+  },
+  {
+    "year": 2018,
+    "team": "France",
+    "coach": "Didier Deschamps",
+    "foreign": false,
+    "elo_before_coach": 1861.0,
+    "real_round": 6,
+    "expected_round": 2.07
+  },
+  {
+    "year": 2018,
+    "team": "Germany",
+    "coach": "Joachim Löw",
+    "foreign": false,
+    "elo_before_coach": 1895.0,
+    "real_round": 1,
+    "expected_round": 2.235
+  },
+  {
+    "year": 2018,
+    "team": "Iceland",
+    "coach": "Heimir Hallgrímsson",
+    "foreign": false,
+    "elo_before_coach": 1764.0,
+    "real_round": 1,
+    "expected_round": 1.691
+  },
+  {
+    "year": 2018,
+    "team": "Iran",
+    "coach": "Carlos Queiroz",
+    "foreign": true,
+    "elo_before_coach": 1842.0,
+    "real_round": 1,
+    "expected_round": 1.974
+  },
+  {
+    "year": 2018,
+    "team": "Japan",
+    "coach": "Akira Nishino",
+    "foreign": false,
+    "elo_before_coach": 1785.0,
+    "real_round": 2,
+    "expected_round": 1.755
+  },
+  {
+    "year": 2018,
+    "team": "Mexico",
+    "coach": "Juan Carlos Osorio",
+    "foreign": true,
+    "elo_before_coach": 1814.0,
+    "real_round": 2,
+    "expected_round": 1.882
+  },
+  {
+    "year": 2018,
+    "team": "Morocco",
+    "coach": "Hervé Renard",
+    "foreign": true,
+    "elo_before_coach": 1726.0,
+    "real_round": 1,
+    "expected_round": 1.578
+  },
+  {
+    "year": 2018,
+    "team": "Nigeria",
+    "coach": "Gernot Rohr",
+    "foreign": true,
+    "elo_before_coach": 1727.0,
+    "real_round": 1,
+    "expected_round": 1.583
+  },
+  {
+    "year": 2018,
+    "team": "Panama",
+    "coach": "Hernán Darío Gómez",
+    "foreign": true,
+    "elo_before_coach": 1657.0,
+    "real_round": 1,
+    "expected_round": 1.399
+  },
+  {
+    "year": 2018,
+    "team": "Peru",
+    "coach": "Ricardo Gareca",
+    "foreign": true,
+    "elo_before_coach": 1776.0,
+    "real_round": 1,
+    "expected_round": 1.73
+  },
+  {
+    "year": 2018,
+    "team": "Poland",
+    "coach": "Adam Nawałka",
+    "foreign": false,
+    "elo_before_coach": 1822.0,
+    "real_round": 1,
+    "expected_round": 1.901
+  },
+  {
+    "year": 2018,
+    "team": "Portugal",
+    "coach": "Fernando Santos",
+    "foreign": false,
+    "elo_before_coach": 1942.0,
+    "real_round": 2,
+    "expected_round": 2.508
+  },
+  {
+    "year": 2018,
+    "team": "Russia",
+    "coach": "Stanislav Cherchesov",
+    "foreign": false,
+    "elo_before_coach": 1921.0,
+    "real_round": 3,
+    "expected_round": 2.385
+  },
+  {
+    "year": 2018,
+    "team": "Saudi Arabia",
+    "coach": "Juan Antonio Pizzi",
+    "foreign": true,
+    "elo_before_coach": 1554.0,
+    "real_round": 1,
+    "expected_round": 1.237
+  },
+  {
+    "year": 2018,
+    "team": "Senegal",
+    "coach": "Aliou Cissé",
+    "foreign": false,
+    "elo_before_coach": 1698.0,
+    "real_round": 1,
+    "expected_round": 1.502
+  },
+  {
+    "year": 2018,
+    "team": "Serbia",
+    "coach": "Mladen Krstajić",
+    "foreign": false,
+    "elo_before_coach": 1813.0,
+    "real_round": 1,
+    "expected_round": 1.869
+  },
+  {
+    "year": 2018,
+    "team": "South Korea",
+    "coach": "Shin Tae-yong",
+    "foreign": false,
+    "elo_before_coach": 1667.0,
+    "real_round": 1,
+    "expected_round": 1.424
+  },
+  {
+    "year": 2018,
+    "team": "Spain",
+    "coach": "Fernando Hierro",
+    "foreign": false,
+    "elo_before_coach": 2107.0,
+    "real_round": 2,
+    "expected_round": 3.672
+  },
+  {
+    "year": 2018,
+    "team": "Sweden",
+    "coach": "Janne Andersson",
+    "foreign": false,
+    "elo_before_coach": 1859.0,
+    "real_round": 3,
+    "expected_round": 2.07
+  },
+  {
+    "year": 2018,
+    "team": "Switzerland",
+    "coach": "Vladimir Petković",
+    "foreign": true,
+    "elo_before_coach": 1855.0,
+    "real_round": 2,
+    "expected_round": 2.032
+  },
+  {
+    "year": 2018,
+    "team": "Tunisia",
+    "coach": "Nabil Maâloul",
+    "foreign": false,
+    "elo_before_coach": 1703.0,
+    "real_round": 1,
+    "expected_round": 1.508
+  },
+  {
+    "year": 2018,
+    "team": "Uruguay",
+    "coach": "Óscar Tabárez",
+    "foreign": false,
+    "elo_before_coach": 1811.0,
+    "real_round": 3,
+    "expected_round": 1.876
+  },
+  {
+    "year": 2022,
+    "team": "Argentina",
+    "coach": "Lionel Scaloni",
+    "foreign": false,
+    "elo_before_coach": 1985.0,
+    "real_round": 6,
+    "expected_round": 2.65
+  },
+  {
+    "year": 2022,
+    "team": "Australia",
+    "coach": "Graham Arnold",
+    "foreign": false,
+    "elo_before_coach": 1743.0,
+    "real_round": 2,
+    "expected_round": 1.593
+  },
+  {
+    "year": 2022,
+    "team": "Belgium",
+    "coach": "Roberto Martínez",
+    "foreign": true,
+    "elo_before_coach": 1851.0,
+    "real_round": 1,
+    "expected_round": 1.957
+  },
+  {
+    "year": 2022,
+    "team": "Brazil",
+    "coach": "Tite",
+    "foreign": false,
+    "elo_before_coach": 2138.0,
+    "real_round": 3,
+    "expected_round": 3.771
+  },
+  {
+    "year": 2022,
+    "team": "Cameroon",
+    "coach": "Rigobert Song",
+    "foreign": false,
+    "elo_before_coach": 1606.0,
+    "real_round": 1,
+    "expected_round": 1.3
+  },
+  {
+    "year": 2022,
+    "team": "Canada",
+    "coach": "John Herdman",
+    "foreign": true,
+    "elo_before_coach": 1647.0,
+    "real_round": 1,
+    "expected_round": 1.369
+  },
+  {
+    "year": 2022,
+    "team": "Costa Rica",
+    "coach": "Luis Fernando Suárez",
+    "foreign": true,
+    "elo_before_coach": 1742.0,
+    "real_round": 1,
+    "expected_round": 1.585
+  },
+  {
+    "year": 2022,
+    "team": "Croatia",
+    "coach": "Zlatko Dalić",
+    "foreign": false,
+    "elo_before_coach": 1818.0,
+    "real_round": 4,
+    "expected_round": 1.815
+  },
+  {
+    "year": 2022,
+    "team": "Denmark",
+    "coach": "Kasper Hjulmand",
+    "foreign": false,
+    "elo_before_coach": 1854.0,
+    "real_round": 1,
+    "expected_round": 1.962
+  },
+  {
+    "year": 2022,
+    "team": "Ecuador",
+    "coach": "Gustavo Alfaro",
+    "foreign": true,
+    "elo_before_coach": 1836.0,
+    "real_round": 1,
+    "expected_round": 1.892
+  },
+  {
+    "year": 2022,
+    "team": "England",
+    "coach": "Gareth Southgate",
+    "foreign": false,
+    "elo_before_coach": 1931.0,
+    "real_round": 3,
+    "expected_round": 2.341
+  },
+  {
+    "year": 2022,
+    "team": "France",
+    "coach": "Didier Deschamps",
+    "foreign": false,
+    "elo_before_coach": 1861.0,
+    "real_round": 5,
+    "expected_round": 1.998
+  },
+  {
+    "year": 2022,
+    "team": "Germany",
+    "coach": "Hans-Dieter Flick",
+    "foreign": false,
+    "elo_before_coach": 2076.0,
+    "real_round": 1,
+    "expected_round": 3.271
+  },
+  {
+    "year": 2022,
+    "team": "Ghana",
+    "coach": "Otto Addo",
+    "foreign": false,
+    "elo_before_coach": 1704.0,
+    "real_round": 1,
+    "expected_round": 1.487
+  },
+  {
+    "year": 2022,
+    "team": "Iran",
+    "coach": "Carlos Queiroz",
+    "foreign": true,
+    "elo_before_coach": 1842.0,
+    "real_round": 1,
+    "expected_round": 1.918
+  },
+  {
+    "year": 2022,
+    "team": "Japan",
+    "coach": "Hajime Moriyasu",
+    "foreign": false,
+    "elo_before_coach": 1684.0,
+    "real_round": 2,
+    "expected_round": 1.447
+  },
+  {
+    "year": 2022,
+    "team": "Mexico",
+    "coach": "Gerardo Martino",
+    "foreign": true,
+    "elo_before_coach": 1849.0,
+    "real_round": 1,
+    "expected_round": 1.951
+  },
+  {
+    "year": 2022,
+    "team": "Morocco",
+    "coach": "Walid Regragui",
+    "foreign": false,
+    "elo_before_coach": 1731.0,
+    "real_round": 4,
+    "expected_round": 1.558
+  },
+  {
+    "year": 2022,
+    "team": "Netherlands",
+    "coach": "Louis van Gaal",
+    "foreign": false,
+    "elo_before_coach": 2043.0,
+    "real_round": 3,
+    "expected_round": 3.031
+  },
+  {
+    "year": 2022,
+    "team": "Poland",
+    "coach": "Czesław Michniewicz",
+    "foreign": false,
+    "elo_before_coach": 1830.0,
+    "real_round": 2,
+    "expected_round": 1.861
+  },
+  {
+    "year": 2022,
+    "team": "Portugal",
+    "coach": "Fernando Santos",
+    "foreign": false,
+    "elo_before_coach": 1942.0,
+    "real_round": 3,
+    "expected_round": 2.386
+  },
+  {
+    "year": 2022,
+    "team": "Qatar",
+    "coach": "Félix Sánchez",
+    "foreign": true,
+    "elo_before_coach": 1680.0,
+    "real_round": 1,
+    "expected_round": 1.436
+  },
+  {
+    "year": 2022,
+    "team": "Saudi Arabia",
+    "coach": "Hervé Renard",
+    "foreign": true,
+    "elo_before_coach": 1588.0,
+    "real_round": 1,
+    "expected_round": 1.273
+  },
+  {
+    "year": 2022,
+    "team": "Senegal",
+    "coach": "Aliou Cissé",
+    "foreign": false,
+    "elo_before_coach": 1698.0,
+    "real_round": 2,
+    "expected_round": 1.47
+  },
+  {
+    "year": 2022,
+    "team": "Serbia",
+    "coach": "Dragan Stojković",
+    "foreign": false,
+    "elo_before_coach": 1813.0,
+    "real_round": 1,
+    "expected_round": 1.803
+  },
+  {
+    "year": 2022,
+    "team": "South Korea",
+    "coach": "Paulo Bento",
+    "foreign": true,
+    "elo_before_coach": 1713.0,
+    "real_round": 2,
+    "expected_round": 1.51
+  },
+  {
+    "year": 2022,
+    "team": "Spain",
+    "coach": "Luis Enrique",
+    "foreign": false,
+    "elo_before_coach": 2043.0,
+    "real_round": 2,
+    "expected_round": 3.039
+  },
+  {
+    "year": 2022,
+    "team": "Switzerland",
+    "coach": "Murat Yakin",
+    "foreign": false,
+    "elo_before_coach": 1888.0,
+    "real_round": 2,
+    "expected_round": 2.108
+  },
+  {
+    "year": 2022,
+    "team": "Tunisia",
+    "coach": "Jalel Kadri",
+    "foreign": false,
+    "elo_before_coach": 1651.0,
+    "real_round": 1,
+    "expected_round": 1.386
+  },
+  {
+    "year": 2022,
+    "team": "United States",
+    "coach": "Gregg Berhalter",
+    "foreign": false,
+    "elo_before_coach": 1857.0,
+    "real_round": 2,
+    "expected_round": 1.969
+  },
+  {
+    "year": 2022,
+    "team": "Uruguay",
+    "coach": "Diego Alonso",
+    "foreign": false,
+    "elo_before_coach": 1893.0,
+    "real_round": 1,
+    "expected_round": 2.141
+  },
+  {
+    "year": 2022,
+    "team": "Wales",
+    "coach": "Rob Page",
+    "foreign": false,
+    "elo_before_coach": 1789.0,
+    "real_round": 1,
+    "expected_round": 1.723
+  }
+]

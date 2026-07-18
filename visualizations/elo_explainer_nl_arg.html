@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How the Elo simulation works, end to end</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1:      #fcfcfb;
+    --page-plane:     #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --gridline:       #e1e0d9;
+    --baseline:       #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+    --nl-orange: #e8720c;
+    --arg-blue:  #5b9bd5;
+    --series-domestic: #bd6b4a;
+    --series-foreign:  #c9a227;
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .viz-root {
+    background: var(--page-plane);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--text-primary);
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+  }
+  .card {
+    width: 100%;
+    max-width: 1100px;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 24px 16px;
+  }
+  h1 {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .panels {
+    display: flex;
+    gap: 20px;
+    margin-top: 14px;
+    align-items: stretch;
+  }
+  .panel {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .panel + .panel {
+    border-left: 1px solid var(--gridline);
+    padding-left: 20px;
+  }
+  .panel__head {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+  }
+  .panel__sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .chart-wrap { position: relative; }
+  svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+  /* ---- left panel: one match ---- */
+  .team-box { fill: var(--surface-1); stroke-width: 1.5; }
+  .team-box--nl  { stroke: var(--nl-orange); }
+  .team-box--arg { stroke: var(--arg-blue); }
+  .team-flag { font-size: 20px; }
+  .team-name { font-size: 13px; font-weight: 600; fill: var(--text-primary); }
+  .team-elo  { font-size: 11px; fill: var(--text-secondary); font-variant-numeric: tabular-nums; }
+
+  .connector { fill: none; stroke: var(--gridline); stroke-width: 1.5; }
+  .connector--nl  { stroke: var(--nl-orange); opacity: 0.55; }
+  .connector--arg { stroke: var(--arg-blue); opacity: 0.55; }
+
+  .icon-bg { fill: var(--gridline); opacity: 0.5; }
+  .icon-nl  { fill: var(--nl-orange); }
+  .icon-arg { fill: var(--arg-blue); }
+
+  .col-label { font-size: 11.5px; font-weight: 600; fill: var(--text-primary); }
+  .col-sub   { font-size: 10.5px; fill: var(--text-muted); }
+
+  .icon-hit, .box-hit, .bar-hit { fill: transparent; cursor: pointer; }
+  .icon-col .icon-nl,
+  .icon-col .icon-arg { transition: filter 0.1s ease; }
+  .icon-col:hover .icon-nl,
+  .icon-col:hover .icon-arg { filter: brightness(0.93); }
+
+  .focus-group { transition: opacity 0.15s ease; }
+  #chartLeft:has(.focus-group:hover) .focus-group:not(:hover) { opacity: 0.32; }
+  #chartRight:has(.focus-group:hover) .focus-group:not(:hover) { opacity: 0.32; }
+
+  /* ---- right panel: full simulated bracket ---- */
+  .bar-bg { fill: var(--gridline); opacity: 0.5; }
+  .bar-domestic { fill: var(--series-domestic); }
+  .bar-foreign  { fill: var(--series-foreign); }
+  .stage-group .bar-domestic,
+  .stage-group .bar-foreign { transition: filter 0.1s ease; }
+  .stage-group:hover .bar-domestic,
+  .stage-group:hover .bar-foreign { filter: brightness(0.93); }
+
+  .champion-box {
+    fill: var(--surface-1);
+    stroke: var(--series-domestic);
+    stroke-width: 1.5;
+  }
+  .champion-label { font-size: 11px; font-weight: 600; fill: var(--text-primary); }
+  .champion-sub { font-size: 10px; fill: var(--text-secondary); }
+
+  .legend {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 8px;
+  }
+  .legend__item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    color: var(--text-secondary);
+  }
+  .legend__swatch {
+    width: 9px;
+    height: 9px;
+    border-radius: 2.5px;
+    flex-shrink: 0;
+  }
+  .legend__swatch--domestic { background: var(--series-domestic); }
+  .legend__swatch--foreign  { background: var(--series-foreign); }
+  .legend__swatch--nl  { background: var(--nl-orange); }
+  .legend__swatch--arg { background: var(--arg-blue); }
+
+  .tooltip {
+    position: absolute;
+    top: 0; left: 0;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 12.5px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, -100%);
+    transition: opacity 0.08s ease;
+    white-space: nowrap;
+    z-index: 5;
+  }
+  .tooltip__title {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+  .tooltip__row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: space-between;
+    margin-top: 3px;
+  }
+  .tooltip__key {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-secondary);
+  }
+  .tooltip__keyline {
+    width: 10px;
+    height: 2px;
+    border-radius: 1px;
+    flex-shrink: 0;
+  }
+  .tooltip__keyline--nl  { background: var(--nl-orange); }
+  .tooltip__keyline--arg { background: var(--arg-blue); }
+  .tooltip__keyline--domestic { background: var(--series-domestic); }
+  .tooltip__keyline--foreign  { background: var(--series-foreign); }
+  .tooltip__val {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+    margin-left: 14px;
+  }
+  .tooltip__pct {
+    color: var(--text-muted);
+    font-size: 11px;
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid var(--gridline);
+  }
+
+  .foot {
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid var(--gridline);
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+<div class="viz-root">
+  <div class="card">
+    <h1>How the Elo simulation works, end to end</h1>
+    <p class="subtitle">One real matchup, worked through by hand &mdash; then the same coin-flip-by-rating logic run across a full simulated tournament, 140,000 times, using each team's Elo rating from before their current coach arrived</p>
+
+    <div class="panels">
+      <div class="panel panel-left">
+        <div class="panel__head">One match: Netherlands 🇳🇱 vs Argentina 🇦🇷</div>
+        <div class="panel__sub">2022 World Cup quarterfinal, worked through by hand</div>
+        <div class="chart-wrap" id="chartWrapLeft">
+          <svg id="chartLeft" viewBox="0 0 420 325" preserveAspectRatio="xMidYMid meet"></svg>
+          <div class="tooltip" id="tooltipLeft"></div>
+        </div>
+      </div>
+
+      <div class="panel panel-right">
+        <div class="panel__head">One simulated tournament, run 20,000&times; per year</div>
+        <div class="panel__sub">32-team era (1998&ndash;2022), pre-coach Elo, re-bracketed and replayed each trial</div>
+        <div class="legend">
+          <div class="legend__item"><span class="legend__swatch legend__swatch--domestic"></span>Domestic-coached</div>
+          <div class="legend__item"><span class="legend__swatch legend__swatch--foreign"></span>Foreign-coached</div>
+        </div>
+        <div class="chart-wrap" id="chartWrapRight">
+          <svg id="chartRight" viewBox="0 0 620 480" preserveAspectRatio="xMidYMid meet"></svg>
+          <div class="tooltip" id="tooltipRight"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="foot">
+      Left: this is the exact calculation run for every match, at every round, in the simulation on the right &mdash; the stronger-rated team wins more often, but never certainly. In reality, the 2022 quarterfinal finished 2&ndash;2 after extra time; Argentina won 4&ndash;3 on penalties and went on to win the tournament. Right: each column pools every simulated tournament's outcome at that stage into one round-wide proportion; icons are a unit count (enough solid-foreign icons to cover the round's foreign share, one icon split for the remainder, the rest solid domestic) not individual teams. Elo ratings and win-probability formula: eloratings.net.
+    </div>
+  </div>
+</div>
+
+<script>
+function el(tag, attrs) {
+  const e = document.createElementNS("http://www.w3.org/2000/svg", tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  return e;
+}
+function text(attrs, content) {
+  const t = el("text", attrs);
+  t.textContent = content;
+  return t;
+}
+
+// =====================================================================
+// LEFT PANEL: one real match, Netherlands vs Argentina, 2022
+// =====================================================================
+(function () {
+  const NL  = { flag: "🇳🇱", name: "Netherlands", elo: 2040 };
+  const ARG = { flag: "🇦🇷", name: "Argentina",   elo: 2143 };
+  const P_ARG = 1 / (10 ** (-(ARG.elo - NL.elo) / 400) + 1);
+  const N_REPLAYS = 10;
+
+  const svg = document.getElementById("chartLeft");
+  const tooltip = document.getElementById("tooltipLeft");
+  const wrap = document.getElementById("chartWrapLeft");
+  // widened from 340 so the "Netherlands advances" legend label (which runs
+  // to ~x=400) actually fits inside the viewBox instead of hanging off the
+  // right edge; height follows to keep the aspect ratio matched to the right panel
+  const W = 420, H = 325;
+
+  // uniform offset that centers the whole drawing (team boxes + icon column +
+  // legend) inside the 420x325 viewBox -- measured from the actual content
+  // bounding box, since the viewBox is sized for the widest legend label,
+  // not for the drawing itself
+  const OX = 16, OY = 21;
+
+  const boxW = 150, boxH = 56;
+  const nlBox  = { x: 10 + OX, y: 50 + OY };
+  const argBox = { x: 10 + OX, y: 154 + OY };
+
+  function drawTeamBox(box, team, cls) {
+    const g = el("g", { class: "focus-group" });
+    g.appendChild(el("rect", { class: "team-box " + cls, x: box.x, y: box.y, width: boxW, height: boxH, rx: 10 }));
+    g.appendChild(text({ class: "team-flag", x: box.x + 16, y: box.y + 34 }, team.flag));
+    g.appendChild(text({ class: "team-name", x: box.x + 46, y: box.y + 24 }, team.name));
+    g.appendChild(text({ class: "team-elo",  x: box.x + 46, y: box.y + 42 }, "Elo " + team.elo));
+    g.appendChild(el("rect", { class: "box-hit", x: box.x, y: box.y, width: boxW, height: boxH, rx: 10 }));
+    svg.appendChild(g);
+  }
+  drawTeamBox(nlBox, NL, "team-box--nl");
+  drawTeamBox(argBox, ARG, "team-box--arg");
+
+  const iconColX = 250 + OX, iconW = 80, iconH = 14, iconGap = 5.5;
+  const iconColTop = 40 + OY;
+  const iconColCenterY = iconColTop + (N_REPLAYS * (iconH + iconGap) - iconGap) / 2;
+
+  function connector(fromBox, colorClass) {
+    const xSrc = fromBox.x + boxW, ySrc = fromBox.y + boxH / 2;
+    const xMid = (xSrc + iconColX) / 2;
+    svg.appendChild(el("path", {
+      class: "connector " + colorClass,
+      d: `M ${xSrc} ${ySrc} L ${xMid} ${ySrc} L ${xMid} ${iconColCenterY} L ${iconColX} ${iconColCenterY}`
+    }));
+  }
+  connector(nlBox, "connector--nl");
+  connector(argBox, "connector--arg");
+
+  svg.appendChild(text({ class: "col-label", x: iconColX + iconW / 2, y: iconColTop - 18, "text-anchor": "middle" }, "10 replays"));
+  svg.appendChild(text({ class: "col-sub", x: iconColX + iconW / 2, y: iconColTop - 4, "text-anchor": "middle" }, "who advances"));
+
+  const target = N_REPLAYS * P_ARG;
+  const k = Math.floor(target + 1e-9);
+  const iconCol = el("g", { class: "icon-col focus-group" });
+  for (let i = 0; i < N_REPLAYS; i++) {
+    const y = iconColTop + i * (iconH + iconGap);
+    iconCol.appendChild(el("rect", { class: "icon-bg", x: iconColX, y, width: iconW, height: iconH, rx: 3 }));
+    if (i < k) {
+      iconCol.appendChild(el("rect", { class: "icon-arg", x: iconColX, y, width: iconW, height: iconH, rx: 3 }));
+    } else if (i === k) {
+      const remainder = Math.min(Math.max(target - k, 0), 1);
+      const argW = iconW * remainder;
+      iconCol.appendChild(el("rect", { class: "icon-nl", x: iconColX, y, width: iconW, height: iconH, rx: 3 }));
+      if (remainder > 1e-9) {
+        iconCol.appendChild(el("rect", { class: "icon-arg", x: iconColX + iconW - argW, y, width: argW, height: iconH, rx: 3 }));
+      }
+    } else {
+      iconCol.appendChild(el("rect", { class: "icon-nl", x: iconColX, y, width: iconW, height: iconH, rx: 3 }));
+    }
+  }
+  const iconColBottom = iconColTop + N_REPLAYS * (iconH + iconGap) - iconGap;
+  const hit = el("rect", {
+    class: "icon-hit", x: iconColX - 6, y: iconColTop - 6,
+    width: iconW + 12, height: iconColBottom - iconColTop + 12
+  });
+  hit.addEventListener("pointerenter", showIconTooltip);
+  hit.addEventListener("pointermove", showIconTooltip);
+  hit.addEventListener("pointerleave", hideTooltip);
+  hit.addEventListener("focus", showIconTooltip);
+  hit.addEventListener("blur", hideTooltip);
+  hit.setAttribute("tabindex", "0");
+  iconCol.appendChild(hit);
+  svg.appendChild(iconCol);
+
+  function showIconTooltip() {
+    tooltip.innerHTML = "";
+    tooltip.appendChild(Object.assign(document.createElement("div"), { className: "tooltip__title", textContent: "10 replays of this matchup" }));
+
+    const rowArg = document.createElement("div");
+    rowArg.className = "tooltip__row";
+    const keyArg = document.createElement("span");
+    keyArg.className = "tooltip__key";
+    keyArg.appendChild(Object.assign(document.createElement("span"), { className: "tooltip__keyline tooltip__keyline--arg" }));
+    keyArg.appendChild(document.createTextNode("Argentina 🇦🇷"));
+    rowArg.appendChild(keyArg);
+    rowArg.appendChild(Object.assign(document.createElement("span"), { className: "tooltip__val", textContent: (P_ARG * 100).toFixed(1) + "%" }));
+    tooltip.appendChild(rowArg);
+
+    const rowNl = document.createElement("div");
+    rowNl.className = "tooltip__row";
+    const keyNl = document.createElement("span");
+    keyNl.className = "tooltip__key";
+    keyNl.appendChild(Object.assign(document.createElement("span"), { className: "tooltip__keyline tooltip__keyline--nl" }));
+    keyNl.appendChild(document.createTextNode("Netherlands 🇳🇱"));
+    rowNl.appendChild(keyNl);
+    rowNl.appendChild(Object.assign(document.createElement("span"), { className: "tooltip__val", textContent: ((1 - P_ARG) * 100).toFixed(1) + "%" }));
+    tooltip.appendChild(rowNl);
+
+    positionTooltip(svg, wrap, tooltip, W, iconColX + iconW / 2, iconColTop);
+  }
+  function hideTooltip() { tooltip.style.opacity = 0; }
+
+  const legendY = iconColTop + N_REPLAYS * (iconH + iconGap) + 10;
+  svg.appendChild(el("rect", { class: "icon-arg", x: iconColX, y: legendY, width: 10, height: 10, rx: 2 }));
+  svg.appendChild(text({ x: iconColX + 16, y: legendY + 9, class: "col-sub" }, "Argentina advances"));
+  svg.appendChild(el("rect", { class: "icon-nl", x: iconColX, y: legendY + 16, width: 10, height: 10, rx: 2 }));
+  svg.appendChild(text({ x: iconColX + 16, y: legendY + 25, class: "col-sub" }, "Netherlands advances"));
+})();
+
+function positionTooltip(svg, wrap, tooltip, W, cx, topY) {
+  const svgRect = svg.getBoundingClientRect();
+  const wrapRect = wrap.getBoundingClientRect();
+  const scale = svgRect.width / W;
+  const px = svgRect.left - wrapRect.left + cx * scale;
+  const py = svgRect.top - wrapRect.top + topY * scale - 10;
+  tooltip.style.left = px + "px";
+  tooltip.style.top = py + "px";
+  tooltip.style.opacity = 1;
+}
+
+// =====================================================================
+// RIGHT PANEL: full simulated bracket, pre-coach Elo, foreign vs domestic
+// =====================================================================
+(function () {
+  // From coach_bracket_montecarlo_elo_precoach.py -- 140,000 trials
+  // (20,000 per year x 7 years, 1998-2022), matches decided by real Elo
+  // ratings from before each team's current coach arrived.
+  const STAGES = [
+    { key: "group", label: "Group Stage",   pct: 36.2, bars: 16 },
+    { key: "r16",   label: "Round of 16",   pct: 29.9, bars: 8  },
+    { key: "qf",    label: "Quarterfinals", pct: 23.9, bars: 4  },
+    { key: "sf",    label: "Semifinals",    pct: 18.3, bars: 2  },
+    { key: "final", label: "Final",         pct: 13.6, bars: 1  }
+  ];
+  const CHAMPION_PCT = 9.8;
+
+  const svg = document.getElementById("chartRight");
+  const tooltip = document.getElementById("tooltipRight");
+  const wrap = document.getElementById("chartWrapRight");
+  const W = 620, H = 480; // matched to the left panel's aspect ratio (340x260) so both panels render the same height
+  const M = { top: 50, bottom: 10, left: 10 };
+  const plotH = H - M.top - M.bottom;
+
+  const nCols = STAGES.length;
+  const barW = 92;
+  const barH = 16;
+  const champGap = 40, champBoxW = 84, rightBuffer = 12;
+  // solve column spacing so the last bar + connector gap + champion box all
+  // fit inside W -- previously this used a fudge-factor divisor that didn't
+  // actually account for the champion box's real width, which clipped it.
+  const colGap = (W - M.left - barW - champGap - champBoxW - rightBuffer) / (nCols - 1);
+
+  const colX = STAGES.map((s, c) => M.left + c * colGap);
+  const colCenters = [];
+  colCenters[0] = [];
+  const slot0 = plotH / STAGES[0].bars;
+  for (let i = 0; i < STAGES[0].bars; i++) colCenters[0].push(M.top + slot0 * (i + 0.5));
+  for (let c = 1; c < nCols; c++) {
+    colCenters[c] = [];
+    const prev = colCenters[c - 1];
+    for (let i = 0; i < STAGES[c].bars; i++) colCenters[c].push((prev[2 * i] + prev[2 * i + 1]) / 2);
+  }
+
+  for (let c = 1; c < nCols; c++) {
+    const prev = colCenters[c - 1], cur = colCenters[c];
+    const xSrcRight = colX[c - 1] + barW, xDestLeft = colX[c], xMid = (xSrcRight + xDestLeft) / 2;
+    for (let i = 0; i < cur.length; i++) {
+      const yTop = prev[2 * i], yBottom = prev[2 * i + 1], yDest = cur[i];
+      svg.appendChild(el("path", { class: "connector", d: `M ${xSrcRight} ${yTop} L ${xMid} ${yTop} L ${xMid} ${yBottom} L ${xSrcRight} ${yBottom}` }));
+      svg.appendChild(el("path", { class: "connector", d: `M ${xMid} ${yDest} L ${xDestLeft} ${yDest}` }));
+    }
+  }
+  {
+    const xSrcRight = colX[nCols - 1] + barW, xDestLeft = xSrcRight + champGap, yDest = colCenters[nCols - 1][0];
+    svg.appendChild(el("path", { class: "connector", d: `M ${xSrcRight} ${yDest} L ${xDestLeft} ${yDest}` }));
+  }
+
+  STAGES.forEach((s, c) => {
+    const x = colX[c] + barW / 2;
+    svg.appendChild(text({ class: "col-label", x, y: M.top - 20, "text-anchor": "middle" }, s.label));
+    svg.appendChild(text({ class: "col-sub", x, y: M.top - 7, "text-anchor": "middle" }, s.pct + "% foreign"));
+  });
+
+  function barComposition(index, totalBars, pctForeign) {
+    const target = totalBars * (pctForeign / 100);
+    const k = Math.floor(target + 1e-9);
+    if (index < k) return { domFrac: 0, forFrac: 1 };
+    if (index === k) {
+      const remainder = Math.min(Math.max(target - k, 0), 1);
+      return { domFrac: 1 - remainder, forFrac: remainder };
+    }
+    return { domFrac: 1, forFrac: 0 };
+  }
+  function fillBar(g, x, y, domFrac, forFrac) {
+    if (domFrac <= 1e-9) {
+      g.appendChild(el("rect", { class: "bar-foreign", x, y, width: barW, height: barH, rx: 3 }));
+    } else if (forFrac <= 1e-9) {
+      g.appendChild(el("rect", { class: "bar-domestic", x, y, width: barW, height: barH, rx: 3 }));
+    } else {
+      const domW = barW * domFrac;
+      g.appendChild(el("rect", { class: "bar-domestic", x, y, width: domW, height: barH, rx: 3 }));
+      g.appendChild(el("rect", { class: "bar-foreign", x: x + domW - 3, y, width: barW - domW + 3, height: barH, rx: 3 }));
+    }
+  }
+
+  function addStageInteraction(group, stageData, hitX, hitY, hitW, hitH, anchorX, anchorY) {
+    const hit = el("rect", { class: "bar-hit", x: hitX, y: hitY, width: hitW, height: hitH });
+    hit.addEventListener("pointerenter", () => showStageTooltip(stageData, anchorX, anchorY));
+    hit.addEventListener("pointermove", () => showStageTooltip(stageData, anchorX, anchorY));
+    hit.addEventListener("pointerleave", hideTooltip);
+    hit.addEventListener("focus", () => showStageTooltip(stageData, anchorX, anchorY));
+    hit.addEventListener("blur", hideTooltip);
+    hit.setAttribute("tabindex", "0");
+    group.appendChild(hit);
+  }
+
+  STAGES.forEach((s, c) => {
+    const x = colX[c];
+    const g = el("g", { class: "stage-group focus-group" });
+    colCenters[c].forEach((cy, i) => {
+      const y = cy - barH / 2;
+      const { domFrac, forFrac } = barComposition(i, s.bars, s.pct);
+      g.appendChild(el("rect", { class: "bar-bg", x, y, width: barW, height: barH, rx: 3 }));
+      fillBar(g, x, y, domFrac, forFrac);
+    });
+    const top = colCenters[c][0] - barH / 2, bottom = colCenters[c][colCenters[c].length - 1] + barH / 2;
+    addStageInteraction(g, s, x - 4, top - 6, barW + 8, bottom - top + 12, x + barW / 2, top);
+    svg.appendChild(g);
+  });
+
+  {
+    const boxW = champBoxW, boxH = 58;
+    const bx = colX[nCols - 1] + barW + champGap, cy = colCenters[nCols - 1][0], by = cy - boxH / 2;
+    const box = el("g", { class: "stage-group focus-group" });
+    box.appendChild(el("rect", { class: "champion-box", x: bx, y: by, width: boxW, height: boxH, rx: 8 }));
+    box.appendChild(text({ class: "champion-label", x: bx + boxW / 2, y: by + 23, "text-anchor": "middle" }, "Champion"));
+    box.appendChild(text({ class: "champion-sub", x: bx + boxW / 2, y: by + 39, "text-anchor": "middle" }, CHAMPION_PCT + "% foreign"));
+    const championData = { label: "Champion", pct: CHAMPION_PCT };
+    addStageInteraction(box, championData, bx, by, boxW, boxH, bx + boxW / 2, by);
+    svg.appendChild(box);
+  }
+
+  function showStageTooltip(s, cx, topY) {
+    tooltip.innerHTML = "";
+    tooltip.appendChild(Object.assign(document.createElement("div"), { className: "tooltip__title", textContent: s.label + " (simulated)" }));
+
+    const rowDom = document.createElement("div");
+    rowDom.className = "tooltip__row";
+    const keyDom = document.createElement("span");
+    keyDom.className = "tooltip__key";
+    keyDom.appendChild(Object.assign(document.createElement("span"), { className: "tooltip__keyline tooltip__keyline--domestic" }));
+    keyDom.appendChild(document.createTextNode("Domestic"));
+    rowDom.appendChild(keyDom);
+    rowDom.appendChild(Object.assign(document.createElement("span"), { className: "tooltip__val", textContent: (100 - s.pct).toFixed(1) + "%" }));
+    tooltip.appendChild(rowDom);
+
+    const rowFor = document.createElement("div");
+    rowFor.className = "tooltip__row";
+    const keyFor = document.createElement("span");
+    keyFor.className = "tooltip__key";
+    keyFor.appendChild(Object.assign(document.createElement("span"), { className: "tooltip__keyline tooltip__keyline--foreign" }));
+    keyFor.appendChild(document.createTextNode("Foreign"));
+    rowFor.appendChild(keyFor);
+    rowFor.appendChild(Object.assign(document.createElement("span"), { className: "tooltip__val", textContent: s.pct.toFixed(1) + "%" }));
+    tooltip.appendChild(rowFor);
+
+    const pctRow = document.createElement("div");
+    pctRow.className = "tooltip__pct";
+    pctRow.textContent = "simulated share of teams still in at this stage that are foreign-coached";
+    tooltip.appendChild(pctRow);
+
+    positionTooltip(svg, wrap, tooltip, W, cx, topY);
+  }
+  function hideTooltip() { tooltip.style.opacity = 0; }
+})();
+</script>
+</body>
+</html>

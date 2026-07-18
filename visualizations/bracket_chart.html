@@ -1,0 +1,492 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How far foreign-coached teams make it at the World Cup</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1:      #fcfcfb;
+    --page-plane:     #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --gridline:       #e1e0d9;
+    --baseline:       #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+    --series-domestic: #bd6b4a;
+    --series-foreign:  #c9a227;
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .viz-root {
+    background: var(--page-plane);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--text-primary);
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+  }
+  .card {
+    width: 100%;
+    max-width: 1120px;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px 24px 14px;
+  }
+  .card__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+  h1 {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+    max-width: 560px;
+  }
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-shrink: 0;
+  }
+  .legend__item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+  }
+  .legend__swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 2.5px;
+    flex-shrink: 0;
+  }
+  .legend__swatch--domestic { background: var(--series-domestic); }
+  .legend__swatch--foreign  { background: var(--series-foreign); }
+
+  .chart-wrap {
+    position: relative;
+    margin-top: 0;
+  }
+  svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+  .col-label {
+    font-size: 11.5px;
+    font-weight: 600;
+    fill: var(--text-primary);
+  }
+  .col-pct {
+    font-size: 15px;
+    font-weight: 700;
+    fill: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+  }
+  .col-n {
+    font-size: 10.5px;
+    fill: var(--text-muted);
+  }
+  .col-label--muted { fill: var(--text-muted); font-weight: 500; }
+  .col-pct--muted { fill: var(--text-secondary); }
+
+  .dnq-divider {
+    stroke: var(--gridline);
+    stroke-width: 1;
+    stroke-dasharray: 3 3;
+  }
+
+  .connector {
+    fill: none;
+    stroke: var(--gridline);
+    stroke-width: 1.5;
+  }
+
+  .bar-bg { fill: var(--gridline); opacity: 0.5; }
+  .bar-domestic { fill: var(--series-domestic); }
+  .bar-foreign  { fill: var(--series-foreign); }
+  .bar-hit { fill: transparent; cursor: pointer; }
+
+  .stage-group { transition: opacity 0.15s ease; }
+  .stage-group .bar-domestic,
+  .stage-group .bar-foreign { transition: filter 0.1s ease; }
+  .stage-group:hover .bar-domestic,
+  .stage-group:hover .bar-foreign { filter: brightness(0.93); }
+
+  /* Hovering any one stage dims every other stage, so the hovered column reads as focused. */
+  #chart:has(.stage-group:hover) .stage-group:not(:hover) { opacity: 0.32; }
+
+  .champion-box {
+    fill: var(--surface-1);
+    stroke: var(--series-domestic);
+    stroke-width: 1.5;
+  }
+  .champion-label {
+    font-size: 11px;
+    font-weight: 600;
+    fill: var(--text-primary);
+  }
+  .champion-sub {
+    font-size: 10px;
+    fill: var(--text-secondary);
+  }
+
+  .tooltip {
+    position: absolute;
+    top: 0; left: 0;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 12.5px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, -100%);
+    transition: opacity 0.08s ease;
+    white-space: nowrap;
+    z-index: 5;
+  }
+  .tooltip__title {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+  .tooltip__row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: space-between;
+    margin-top: 3px;
+  }
+  .tooltip__key {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-secondary);
+  }
+  .tooltip__keyline {
+    width: 10px;
+    height: 2px;
+    border-radius: 1px;
+    flex-shrink: 0;
+  }
+  .tooltip__keyline--domestic { background: var(--series-domestic); }
+  .tooltip__keyline--foreign  { background: var(--series-foreign); }
+  .tooltip__val {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+    margin-left: 14px;
+  }
+  .tooltip__pct {
+    color: var(--text-muted);
+    font-size: 11px;
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid var(--gridline);
+  }
+
+  .foot {
+    margin-top: 4px;
+    padding-top: 10px;
+    border-top: 1px solid var(--gridline);
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+<div class="viz-root">
+  <div class="card">
+    <div class="card__head">
+      <div>
+        <h1>How far do foreign-coached teams get?</h1>
+        <p class="subtitle">Share of foreign- vs. domestic-born coaches among teams still standing at each stage, pooled across all 12 World Cups, 1978&ndash;2022</p>
+      </div>
+      <div class="legend">
+        <div class="legend__item"><span class="legend__swatch legend__swatch--domestic"></span>Domestic-born coach</div>
+        <div class="legend__item"><span class="legend__swatch legend__swatch--foreign"></span>Foreign-born coach</div>
+      </div>
+    </div>
+
+    <div class="chart-wrap" id="chartWrap">
+      <svg id="chart" viewBox="0 0 1120 300" preserveAspectRatio="xMidYMid meet"></svg>
+      <div class="tooltip" id="tooltip"></div>
+    </div>
+
+    <div class="foot">
+      Illustrative bracket &mdash; each column pools every team that reached that stage across all 12 tournaments into one round-wide proportion; it is not a single tournament's actual draw. Icons within a column aren't individual teams &mdash; they're a unit count: enough solid-foreign icons to cover the round's foreign share, one icon split to carry the remainder, the rest solid domestic, so the total colored area across the column matches the real percentage. "Did Not Qualify" is a separate pool of every non-qualifying campaign (not connected into the bracket, since those teams never advanced to Group Stage) shown alongside for comparison. Source: World Cup coach data compiled from Wikipedia, 1978&ndash;2022.
+    </div>
+  </div>
+</div>
+
+<script>
+// Teams that never made it out of qualifying -- shown as its own pool to the
+// left of Group Stage. It is NOT part of the elimination lineage (nothing
+// merges out of it into Group Stage), so it gets no bracket connectors.
+const DNQ = { key: "dnq", label: "Did Not Qualify", n: 1383, domestic: 942, foreign: 441, pct: 31.9, bars: 1 };
+
+const STAGES = [
+  { key: "group",  label: "Group Stage",   n: 336, domestic: 233, foreign: 103, pct: 30.7, bars: 16 },
+  { key: "r16",    label: "Round of 16",   n: 180, domestic: 136, foreign: 44,  pct: 24.4, bars: 8  },
+  { key: "qf",     label: "Quarterfinals", n: 100, domestic: 85,  foreign: 15,  pct: 15.0, bars: 4  },
+  { key: "sf",     label: "Semifinals",    n: 48,  domestic: 44,  foreign: 4,   pct: 8.3,  bars: 2  },
+  { key: "final",  label: "Final",         n: 24,  domestic: 23,  foreign: 1,   pct: 4.2,  bars: 1  }
+];
+const CHAMPION = { n: 12, domestic: 12, foreign: 0, pct: 0.0 };
+
+const svgNS = "http://www.w3.org/2000/svg";
+const svg = document.getElementById("chart");
+const tooltip = document.getElementById("tooltip");
+const wrap = document.getElementById("chartWrap");
+
+const W = 1120, H = 300;
+const M = { top: 42, right: 100, bottom: 6, left: 14 };
+const plotW = W - M.left - M.right;
+const plotH = H - M.top - M.bottom;
+
+const nCols = STAGES.length;
+const colGap = plotW / (nCols + 0.65); // one extra slot reserved for the DNQ column, plus room for the champion box
+const barW = 108;
+const barH = 10;
+
+function el(tag, attrs) {
+  const e = document.createElementNS(svgNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  return e;
+}
+
+// ---- DNQ column geometry (own row of 16, evenly spaced, aligned with Group Stage's rows) ----
+const dnqX = M.left;
+const dnqCenters = [];
+const dnqSlot = plotH / DNQ.bars;
+for (let i = 0; i < DNQ.bars; i++) {
+  dnqCenters.push(M.top + dnqSlot * (i + 0.5));
+}
+
+// ---- compute bar centers per column (Group Stage onward) ----
+// column 0 (Group Stage): evenly spaced across plotH, one slot to the right of DNQ
+const colX = STAGES.map((s, c) => M.left + (c + 1) * colGap);
+const colCenters = [];
+colCenters[0] = [];
+const slot0 = plotH / STAGES[0].bars;
+for (let i = 0; i < STAGES[0].bars; i++) {
+  colCenters[0].push(M.top + slot0 * (i + 0.5));
+}
+for (let c = 1; c < nCols; c++) {
+  colCenters[c] = [];
+  const prev = colCenters[c - 1];
+  for (let i = 0; i < STAGES[c].bars; i++) {
+    colCenters[c].push((prev[2 * i] + prev[2 * i + 1]) / 2);
+  }
+}
+
+// ---- connectors (drawn first, so bars sit on top) ----
+for (let c = 1; c < nCols; c++) {
+  const prev = colCenters[c - 1];
+  const cur = colCenters[c];
+  const xSrcRight = colX[c - 1] + barW;
+  const xDestLeft = colX[c];
+  const xMid = (xSrcRight + xDestLeft) / 2;
+  for (let i = 0; i < cur.length; i++) {
+    const yTop = prev[2 * i], yBottom = prev[2 * i + 1], yDest = cur[i];
+    svg.appendChild(el("path", {
+      class: "connector",
+      d: `M ${xSrcRight} ${yTop} L ${xMid} ${yTop} L ${xMid} ${yBottom} L ${xSrcRight} ${yBottom}`
+    }));
+    svg.appendChild(el("path", {
+      class: "connector",
+      d: `M ${xMid} ${yDest} L ${xDestLeft} ${yDest}`
+    }));
+  }
+}
+// connector from Final into the champion box
+{
+  const xSrcRight = colX[nCols - 1] + barW;
+  const xDestLeft = xSrcRight + 46;
+  const yDest = colCenters[nCols - 1][0];
+  svg.appendChild(el("path", { class: "connector", d: `M ${xSrcRight} ${yDest} L ${xDestLeft} ${yDest}` }));
+}
+
+// ---- divider between DNQ and the elimination bracket ----
+// No bracket connectors are drawn here on purpose: these teams didn't
+// advance into Group Stage, they're a separate pool shown for comparison.
+{
+  const xDiv = (dnqX + barW + colX[0]) / 2;
+  svg.appendChild(el("line", {
+    class: "dnq-divider", x1: xDiv, x2: xDiv, y1: M.top - 4, y2: H - M.bottom
+  }));
+}
+
+// ---- column headers ----
+svg.appendChild(Object.assign(el("text", { class: "col-label col-label--muted", x: dnqX + barW / 2, y: M.top - 30, "text-anchor": "middle" }), { textContent: DNQ.label }));
+svg.appendChild(Object.assign(el("text", { class: "col-pct col-pct--muted", x: dnqX + barW / 2, y: M.top - 14, "text-anchor": "middle" }), { textContent: DNQ.pct + "% foreign" }));
+
+STAGES.forEach((s, c) => {
+  const x = colX[c] + barW / 2;
+  svg.appendChild(Object.assign(el("text", { class: "col-label", x, y: M.top - 30, "text-anchor": "middle" }), { textContent: s.label }));
+  svg.appendChild(Object.assign(el("text", { class: "col-pct", x, y: M.top - 14, "text-anchor": "middle" }), { textContent: s.pct + "% foreign" }));
+});
+
+// ---- unit-visualization allocation ----
+// Instead of every bar in a column repeating the same fractional split
+// (redundant -- they all said the same thing), color whole bars solidly:
+// enough full-foreign bars to cover the round's foreign share, one bar
+// split to carry the fractional remainder, the rest solid domestic. The
+// TOTAL colored area across the column still equals the round's real
+// percentage; individual bars just read as whole units instead of clones.
+function barComposition(index, totalBars, pctForeign) {
+  const target = totalBars * (pctForeign / 100);
+  const k = Math.floor(target + 1e-9);
+  if (index < k) return { domFrac: 0, forFrac: 1 };
+  if (index === k) {
+    const remainder = Math.min(Math.max(target - k, 0), 1);
+    return { domFrac: 1 - remainder, forFrac: remainder };
+  }
+  return { domFrac: 1, forFrac: 0 };
+}
+
+function fillBar(g, x, y, domFrac, forFrac) {
+  if (domFrac <= 1e-9) {
+    g.appendChild(el("rect", { class: "bar-foreign", x, y, width: barW, height: barH, rx: 3 }));
+  } else if (forFrac <= 1e-9) {
+    g.appendChild(el("rect", { class: "bar-domestic", x, y, width: barW, height: barH, rx: 3 }));
+  } else {
+    const domW = barW * domFrac;
+    g.appendChild(el("rect", { class: "bar-domestic", x, y, width: domW, height: barH, rx: 3 }));
+    g.appendChild(el("rect", { class: "bar-foreign", x: x + domW - 3, y, width: barW - domW + 3, height: barH, rx: 3 }));
+  }
+}
+
+// ---- one shared hover target + tooltip per whole column, not per bar ----
+function addStageInteraction(group, stageData, hitX, hitY, hitW, hitH, anchorX, anchorY) {
+  const hit = el("rect", { class: "bar-hit", x: hitX, y: hitY, width: hitW, height: hitH });
+  hit.addEventListener("pointerenter", () => showTooltip(stageData, anchorX, anchorY));
+  hit.addEventListener("pointermove", () => showTooltip(stageData, anchorX, anchorY));
+  hit.addEventListener("pointerleave", hideTooltip);
+  hit.addEventListener("focus", () => showTooltip(stageData, anchorX, anchorY));
+  hit.addEventListener("blur", hideTooltip);
+  hit.setAttribute("tabindex", "0");
+  group.appendChild(hit);
+}
+
+// ---- DNQ bar(s) (own pool, no merge connectors) ----
+{
+  const g = el("g", { class: "stage-group" });
+  dnqCenters.forEach((cy, i) => {
+    const y = cy - barH / 2;
+    const { domFrac, forFrac } = barComposition(i, DNQ.bars, DNQ.pct);
+    g.appendChild(el("rect", { class: "bar-bg", x: dnqX, y, width: barW, height: barH, rx: 3 }));
+    fillBar(g, dnqX, y, domFrac, forFrac);
+  });
+  const top = dnqCenters[0] - barH / 2, bottom = dnqCenters[dnqCenters.length - 1] + barH / 2;
+  addStageInteraction(g, DNQ, dnqX - 4, top - 6, barW + 8, bottom - top + 12, dnqX + barW / 2, top);
+  svg.appendChild(g);
+}
+
+// ---- bars ----
+STAGES.forEach((s, c) => {
+  const x = colX[c];
+  const g = el("g", { class: "stage-group" });
+  colCenters[c].forEach((cy, i) => {
+    const y = cy - barH / 2;
+    const { domFrac, forFrac } = barComposition(i, s.bars, s.pct);
+    g.appendChild(el("rect", { class: "bar-bg", x, y, width: barW, height: barH, rx: 3 }));
+    fillBar(g, x, y, domFrac, forFrac);
+  });
+  const top = colCenters[c][0] - barH / 2, bottom = colCenters[c][colCenters[c].length - 1] + barH / 2;
+  addStageInteraction(g, s, x - 4, top - 6, barW + 8, bottom - top + 12, x + barW / 2, top);
+  svg.appendChild(g);
+});
+
+// ---- champion box ----
+{
+  const boxW = 92, boxH = 54;
+  const cx = colX[nCols - 1] + barW + 46;
+  const cy = colCenters[nCols - 1][0];
+  const bx = cx, by = cy - boxH / 2;
+  const box = el("g", { class: "stage-group" });
+  box.appendChild(el("rect", { class: "champion-box", x: bx, y: by, width: boxW, height: boxH, rx: 8 }));
+  const label = el("text", { class: "champion-label", x: bx + boxW / 2, y: by + 21, "text-anchor": "middle" });
+  label.textContent = "Champion";
+  box.appendChild(label);
+  const sub = el("text", { class: "champion-sub", x: bx + boxW / 2, y: by + 38, "text-anchor": "middle" });
+  sub.textContent = "100% domestic";
+  box.appendChild(sub);
+  const championData = { label: "Champion", n: CHAMPION.n, domestic: CHAMPION.domestic, foreign: CHAMPION.foreign, pct: CHAMPION.pct };
+  addStageInteraction(box, championData, bx, by, boxW, boxH, bx + boxW / 2, by);
+  svg.appendChild(box);
+}
+
+function showTooltip(s, cx, topY) {
+  tooltip.innerHTML = "";
+  const title = document.createElement("div");
+  title.className = "tooltip__title";
+  title.textContent = s.label + " — " + s.n + " team-appearances";
+  tooltip.appendChild(title);
+
+  const rowDom = document.createElement("div");
+  rowDom.className = "tooltip__row";
+  const keyDom = document.createElement("span");
+  keyDom.className = "tooltip__key";
+  const lineDom = document.createElement("span");
+  lineDom.className = "tooltip__keyline tooltip__keyline--domestic";
+  keyDom.appendChild(lineDom);
+  keyDom.appendChild(document.createTextNode("Domestic"));
+  const valDom = document.createElement("span");
+  valDom.className = "tooltip__val";
+  valDom.textContent = s.domestic;
+  rowDom.appendChild(keyDom);
+  rowDom.appendChild(valDom);
+  tooltip.appendChild(rowDom);
+
+  const rowFor = document.createElement("div");
+  rowFor.className = "tooltip__row";
+  const keyFor = document.createElement("span");
+  keyFor.className = "tooltip__key";
+  const lineFor = document.createElement("span");
+  lineFor.className = "tooltip__keyline tooltip__keyline--foreign";
+  keyFor.appendChild(lineFor);
+  keyFor.appendChild(document.createTextNode("Foreign"));
+  const valFor = document.createElement("span");
+  valFor.className = "tooltip__val";
+  valFor.textContent = s.foreign;
+  rowFor.appendChild(keyFor);
+  rowFor.appendChild(valFor);
+  tooltip.appendChild(rowFor);
+
+  const pct = document.createElement("div");
+  pct.className = "tooltip__pct";
+  pct.textContent = s.pct + "% of coaches at this stage were foreign-born";
+  tooltip.appendChild(pct);
+
+  const svgRect = svg.getBoundingClientRect();
+  const wrapRect = wrap.getBoundingClientRect();
+  const scale = svgRect.width / W;
+  const px = svgRect.left - wrapRect.left + cx * scale;
+  const py = svgRect.top - wrapRect.top + topY * scale - 10;
+  tooltip.style.left = px + "px";
+  tooltip.style.top = py + "px";
+  tooltip.style.opacity = 1;
+}
+function hideTooltip() {
+  tooltip.style.opacity = 0;
+}
+</script>
+</body>
+</html>

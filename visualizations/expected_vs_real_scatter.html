@@ -1,0 +1,694 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulated vs. actual: how far did teams really get?</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1:      #fcfcfb;
+    --page-plane:     #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --gridline:       #e1e0d9;
+    --baseline:       #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+    --series-domestic: #bd6b4a;
+    --series-foreign:  #c9a227;
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .viz-root {
+    background: var(--page-plane);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--text-primary);
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+  }
+  .card {
+    width: 100%;
+    max-width: 760px;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px 24px 16px;
+  }
+  .card__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  h1 {
+    font-size: 17px;
+    font-weight: 600;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.5;
+    max-width: 520px;
+  }
+  .legend { display: flex; gap: 16px; flex-shrink: 0; }
+  .legend__item {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12.5px; color: var(--text-secondary);
+  }
+  .legend__swatch { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .legend__swatch--domestic { background: var(--series-domestic); }
+  .legend__swatch--foreign  { background: var(--series-foreign); }
+
+  .chart-wrap { position: relative; margin-top: 12px; }
+  svg, canvas {
+    display: block;
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .chart-sizer { position: relative; width: 100%; }
+
+  .axis-title { font-size: 11.5px; fill: var(--text-secondary); font-weight: 500; }
+  .tick-label { font-size: 10px; fill: var(--text-muted); }
+  .grid-line { stroke: var(--gridline); stroke-width: 1; }
+  .diag-line { stroke: var(--baseline); stroke-width: 1.5; stroke-dasharray: 4 4; }
+  .diag-label { font-size: 10px; fill: var(--text-muted); font-style: italic; }
+  .region-arrow { stroke: var(--text-secondary); stroke-width: 1.3; fill: none; }
+  .region-label { font-size: 10.5px; fill: var(--text-secondary); font-weight: 500; }
+  .avg-line-domestic { stroke: var(--series-domestic); stroke-width: 1.4; stroke-dasharray: 6 4; opacity: 0.75; }
+  .avg-line-foreign  { stroke: var(--series-foreign);  stroke-width: 1.4; stroke-dasharray: 6 4; opacity: 0.75; }
+  .avg-line-label { font-size: 10px; font-weight: 500; font-style: italic; }
+
+  .tooltip {
+    position: absolute;
+    top: 0; left: 0;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 9px 11px;
+    font-size: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, -100%);
+    transition: opacity 0.08s ease;
+    white-space: nowrap;
+    z-index: 5;
+  }
+  .tooltip__title { font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+  .tooltip__row { color: var(--text-secondary); margin-top: 2px; }
+  .tooltip__row b { color: var(--text-primary); font-variant-numeric: tabular-nums; }
+
+  .foot {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--gridline);
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  #chartAnnotations { pointer-events: none; }
+  .annotation-arrow { stroke: var(--text-secondary); stroke-width: 1.3; fill: none; stroke-dasharray: 1.5 3; stroke-linecap: round; }
+  .annotation-dot-ring { fill: none; stroke: var(--text-secondary); stroke-width: 1.3; }
+  .annotation-bg { fill: var(--surface-1); stroke: var(--border); stroke-width: 1; }
+  .annotation-text { font-size: 11px; fill: var(--text-primary); font-weight: 500; }
+
+  /* Searchable Filter Styles */
+  .controls-wrap {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .search-container {
+    position: relative;
+    width: 200px;
+  }
+  .search-container input {
+    width: 100%;
+    height: 32px;
+    padding: 6px 28px 6px 28px;
+    font-size: 12.5px;
+    border: 1px solid var(--gridline);
+    border-radius: 8px;
+    background: var(--surface-1);
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .search-container input:focus {
+    border-color: var(--text-muted);
+    box-shadow: 0 0 0 2px rgba(11,11,11,0.05);
+  }
+  .search-icon {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+  #clearSearch {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+    display: none;
+  }
+  #clearSearch:hover {
+    color: var(--text-primary);
+  }
+  .dropdown-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-top: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 10;
+    display: none;
+  }
+  .dropdown-item {
+    padding: 8px 12px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    user-select: none;
+  }
+  .dropdown-item:hover, .dropdown-item.active {
+    background: var(--page-plane);
+    color: var(--text-primary);
+  }
+</style>
+</head>
+<body>
+<div class="viz-root">
+  <div class="card">
+    <div class="card__head">
+      <div style="flex: 1; min-width: 280px; margin-bottom: 8px;">
+        <h1>Simulated vs. actual: how far did teams really get?</h1>
+        <p class="subtitle">Every dot is one team in one World Cup (1998&ndash;2022, 32-team era). X: the round Elo alone predicted, on average, across 20,000 re-bracketed replays of that specific year. Y: the round they actually reached.</p>
+      </div>
+      <div class="controls-wrap">
+        <div class="search-container">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="countrySearch" placeholder="Search country..." autocomplete="off">
+          <button id="clearSearch">&times;</button>
+          <div class="dropdown-list" id="dropdownList"></div>
+        </div>
+        <div class="legend">
+          <div class="legend__item"><span class="legend__swatch legend__swatch--domestic"></span>Domestic-coached</div>
+          <div class="legend__item"><span class="legend__swatch legend__swatch--foreign"></span>Foreign-coached</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-wrap" id="chartWrap">
+      <div class="chart-sizer" id="chartSizer" style="padding-top: 90.43%;">
+        <svg id="chartSvg" viewBox="0 0 700 633" preserveAspectRatio="xMidYMid meet"></svg>
+        <canvas id="chartCanvas"></canvas>
+        <svg id="chartAnnotations" viewBox="0 0 700 633" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
+      <div class="tooltip" id="tooltip"></div>
+    </div>
+
+    <div class="foot">
+      Points are jittered slightly within each real-round row so overlapping teams stay visible; the dashed line marks perfect calibration (expected = actual). Above the line: teams that overperformed their Elo-implied odds. Below: teams that underperformed. Simulation: pre-coach Elo ratings, per-year re-bracketed Monte Carlo (compute_expected_rounds.py). Correlation between expected and real round: 0.49.
+    </div>
+  </div>
+</div>
+
+<script>
+const ROUND_LABELS = ["", "Group Stage", "Round of 16", "Quarterfinals", "Semifinals", "Runners-up", "Champions"];
+
+const FLAGS = {
+  "Algeria": "🇩🇿", "Angola": "🇦🇴", "Argentina": "🇦🇷", "Australia": "🇦🇺",
+  "Austria": "🇦🇹", "Belgium": "🇧🇪", "Bosnia and Herzegovina": "🇧🇦", "Brazil": "🇧🇷",
+  "Bulgaria": "🇧🇬", "Cameroon": "🇨🇲", "Canada": "🇨🇦", "Chile": "🇨🇱",
+  "China PR": "🇨🇳", "Colombia": "🇨🇴", "Costa Rica": "🇨🇷", "Croatia": "🇭🇷",
+  "Czech Republic": "🇨🇿", "Denmark": "🇩🇰", "Ecuador": "🇪🇨", "Egypt": "🇪🇬",
+  "England": "🏴󠁧󠁢󠁥󠁮󠁧󠁿", "FR Yugoslavia": "🇷🇸", "France": "🇫🇷", "Germany": "🇩🇪",
+  "Ghana": "🇬🇭", "Greece": "🇬🇷", "Honduras": "🇭🇳", "Iceland": "🇮🇸",
+  "Iran": "🇮🇷", "Italy": "🇮🇹", "Ivory Coast": "🇨🇮", "Jamaica": "🇯🇲",
+  "Japan": "🇯🇵", "Mexico": "🇲🇽", "Morocco": "🇲🇦", "Netherlands": "🇳🇱",
+  "New Zealand": "🇳🇿", "Nigeria": "🇳🇬", "North Korea": "🇰🇵", "Norway": "🇳🇴",
+  "Panama": "🇵🇦", "Paraguay": "🇵🇾", "Peru": "🇵🇪", "Poland": "🇵🇱",
+  "Portugal": "🇵🇹", "Qatar": "🇶🇦", "Republic of Ireland": "🇮🇪", "Romania": "🇷🇴",
+  "Russia": "🇷🇺", "Saudi Arabia": "🇸🇦", "Scotland": "🏴󠁧󠁢󠁳󠁣󠁴󠁿", "Senegal": "🇸🇳",
+  "Serbia": "🇷🇸", "Serbia and Montenegro": "🇷🇸", "Slovakia": "🇸🇰", "Slovenia": "🇸🇮",
+  "South Africa": "🇿🇦", "South Korea": "🇰🇷", "Spain": "🇪🇸", "Sweden": "🇸🇪",
+  "Switzerland": "🇨🇭", "Togo": "🇹🇬", "Trinidad and Tobago": "🇹🇹", "Tunisia": "🇹🇳",
+  "Turkey": "🇹🇷", "Ukraine": "🇺🇦", "United States": "🇺🇸", "Uruguay": "🇺🇾",
+  "Wales": "🏴󠁧󠁢󠁷󠁬󠁳󠁿",
+};
+
+fetch("expected_rounds.json")
+  .then(r => r.json())
+  .then(data => render(data))
+  .catch(err => {
+    document.getElementById("chartWrap").innerHTML =
+      '<p style="color:#a33;font-size:12px;">Could not load expected_rounds.json ' +
+      '(open this file over http://, not file://, or run it alongside a local server) &mdash; ' + err + '</p>';
+  });
+
+function render(data) {
+  const svgNS = "http://www.w3.org/2000/svg";
+  const svg = document.getElementById("chartSvg");
+  const canvas = document.getElementById("chartCanvas");
+  const sizer = document.getElementById("chartSizer");
+  const wrap = document.getElementById("chartWrap");
+  const tooltip = document.getElementById("tooltip");
+
+  const W = 700, H = 633;
+  // left margin has to fit the widest y tick label ("Quarterfinals") plus
+  // the rotated axis title -- 46px clipped it off the edge of the viewBox.
+  // top margin is enlarged to give the Argentina annotation its own space
+  // above the plot instead of overlapping the dots.
+  const M = { top: 75, right: 16, bottom: 78, left: 104 };
+  const plotW = W - M.left - M.right;
+  const plotH = H - M.top - M.bottom;
+
+  const X_MIN = 0.8, X_MAX = 4.3;
+  const Y_MIN = 0.5, Y_MAX = 6.5;
+
+  function xPix(v) { return M.left + (v - X_MIN) / (X_MAX - X_MIN) * plotW; }
+  function yPix(v) { return M.top + (1 - (v - Y_MIN) / (Y_MAX - Y_MIN)) * plotH; }
+
+  function el(tag, attrs) {
+    const e = document.createElementNS(svgNS, tag);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    return e;
+  }
+  function text(attrs, content) {
+    const t = el("text", attrs);
+    t.textContent = content;
+    return t;
+  }
+
+  // ---- gridlines + axis ticks (y: 1-6 rows; x: every 0.5) ----
+  for (let v = 1; v <= 6; v++) {
+    svg.appendChild(el("line", { class: "grid-line", x1: M.left, x2: W - M.right, y1: yPix(v), y2: yPix(v) }));
+    const label = ROUND_LABELS[v];
+    svg.appendChild(text({ class: "tick-label", x: M.left - 6, y: yPix(v) + 3, "text-anchor": "end" }, label));
+  }
+  for (let v = 1; v <= 4; v++) {
+    svg.appendChild(el("line", { class: "grid-line", x1: xPix(v), x2: xPix(v), y1: M.top, y2: H - M.bottom }));
+    const xTickLabel = text({
+      class: "tick-label",
+      x: xPix(v),
+      y: H - M.bottom + 14,
+      "text-anchor": "end",
+      transform: `rotate(-30, ${xPix(v)}, ${H - M.bottom + 14})`
+    }, ROUND_LABELS[v]);
+    svg.appendChild(xTickLabel);
+  }
+
+  svg.appendChild(text({ class: "axis-title", x: M.left + plotW / 2, y: H - 4, "text-anchor": "middle" }, "Expected round (simulated, pre-coach Elo)"));
+  const yTitle = text({ class: "axis-title", x: 0, y: 0, "text-anchor": "middle" }, "Actual round reached");
+  yTitle.setAttribute("transform", `translate(12, ${M.top + plotH / 2}) rotate(-90)`);
+  svg.appendChild(yTitle);
+
+  // ---- diagonal reference line (y = x, clipped to plot area) ----
+  const dx1 = Math.max(X_MIN, Y_MIN), dx2 = Math.min(X_MAX, Y_MAX);
+  svg.appendChild(el("line", { class: "diag-line", x1: xPix(dx1), y1: yPix(dx1), x2: xPix(dx2), y2: yPix(dx2) }));
+
+  // ---- average horizontal lines for domestic vs foreign coaches ----
+  // Computed from the data at runtime so they always stay in sync with the JSON.
+  const domesticPts = data.filter(d => !d.foreign);
+  const foreignPts  = data.filter(d =>  d.foreign);
+  const avgRealDomestic = domesticPts.reduce((s, d) => s + d.real_round, 0) / domesticPts.length;
+  const avgRealForeign  = foreignPts .reduce((s, d) => s + d.real_round, 0) / foreignPts.length;
+
+  const lineX1 = M.left;
+  const lineX2 = W - M.right;
+  const labelX = lineX2 + 4;
+
+  // domestic average line
+  svg.appendChild(el("line", {
+    class: "avg-line-domestic",
+    x1: lineX1, x2: lineX2,
+    y1: yPix(avgRealDomestic), y2: yPix(avgRealDomestic)
+  }));
+  const domLabel = text({
+    class: "avg-line-label",
+    x: lineX2 - 4,
+    y: yPix(avgRealDomestic) - 4,
+    "text-anchor": "end",
+    fill: "var(--series-domestic)"
+  }, `Avg. national coach (${avgRealDomestic.toFixed(2)})`);
+  svg.appendChild(domLabel);
+
+  // foreign average line
+  svg.appendChild(el("line", {
+    class: "avg-line-foreign",
+    x1: lineX1, x2: lineX2,
+    y1: yPix(avgRealForeign), y2: yPix(avgRealForeign)
+  }));
+  const fgnLabel = text({
+    class: "avg-line-label",
+    x: lineX2 - 4,
+    y: yPix(avgRealForeign) + 12,
+    "text-anchor": "end",
+    fill: "var(--series-foreign)"
+  }, `Avg. foreign coach (${avgRealForeign.toFixed(2)})`);
+  svg.appendChild(fgnLabel);
+
+  // ---- deterministic jitter per point (seeded by index, so it's stable across renders/hovers) ----
+  function seededJitter(i) {
+    const s = Math.sin(i * 12.9898) * 43758.5453;
+    return ((s - Math.floor(s)) - 0.5) * 0.62; // spread within ~0.31 of the row center each way
+  }
+
+  const points = data.map((d, i) => ({
+    ...d,
+    px: xPix(d.expected_round),
+    py: yPix(d.real_round + seededJitter(i)),
+  }));
+
+  // ---- canvas: the actual data layer, drawn as alpha-blended dots so density shows through overlap ----
+  function sizeCanvas() {
+    const rect = sizer.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    const ctx = canvas.getContext("2d");
+    ctx.setTransform(dpr * rect.width / W, 0, 0, dpr * rect.height / H, 0, 0);
+    return ctx;
+  }
+
+  const domesticColor = getComputedStyle(document.documentElement).getPropertyValue("--series-domestic").trim() || "#bd6b4a";
+  const foreignColor = getComputedStyle(document.documentElement).getPropertyValue("--series-foreign").trim() || "#c9a227";
+
+  let selectedCountry = "";
+
+  function draw(highlightIdx) {
+    const ctx = sizeCanvas();
+    ctx.clearRect(0, 0, W, H);
+    
+    const filterCountry = selectedCountry ? selectedCountry.toLowerCase() : "";
+    
+    points.forEach((p, i) => {
+      const isHi = i === highlightIdx;
+      
+      let matchesFilter = true;
+      if (filterCountry) {
+        matchesFilter = p.team.toLowerCase() === filterCountry;
+      }
+      
+      ctx.beginPath();
+      ctx.arc(p.px, p.py, isHi ? 7 : (matchesFilter && filterCountry ? 5.8 : 4.8), 0, Math.PI * 2);
+      ctx.fillStyle = p.foreign ? foreignColor : domesticColor;
+      
+      if (filterCountry) {
+        ctx.globalAlpha = isHi ? 1 : (matchesFilter ? 0.95 : 0.12);
+      } else {
+        ctx.globalAlpha = isHi ? 1 : 0.82;
+      }
+      ctx.fill();
+      
+      if (filterCountry) {
+        ctx.globalAlpha = isHi ? 1 : (matchesFilter ? 0.8 : 0.12);
+        ctx.lineWidth = isHi ? 1.5 : (matchesFilter ? 1.0 : 0.5);
+      } else {
+        ctx.globalAlpha = isHi ? 1 : 0.6;
+        ctx.lineWidth = isHi ? 1.5 : 0.75;
+      }
+      ctx.strokeStyle = "#fcfcfb";
+      ctx.stroke();
+    });
+    ctx.globalAlpha = 1;
+  }
+  draw(-1);
+  window.addEventListener("resize", () => draw(-1));
+
+  // ---- search dropdown logic ----
+  const searchInput = document.getElementById("countrySearch");
+  const clearBtn = document.getElementById("clearSearch");
+  const dropdownList = document.getElementById("dropdownList");
+
+  // Extract all unique country names from points
+  const uniqueTeams = Array.from(new Set(points.map(p => p.team))).sort();
+
+  function populateDropdown(filterText = "") {
+    dropdownList.innerHTML = "";
+    const query = filterText.toLowerCase().trim();
+    
+    // Find matches
+    const matches = uniqueTeams.filter(team => 
+      team.toLowerCase().includes(query)
+    );
+
+    if (matches.length === 0) {
+      const noResults = document.createElement("div");
+      noResults.className = "dropdown-item";
+      noResults.style.color = "var(--text-muted)";
+      noResults.style.cursor = "default";
+      noResults.textContent = "No countries found";
+      dropdownList.appendChild(noResults);
+    } else {
+      matches.forEach(team => {
+        const item = document.createElement("div");
+        item.className = "dropdown-item";
+        if (team === selectedCountry) item.classList.add("active");
+        
+        const flag = FLAGS[team] || "🏳️";
+        item.innerHTML = `<span>${flag}</span> <span>${team}</span>`;
+        
+        item.addEventListener("mousedown", (ev) => {
+          ev.preventDefault();
+          selectCountry(team);
+        });
+        
+        dropdownList.appendChild(item);
+      });
+    }
+  }
+
+  function selectCountry(team) {
+    selectedCountry = team;
+    const flag = FLAGS[team] || "🏳️";
+    searchInput.value = `${flag} ${team}`;
+    clearBtn.style.display = "block";
+    dropdownList.style.display = "none";
+    draw(-1);
+  }
+
+  function clearSelection() {
+    selectedCountry = "";
+    searchInput.value = "";
+    clearBtn.style.display = "none";
+    dropdownList.style.display = "none";
+    draw(-1);
+  }
+
+  searchInput.addEventListener("focus", () => {
+    populateDropdown(selectedCountry ? "" : searchInput.value);
+    dropdownList.style.display = "block";
+    if (selectedCountry) {
+      searchInput.value = selectedCountry;
+      searchInput.select();
+    }
+  });
+
+  searchInput.addEventListener("input", () => {
+    populateDropdown(searchInput.value);
+    dropdownList.style.display = "block";
+  });
+
+  searchInput.addEventListener("blur", () => {
+    dropdownList.style.display = "none";
+    if (selectedCountry) {
+      const flag = FLAGS[selectedCountry] || "🏳️";
+      searchInput.value = `${flag} ${selectedCountry}`;
+    } else {
+      searchInput.value = "";
+    }
+  });
+
+  clearBtn.addEventListener("click", () => {
+    clearSelection();
+  });
+
+  searchInput.addEventListener("keydown", (ev) => {
+    if (ev.key === "Escape") {
+      dropdownList.style.display = "none";
+      searchInput.blur();
+    } else if (ev.key === "Enter") {
+      const firstItem = dropdownList.querySelector(".dropdown-item:not([style*='cursor: default'])");
+      if (firstItem) {
+        firstItem.dispatchEvent(new MouseEvent("mousedown"));
+        searchInput.blur();
+      }
+    }
+  });
+
+  // ---- callout annotations for specific, named team-years ----
+  const annoSvg = document.getElementById("chartAnnotations");
+
+  const defs = el("defs", {});
+  const marker = el("marker", { id: "arrowhead", viewBox: "0 0 10 10", refX: 8, refY: 5, markerWidth: 5, markerHeight: 5, orient: "auto-start-reverse" });
+  marker.appendChild(el("path", { d: "M 0 0 L 10 5 L 0 10 z", fill: "var(--text-secondary)" }));
+  defs.appendChild(marker);
+  annoSvg.appendChild(defs);
+
+  // box is centered on (boxCenterX, boxCenterY); the arrow autodetects which
+  // side of the box faces the dot, bows into a curve, and stops short of the
+  // dot's ring instead of running into it
+  function drawAnnotation(team, year, lines, boxCenterX, boxCenterY) {
+    const p = points.find(pt => pt.team === team && pt.year === year);
+    if (!p) return;
+
+    const lineH = 13.5;
+    const padX = 8, padY = 7;
+    const textW = Math.max(...lines.map(l => l.length)) * 6.0;
+    const boxW = textW + padX * 2;
+    const boxH = lines.length * lineH + padY * 2 - 3;
+    const boxX = boxCenterX - boxW / 2;
+    const boxY = boxCenterY - boxH / 2;
+
+    annoSvg.appendChild(el("circle", { class: "annotation-dot-ring", cx: p.px, cy: p.py, r: 8 }));
+
+    const exitRight = p.px >= boxCenterX;
+    const startX = exitRight ? boxX + boxW : boxX;
+    const startY = boxCenterY;
+
+    const dx = p.px - startX, dy = p.py - startY;
+    const dist = Math.hypot(dx, dy) || 1;
+    const stopShort = 12; // leave a gap before the ring instead of running into the dot
+    const endX = p.px - (dx / dist) * stopShort;
+    const endY = p.py - (dy / dist) * stopShort;
+    const midX = (startX + endX) / 2, midY = (startY + endY) / 2;
+    const perpX = -(dy / dist), perpY = dx / dist;
+    const bow = 20 * (exitRight ? 1 : -1);
+    const ctrlX = midX + perpX * bow, ctrlY = midY + perpY * bow;
+
+    annoSvg.appendChild(el("path", {
+      class: "annotation-arrow",
+      d: `M ${startX} ${startY} Q ${ctrlX} ${ctrlY} ${endX} ${endY}`,
+      "marker-end": "url(#arrowhead)"
+    }));
+
+    annoSvg.appendChild(el("rect", { class: "annotation-bg", x: boxX, y: boxY, width: boxW, height: boxH, rx: 6 }));
+    lines.forEach((line, i) => {
+      annoSvg.appendChild(text({
+        class: "annotation-text", x: boxX + padX, y: boxY + padY + i * lineH + 9
+      }, line));
+    });
+  }
+
+  drawAnnotation(
+    "Germany", 2014,
+    ["Given their pre-coach Elo, Joachim Löw", "led Germany to an unlikely", `victory in 2014 ${FLAGS["Germany"]}.`],
+    480, 45
+  );
+  // ---- "above/below the line" region arrows, straight up/down from a point on the diagonal ----
+  function diagPoint(t) {
+    return {
+      x: xPix(dx1) + t * (xPix(dx2) - xPix(dx1)),
+      y: yPix(dx1) + t * (yPix(dx2) - yPix(dx1)),
+    };
+  }
+  function drawRegionArrow(t, label, dir) {
+    // dir = -1 for "above" (arrow points up), +1 for "below" (arrow points down)
+    const p0 = diagPoint(t);
+    const startY = p0.y + dir * 9;
+    const endY = p0.y + dir * 40;
+    annoSvg.appendChild(el("path", {
+      class: "region-arrow",
+      d: `M ${p0.x} ${startY} L ${p0.x} ${endY}`,
+      "marker-end": "url(#arrowhead)"
+    }));
+    annoSvg.appendChild(text({
+      class: "region-label", x: p0.x, y: endY + dir * 11, "text-anchor": "middle"
+    }, label));
+  }
+  drawRegionArrow(0.90, "Coach overperformance", -1);
+  drawRegionArrow(0.90, "Coach underperformance", 1);
+
+  // ---- hover: nearest point within a small pixel radius ----
+  function nearestPoint(mx, my) {
+    let best = -1, bestD2 = 14 * 14; // hit radius in SVG viewBox units
+    points.forEach((p, i) => {
+      const d2 = (p.px - mx) ** 2 + (p.py - my) ** 2;
+      if (d2 < bestD2) { bestD2 = d2; best = i; }
+    });
+    return best;
+  }
+
+  function toChartCoords(clientX, clientY) {
+    const rect = sizer.getBoundingClientRect();
+    const scale = W / rect.width;
+    return { x: (clientX - rect.left) * scale, y: (clientY - rect.top) * scale };
+  }
+
+  canvas.addEventListener("pointermove", (ev) => {
+    const { x, y } = toChartCoords(ev.clientX, ev.clientY);
+    const idx = nearestPoint(x, y);
+    if (idx === -1) { draw(-1); hideTooltip(); return; }
+    draw(idx);
+    showTooltip(points[idx]);
+  });
+  canvas.addEventListener("pointerleave", () => { draw(-1); hideTooltip(); });
+
+  function showTooltip(p) {
+    tooltip.innerHTML = "";
+    const title = document.createElement("div");
+    title.className = "tooltip__title";
+    const flag = FLAGS[p.team] ? " " + FLAGS[p.team] : "";
+    title.textContent = p.team + flag + " " + p.year;
+    tooltip.appendChild(title);
+
+    const coachRow = document.createElement("div");
+    coachRow.className = "tooltip__row";
+    coachRow.textContent = p.coach + (p.foreign ? " (foreign)" : " (domestic)");
+    tooltip.appendChild(coachRow);
+
+    const expRow = document.createElement("div");
+    expRow.className = "tooltip__row";
+    expRow.innerHTML = "Expected: <b>" + p.expected_round.toFixed(2) + "</b> (" + ROUND_LABELS[Math.round(p.expected_round)] + "-ish)";
+    tooltip.appendChild(expRow);
+
+    const realRow = document.createElement("div");
+    realRow.className = "tooltip__row";
+    realRow.innerHTML = "Actually reached: <b>" + ROUND_LABELS[p.real_round] + "</b>";
+    tooltip.appendChild(realRow);
+
+    const rect = sizer.getBoundingClientRect();
+    const wrapRect = wrap.getBoundingClientRect();
+    const scale = rect.width / W;
+    const px = rect.left - wrapRect.left + p.px * scale;
+    const py = rect.top - wrapRect.top + p.py * scale - 10;
+    tooltip.style.left = px + "px";
+    tooltip.style.top = py + "px";
+    tooltip.style.opacity = 1;
+  }
+  function hideTooltip() { tooltip.style.opacity = 0; }
+}
+</script>
+</body>
+</html>
