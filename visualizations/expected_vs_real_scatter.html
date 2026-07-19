@@ -95,9 +95,9 @@
   .axis-title { font-size: 11.5px; fill: var(--text-secondary); font-weight: 500; }
   .tick-label { font-size: 10px; fill: var(--text-muted); }
   .grid-line { stroke: var(--gridline); stroke-width: 1; }
-  .diag-line { stroke: var(--baseline); stroke-width: 1.5; stroke-dasharray: 4 4; }
+  .overperform-region  { fill: #5b8fa8; opacity: 0.14; }
+  .underperform-region { fill: #bd6b4a; opacity: 0.14; }
   .diag-label { font-size: 10px; fill: var(--text-muted); font-style: italic; }
-  .region-arrow { stroke: var(--text-secondary); stroke-width: 1.3; fill: none; }
   .region-label { font-size: 10.5px; fill: var(--text-secondary); font-weight: 500; }
   .avg-line-domestic { stroke: var(--series-domestic); stroke-width: 1.4; stroke-dasharray: 6 4; opacity: 0.75; }
   .avg-line-foreign  { stroke: var(--series-foreign);  stroke-width: 1.4; stroke-dasharray: 6 4; opacity: 0.75; }
@@ -337,6 +337,20 @@ function render(data) {
     return t;
   }
 
+  // ---- shaded over/underperformance regions, split by the y=x diagonal ----
+  // (replaces a dashed reference line -- the diagonal only needs to be
+  // implied by the color boundary, not drawn on top of the dots)
+  const dx1 = Math.max(X_MIN, Y_MIN), dx2 = Math.min(X_MAX, Y_MAX);
+  function pt(x, y) { return `${xPix(x)},${yPix(y)}`; }
+  svg.appendChild(el("polygon", {
+    class: "overperform-region",
+    points: [pt(X_MIN, dx1), pt(X_MIN, Y_MAX), pt(X_MAX, Y_MAX), pt(X_MAX, dx2)].join(" ")
+  }));
+  svg.appendChild(el("polygon", {
+    class: "underperform-region",
+    points: [pt(X_MIN, dx1), pt(X_MAX, dx2), pt(X_MAX, Y_MIN), pt(X_MIN, Y_MIN)].join(" ")
+  }));
+
   // ---- gridlines + axis ticks (y: 1-6 rows; x: every 0.5) ----
   for (let v = 1; v <= 6; v++) {
     svg.appendChild(el("line", { class: "grid-line", x1: M.left, x2: W - M.right, y1: yPix(v), y2: yPix(v) }));
@@ -359,10 +373,6 @@ function render(data) {
   const yTitle = text({ class: "axis-title", x: 0, y: 0, "text-anchor": "middle" }, "Actual round reached");
   yTitle.setAttribute("transform", `translate(12, ${M.top + plotH / 2}) rotate(-90)`);
   svg.appendChild(yTitle);
-
-  // ---- diagonal reference line (y = x, clipped to plot area) ----
-  const dx1 = Math.max(X_MIN, Y_MIN), dx2 = Math.min(X_MAX, Y_MAX);
-  svg.appendChild(el("line", { class: "diag-line", x1: xPix(dx1), y1: yPix(dx1), x2: xPix(dx2), y2: yPix(dx2) }));
 
   // ---- best-fit trend lines for domestic vs foreign coaches ----
   // Computed from the data at runtime so they always stay in sync with the JSON.
@@ -664,29 +674,13 @@ function render(data) {
     ["Given their pre-coach Elo, Joachim Löw", "led Germany to an unlikely", `victory in 2014 ${FLAGS["Germany"]}.`],
     480, 45
   );
-  // ---- "above/below the line" region arrows, straight up/down from a point on the diagonal ----
-  function diagPoint(t) {
-    return {
-      x: xPix(dx1) + t * (xPix(dx2) - xPix(dx1)),
-      y: yPix(dx1) + t * (yPix(dx2) - yPix(dx1)),
-    };
-  }
-  function drawRegionArrow(t, label, dir) {
-    // dir = -1 for "above" (arrow points up), +1 for "below" (arrow points down)
-    const p0 = diagPoint(t);
-    const startY = p0.y + dir * 9;
-    const endY = p0.y + dir * 40;
-    annoSvg.appendChild(el("path", {
-      class: "region-arrow",
-      d: `M ${p0.x} ${startY} L ${p0.x} ${endY}`,
-      "marker-end": "url(#arrowhead)"
-    }));
-    annoSvg.appendChild(text({
-      class: "region-label", x: p0.x, y: endY + dir * 11, "text-anchor": "middle"
-    }, label));
-  }
-  drawRegionArrow(0.90, "Coach overperformance", -1);
-  drawRegionArrow(0.90, "Coach underperformance", 1);
+  // ---- "over/underperformance" labels, planted in opposite corners of their shaded region ----
+  annoSvg.appendChild(text({
+    class: "region-label", x: xPix(X_MIN) + 6, y: yPix(Y_MAX) + 14, "text-anchor": "start"
+  }, "Coach overperformance"));
+  annoSvg.appendChild(text({
+    class: "region-label", x: xPix(X_MAX) - 6, y: yPix(Y_MIN) - 6, "text-anchor": "end"
+  }, "Coach underperformance"));
 
   // ---- hover: nearest point within a small pixel radius ----
   function nearestPoint(mx, my) {
