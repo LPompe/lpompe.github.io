@@ -82,18 +82,6 @@
 
   .chart-wrap { position: relative; }
   svg { display: block; width: 100%; height: auto; overflow: visible; }
-  /* Squeeze both panels ~30% shorter than their natural aspect ratio without
-     leaving reserved whitespace: the wrap's own box is set to the shorter
-     ratio, and the svg is stretched non-uniformly (preserveAspectRatio="none")
-     to fill it exactly. */
-  #chartWrapLeft  { aspect-ratio: 420 / 227; }
-  #chartWrapRight { aspect-ratio: 620 / 336; }
-  #chartWrapLeft svg, #chartWrapRight svg {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%;
-    height: 100%;
-  }
 
   /* ---- left panel: one match ---- */
   .team-box { fill: var(--surface-1); stroke-width: 1.5; }
@@ -243,7 +231,7 @@
         <div class="panel__head">One match: Netherlands 🇳🇱 vs Argentina 🇦🇷</div>
         <div class="panel__sub">2022 World Cup quarterfinal, worked through by hand</div>
         <div class="chart-wrap" id="chartWrapLeft">
-          <svg id="chartLeft" viewBox="0 0 420 325" preserveAspectRatio="none"></svg>
+          <svg id="chartLeft" viewBox="0 0 420 231" preserveAspectRatio="xMidYMid meet"></svg>
           <div class="tooltip" id="tooltipLeft"></div>
         </div>
       </div>
@@ -256,7 +244,7 @@
           <div class="legend__item"><span class="legend__swatch legend__swatch--foreign"></span>Foreign-coached</div>
         </div>
         <div class="chart-wrap" id="chartWrapRight">
-          <svg id="chartRight" viewBox="0 0 620 480" preserveAspectRatio="none"></svg>
+          <svg id="chartRight" viewBox="0 0 620 341" preserveAspectRatio="xMidYMid meet"></svg>
           <div class="tooltip" id="tooltipRight"></div>
         </div>
       </div>
@@ -295,17 +283,19 @@ function text(attrs, content) {
   // widened from 340 so the "Netherlands advances" legend label (which runs
   // to ~x=400) actually fits inside the viewBox instead of hanging off the
   // right edge; height follows to keep the aspect ratio matched to the right panel
-  const W = 420, H = 325;
+  const W = 420, H = 231;
 
   // uniform offset that centers the whole drawing (team boxes + icon column +
-  // legend) inside the 420x325 viewBox -- measured from the actual content
+  // legend) inside the viewBox -- measured from the actual content
   // bounding box, since the viewBox is sized for the widest legend label,
   // not for the drawing itself
   const OX = 16, OY = 21;
 
   const boxW = 150, boxH = 56;
-  const nlBox  = { x: 10 + OX, y: 50 + OY };
-  const argBox = { x: 10 + OX, y: 154 + OY };
+  // y positions chosen so the midpoint between the two box centers lines up
+  // with the icon column's vertical center (iconColCenterY, defined below).
+  const nlBox  = { x: 10 + OX, y: 110 + OY };
+  const argBox = { x: 10 + OX, y: 30 + OY };
 
   function drawTeamBox(box, team, cls) {
     const g = el("g", { class: "focus-group" });
@@ -319,7 +309,7 @@ function text(attrs, content) {
   drawTeamBox(nlBox, NL, "team-box--nl");
   drawTeamBox(argBox, ARG, "team-box--arg");
 
-  const iconColX = 250 + OX, iconW = 80, iconH = 14, iconGap = 5.5;
+  const iconColX = 250 + OX, iconW = 80, iconH = 9, iconGap = 3;
   const iconColTop = 40 + OY;
   const iconColCenterY = iconColTop + (N_REPLAYS * (iconH + iconGap) - iconGap) / 2;
 
@@ -408,8 +398,6 @@ function text(attrs, content) {
 function positionTooltip(svg, wrap, tooltip, W, H, cx, topY) {
   const svgRect = svg.getBoundingClientRect();
   const wrapRect = wrap.getBoundingClientRect();
-  // The svg is stretched non-uniformly (preserveAspectRatio="none") to hit a
-  // shorter aspect ratio, so x and y need their own scale factors.
   const xScale = svgRect.width / W;
   const yScale = svgRect.height / H;
   const px = svgRect.left - wrapRect.left + cx * xScale;
@@ -452,13 +440,13 @@ function positionTooltip(svg, wrap, tooltip, W, H, cx, topY) {
   const svg = document.getElementById("chartRight");
   const tooltip = document.getElementById("tooltipRight");
   const wrap = document.getElementById("chartWrapRight");
-  const W = 620, H = 480; // matched to the left panel's aspect ratio (340x260) so both panels render the same height
+  const W = 620, H = 341; // matched to the left panel's aspect ratio (420x231) so both panels render the same height
   const M = { top: 50, bottom: 10, left: 10 };
   const plotH = H - M.top - M.bottom;
 
   const nCols = STAGES.length;
   const barW = 92;
-  const barH = 16;
+  const barH = 10;
   const champGap = 40, champBoxW = 84, rightBuffer = 12;
   // solve column spacing so the last bar + connector gap + champion box all
   // fit inside W -- previously this used a fudge-factor divisor that didn't
