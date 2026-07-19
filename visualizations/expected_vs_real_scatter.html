@@ -242,12 +242,12 @@
         </div>
         <div class="line-toggles">
           <label class="line-toggle">
-            <input type="checkbox" id="toggleDomesticTrend" checked>
+            <input type="checkbox" id="toggleDomesticTrend">
             <span class="line-toggle__swatch" style="--swatch-color: var(--series-domestic);"></span>
             Domestic trend
           </label>
           <label class="line-toggle">
-            <input type="checkbox" id="toggleForeignTrend" checked>
+            <input type="checkbox" id="toggleForeignTrend">
             <span class="line-toggle__swatch" style="--swatch-color: var(--series-foreign);"></span>
             Foreign trend
           </label>
@@ -396,29 +396,32 @@ function render(data) {
     return { x1: xLo, y1: slope * xLo + intercept, x2: xHi, y2: slope * xHi + intercept };
   }
 
-  function drawTrendLine(pts, cls, labelText, labelDy) {
+  function drawTrendLine(pts, cls, labelText, labelDy, startHidden) {
     const { slope, intercept } = linreg(pts);
     const seg = clipTrendLine(slope, intercept);
     if (!seg) return;
     const g = el("g", { class: "trend-line-group" });
+    if (startHidden) g.style.display = "none";
     g.appendChild(el("line", {
       class: cls,
       x1: xPix(seg.x1), y1: yPix(seg.y1),
       x2: xPix(seg.x2), y2: yPix(seg.y2)
     }));
+    // labeled at the left end of the segment -- the right side of the plot is
+    // where the "overperformance"/"underperformance" region labels live.
     g.appendChild(text({
       class: "avg-line-label",
-      x: xPix(seg.x2) - 4,
-      y: yPix(seg.y2) + labelDy,
-      "text-anchor": "end",
+      x: xPix(seg.x1) + 4,
+      y: yPix(seg.y1) + labelDy,
+      "text-anchor": "start",
       fill: `var(--${cls === "avg-line-domestic" ? "series-domestic" : "series-foreign"})`
     }, labelText));
     svg.appendChild(g);
     return g;
   }
 
-  const domTrendGroup = drawTrendLine(domesticPts, "avg-line-domestic", "Domestic-coached", -4);
-  const fgnTrendGroup = drawTrendLine(foreignPts, "avg-line-foreign", "Foreign-coached", 12);
+  const domTrendGroup = drawTrendLine(domesticPts, "avg-line-domestic", "Domestic-coached", -4, true);
+  const fgnTrendGroup = drawTrendLine(foreignPts, "avg-line-foreign", "Foreign-coached", 12, true);
 
   const domToggle = document.getElementById("toggleDomesticTrend");
   const fgnToggle = document.getElementById("toggleForeignTrend");
