@@ -244,12 +244,12 @@
         </div>
         <div class="line-toggles">
           <label class="line-toggle">
-            <input type="checkbox" id="toggleDomesticTrend">
+            <input type="checkbox" id="toggleDomesticTrend" autocomplete="off">
             <span class="line-toggle__swatch" style="--swatch-color: var(--series-domestic);"></span>
             Domestic trend
           </label>
           <label class="line-toggle">
-            <input type="checkbox" id="toggleForeignTrend">
+            <input type="checkbox" id="toggleForeignTrend" autocomplete="off">
             <span class="line-toggle__swatch" style="--swatch-color: var(--series-foreign);"></span>
             Foreign trend
           </label>
@@ -408,12 +408,11 @@ function render(data) {
     return { x1: xLo, y1: slope * xLo + intercept, x2: xHi, y2: slope * xHi + intercept };
   }
 
-  function drawTrendLine(pts, cls, labelText, labelDy, startHidden) {
+  function drawTrendLine(pts, cls, labelText, labelDy) {
     const { slope, intercept } = linreg(pts);
     const seg = clipTrendLine(slope, intercept);
     if (!seg) return;
     const g = el("g", { class: "trend-line-group" });
-    if (startHidden) g.style.display = "none";
     g.appendChild(el("line", {
       class: cls,
       x1: xPix(seg.x1), y1: yPix(seg.y1),
@@ -430,21 +429,25 @@ function render(data) {
     return g;
   }
 
-  const domTrendGroup = drawTrendLine(domesticPts, "avg-line-domestic", "Domestic-coached", -4, true);
-  const fgnTrendGroup = drawTrendLine(foreignPts, "avg-line-foreign", "Foreign-coached", 12, true);
+  const domTrendGroup = drawTrendLine(domesticPts, "avg-line-domestic", "Domestic-coached", -4);
+  const fgnTrendGroup = drawTrendLine(foreignPts, "avg-line-foreign", "Foreign-coached", 12);
 
   const domToggle = document.getElementById("toggleDomesticTrend");
   const fgnToggle = document.getElementById("toggleForeignTrend");
-  if (domTrendGroup && domToggle) {
-    domToggle.addEventListener("change", () => {
-      domTrendGroup.style.display = domToggle.checked ? "" : "none";
+  // The checkbox's checked state is the single source of truth for whether a
+  // trend line shows -- force it unchecked on load (some browsers restore a
+  // checkbox's checked state from before the last reload) and sync the line
+  // to match, instead of hardcoding the line's initial visibility separately.
+  function syncTrendVisibility(toggle, group) {
+    if (!toggle || !group) return;
+    toggle.checked = false;
+    group.style.display = "none";
+    toggle.addEventListener("change", () => {
+      group.style.display = toggle.checked ? "" : "none";
     });
   }
-  if (fgnTrendGroup && fgnToggle) {
-    fgnToggle.addEventListener("change", () => {
-      fgnTrendGroup.style.display = fgnToggle.checked ? "" : "none";
-    });
-  }
+  syncTrendVisibility(domToggle, domTrendGroup);
+  syncTrendVisibility(fgnToggle, fgnTrendGroup);
 
   // ---- deterministic jitter per point (seeded by index, so it's stable across renders/hovers) ----
   function seededJitter(i) {
