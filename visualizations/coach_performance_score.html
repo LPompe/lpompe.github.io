@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coach performance score: over/underperformance across every World Cup coached</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1:      #fcfcfb;
+    --page-plane:     #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --gridline:       #e1e0d9;
+    --baseline:       #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+    --series-domestic: #bd6b4a;
+    --series-foreign:  #c9a227;
+    --series-mixed:    #8a8a86;
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .viz-root {
+    background: var(--page-plane);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--text-primary);
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .card {
+    width: 100%;
+    max-width: 860px;
+    background: var(--surface-1);
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    overflow: visible;
+  }
+  .card__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+  h1 { font-size: 17px; font-weight: 600; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .subtitle { font-size: 13px; color: var(--text-secondary); margin: 0; line-height: 1.5; max-width: 560px; }
+
+  .legend { display: flex; gap: 16px; flex-shrink: 0; }
+  .legend__item { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--text-secondary); }
+  .legend__swatch { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .legend__swatch--domestic { background: var(--series-domestic); }
+  .legend__swatch--foreign  { background: var(--series-foreign); }
+  .legend__swatch--mixed    { background: var(--series-mixed); }
+
+  .chart-wrap { position: relative; margin-top: 14px; }
+  svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+  .overperform-half  { fill: #5b8fa8; opacity: 0.10; }
+  .underperform-half { fill: #bd6b4a; opacity: 0.10; }
+  .half-label { font-size: 12px; font-weight: 600; }
+  .half-label--over  { fill: #5b8fa8; }
+  .half-label--under { fill: #bd6b4a; }
+
+  .axis-line { stroke: var(--gridline); stroke-width: 1; }
+  .zero-line { stroke: var(--baseline); stroke-width: 1; }
+  .tick-label { font-size: 10.5px; fill: var(--text-muted); font-variant-numeric: tabular-nums; text-anchor: middle; }
+  .axis-title { font-size: 11.5px; fill: var(--text-secondary); font-weight: 500; text-anchor: middle; }
+
+  .avg-line-domestic { stroke: var(--series-domestic); stroke-width: 1.4; stroke-dasharray: 6 4; opacity: 0.8; }
+  .avg-line-foreign  { stroke: var(--series-foreign);  stroke-width: 1.4; stroke-dasharray: 6 4; opacity: 0.8; }
+  .avg-line-label { font-size: 10px; font-weight: 600; }
+
+  .dot { stroke: #fcfcfb; stroke-width: 1; cursor: pointer; }
+  .dot--domestic { fill: var(--series-domestic); }
+  .dot--foreign  { fill: var(--series-foreign); }
+  .dot--mixed    { fill: var(--series-mixed); }
+  .dot-hit { fill: transparent; }
+
+  .tooltip {
+    position: absolute;
+    top: 0; left: 0;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 9px 11px;
+    font-size: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.08s ease;
+    white-space: nowrap;
+    z-index: 5;
+  }
+  .tooltip__title { font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+  .tooltip__row { color: var(--text-secondary); margin-top: 2px; }
+  .tooltip__row b { color: var(--text-primary); font-variant-numeric: tabular-nums; }
+
+  .foot {
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid var(--gridline);
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+<div class="viz-root">
+  <div class="card">
+    <div class="card__head">
+      <div style="flex: 1; min-width: 280px;">
+        <h1>Coach performance score</h1>
+        <p class="subtitle">Each dot is one coach. Score = their average (actual round &minus; Elo-expected round) across every World Cup they coached &mdash; positive means they beat their teams' Elo-implied odds on average, negative means they fell short. The vertical spread has no meaning; it only keeps overlapping dots readable.</p>
+      </div>
+      <div class="legend">
+        <div class="legend__item"><span class="legend__swatch legend__swatch--domestic"></span>Domestic-coached</div>
+        <div class="legend__item"><span class="legend__swatch legend__swatch--foreign"></span>Foreign-coached</div>
+        <div class="legend__item"><span class="legend__swatch legend__swatch--mixed"></span>Both (different teams)</div>
+      </div>
+    </div>
+
+    <div class="chart-wrap" id="chartWrap">
+      <svg id="chart" viewBox="0 0 900 380" preserveAspectRatio="xMidYMid meet"></svg>
+      <div class="tooltip" id="tooltip"></div>
+    </div>
+
+    <div class="foot">
+      Reuses the per-team-year expected/actual rounds already computed for the "Simulated vs. actual" chart (no re-simulation needed) &mdash; a coach's score is just the mean of their own rows, grouped by coach name across every team and year they appear with. Dot size scales gently with how many World Cups that coach appears in. Vertical position is a deterministic beeswarm packing (fixed step size, not random jitter) so dots never overlap.
+    </div>
+  </div>
+</div>
+
+<script>
+const svgNS = "http://www.w3.org/2000/svg";
+const svg = document.getElementById("chart");
+const wrap = document.getElementById("chartWrap");
+const tooltip = document.getElementById("tooltip");
+
+function el(tag, attrs) {
+  const e = document.createElementNS(svgNS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  return e;
+}
+function text(attrs, content) {
+  const t = el("text", attrs);
+  t.textContent = content;
+  return t;
+}
+
+fetch("expected_rounds.json")
+  .then(r => r.json())
+  .then(data => render(data))
+  .catch(err => {
+    wrap.innerHTML =
+      '<p style="color:#a33;font-size:12px;">Could not load expected_rounds.json ' +
+      '(open this file over http://, not file://, or run it alongside a local server) &mdash; ' + err + '</p>';
+  });
+
+function render(data) {
+  const W = 900, H = 380;
+  const M = { top: 34, right: 24, bottom: 46, left: 24 };
+  const plotW = W - M.left - M.right;
+  const plotH = H - M.top - M.bottom;
+  const midY = M.top + plotH / 2;
+
+  // ---- group per-team-year rows into one score per coach ----
+  const byCoach = new Map();
+  data.forEach(d => {
+    if (!byCoach.has(d.coach)) byCoach.set(d.coach, []);
+    byCoach.get(d.coach).push(d);
+  });
+  const coaches = Array.from(byCoach.entries()).map(([coach, apps]) => {
+    const score = apps.reduce((s, a) => s + (a.real_round - a.expected_round), 0) / apps.length;
+    const allForeign = apps.every(a => a.foreign);
+    const allDomestic = apps.every(a => !a.foreign);
+    const category = allDomestic ? "domestic" : allForeign ? "foreign" : "mixed";
+    return { coach, apps, score, category, n: apps.length };
+  });
+
+  const scoreExtent = coaches.reduce((ext, c) => [Math.min(ext[0], c.score), Math.max(ext[1], c.score)], [0, 0]);
+  const X_MIN = Math.floor(scoreExtent[0] - 0.3);
+  const X_MAX = Math.ceil(scoreExtent[1] + 0.3);
+  function xPix(v) { return M.left + (v - X_MIN) / (X_MAX - X_MIN) * plotW; }
+
+  // ---- shaded halves + corner labels (consistent with the over/underperformance framing on the scatter chart) ----
+  svg.appendChild(el("rect", { class: "underperform-half", x: M.left, y: M.top, width: xPix(0) - M.left, height: plotH }));
+  svg.appendChild(el("rect", { class: "overperform-half", x: xPix(0), y: M.top, width: (W - M.right) - xPix(0), height: plotH }));
+  svg.appendChild(text({ class: "half-label half-label--under", x: M.left + 10, y: M.top + 16, "text-anchor": "start" }, "Underperformed on average"));
+  svg.appendChild(text({ class: "half-label half-label--over", x: W - M.right - 10, y: M.top + 16, "text-anchor": "end" }, "Overperformed on average"));
+
+  // ---- axis ----
+  svg.appendChild(el("line", { class: "zero-line", x1: xPix(0), x2: xPix(0), y1: M.top, y2: H - M.bottom }));
+  svg.appendChild(el("line", { class: "axis-line", x1: M.left, x2: W - M.right, y1: H - M.bottom, y2: H - M.bottom }));
+  for (let v = Math.ceil(X_MIN); v <= Math.floor(X_MAX); v++) {
+    svg.appendChild(el("line", { class: "axis-line", x1: xPix(v), x2: xPix(v), y1: H - M.bottom, y2: H - M.bottom + 4 }));
+    svg.appendChild(text({ class: "tick-label", x: xPix(v), y: H - M.bottom + 16 }, (v > 0 ? "+" : "") + v));
+  }
+  svg.appendChild(text({ class: "axis-title", x: M.left + plotW / 2, y: H - 4 }, "Performance score (avg. actual round − expected round)"));
+
+  // ---- domestic/foreign group-average reference lines ----
+  function groupAverage(cat) {
+    const group = coaches.filter(c => c.category === cat);
+    return group.reduce((s, c) => s + c.score, 0) / group.length;
+  }
+  const avgDomestic = groupAverage("domestic");
+  const avgForeign = groupAverage("foreign");
+  // Labels sit stacked in the top margin (above M.top, where no dot ever
+  // reaches) since the two averages are close enough in score that centered
+  // labels on the line itself would collide.
+  function drawAvgLine(value, cls, label, labelY, fill) {
+    const x = xPix(value);
+    svg.appendChild(el("line", { class: cls, x1: x, x2: x, y1: M.top, y2: H - M.bottom }));
+    svg.appendChild(text({
+      class: "avg-line-label", x, y: labelY, "text-anchor": "middle", fill
+    }, label));
+  }
+  drawAvgLine(avgDomestic, "avg-line-domestic", `Domestic avg ${avgDomestic >= 0 ? "+" : ""}${avgDomestic.toFixed(2)}`, 12, "var(--series-domestic)");
+  drawAvgLine(avgForeign, "avg-line-foreign", `Foreign avg ${avgForeign >= 0 ? "+" : ""}${avgForeign.toFixed(2)}`, 26, "var(--series-foreign)");
+
+  // ---- deterministic beeswarm: fixed-step collision avoidance, not random jitter ----
+  // All coaches share one compact clump (same vertical range as a plain
+  // beeswarm), but domestic-coached dots exhaust upward offsets before ever
+  // trying downward, and foreign-coached dots do the mirror image -- so the
+  // two groups separate cleanly by y-position without the plot getting any
+  // taller. Coaches who did both start from the center line outward in both
+  // directions, landing naturally between the two groups.
+  coaches.sort((a, b) => a.score - b.score);
+  const step = 9;
+  const maxOffset = plotH / 2 - 14;
+  const maxRing = Math.floor(maxOffset / step);
+  coaches.forEach(c => {
+    c.r = 3.6 + Math.min(c.n - 1, 4) * 1.0; // radius grows gently with tournament count, capped
+    c.px = xPix(c.score);
+  });
+  const placed = [];
+  coaches.forEach(c => {
+    let found = null;
+    if (c.category === "mixed") {
+      outerMixed:
+      for (let k = 0; k <= maxRing; k++) {
+        const offs = k === 0 ? [0] : [k * step, -k * step];
+        for (const off of offs) {
+          const cy = midY + off;
+          const collides = placed.some(p => {
+            const dx = p.px - c.px, dy = p.py - cy;
+            return Math.hypot(dx, dy) < p.r + c.r + 1;
+          });
+          if (!collides) { found = cy; break outerMixed; }
+        }
+      }
+    } else {
+      const sign = c.category === "domestic" ? -1 : 1; // domestic up, foreign down
+      for (let k = 0; k <= maxRing; k++) {
+        const cy = midY + k * step * sign;
+        const collides = placed.some(p => {
+          const dx = p.px - c.px, dy = p.py - cy;
+          return Math.hypot(dx, dy) < p.r + c.r + 1;
+        });
+        if (!collides) { found = cy; break; }
+      }
+    }
+    c.py = found !== null ? found : midY; // safety valve, shouldn't trigger in practice
+    placed.push(c);
+  });
+
+  // ---- draw dots ----
+  const dotsGroup = el("g", {});
+  coaches.forEach(c => {
+    const g = el("g", { class: "focus-group" });
+    g.appendChild(el("circle", {
+      class: "dot dot--" + c.category,
+      cx: c.px, cy: c.py, r: c.r
+    }));
+    g.appendChild(el("circle", { class: "dot-hit", cx: c.px, cy: c.py, r: c.r + 3 }));
+    g.addEventListener("pointerenter", () => showTooltip(c));
+    g.addEventListener("pointermove", () => showTooltip(c));
+    g.addEventListener("pointerleave", hideTooltip);
+    g.addEventListener("focus", () => showTooltip(c));
+    g.addEventListener("blur", hideTooltip);
+    g.setAttribute("tabindex", "0");
+    dotsGroup.appendChild(g);
+  });
+  svg.appendChild(dotsGroup);
+
+  function showTooltip(c) {
+    tooltip.innerHTML = "";
+    tooltip.appendChild(Object.assign(document.createElement("div"), { className: "tooltip__title", textContent: c.coach }));
+    const scoreRow = document.createElement("div");
+    scoreRow.className = "tooltip__row";
+    scoreRow.innerHTML = `Score: <b>${c.score > 0 ? "+" : ""}${c.score.toFixed(2)}</b>`;
+    tooltip.appendChild(scoreRow);
+    c.apps.slice().sort((a, b) => a.year - b.year).forEach(a => {
+      const row = document.createElement("div");
+      row.className = "tooltip__row";
+      const delta = a.real_round - a.expected_round;
+      row.innerHTML = `${a.year} ${a.team} (${a.foreign ? "foreign" : "domestic"}): <b>${delta > 0 ? "+" : ""}${delta.toFixed(2)}</b>`;
+      tooltip.appendChild(row);
+    });
+
+    const svgRect = svg.getBoundingClientRect();
+    const wrapRect = wrap.getBoundingClientRect();
+    const scale = svgRect.width / 900;
+    const px = svgRect.left - wrapRect.left + c.px * scale;
+    const py = svgRect.top - wrapRect.top + c.py * scale;
+
+    tooltip.style.opacity = 0;
+    tooltip.style.left = "0px";
+    tooltip.style.top = "0px";
+    const tRect = tooltip.getBoundingClientRect();
+    const tW = tRect.width, tH = tRect.height;
+    const margin = 8;
+    let left = px - tW / 2;
+    left = Math.max(margin, Math.min(left, wrapRect.width - tW - margin));
+    let top = py - tH - 10;
+    if (top < margin) top = py + 14;
+    tooltip.style.left = left + "px";
+    tooltip.style.top = top + "px";
+    tooltip.style.opacity = 1;
+  }
+  function hideTooltip() { tooltip.style.opacity = 0; }
+}
+</script>
+</body>
+</html>
+
+<script>
+function postHeight_coachscore(){
+  const root = document.querySelector('.viz-root');
+  const h = root ? Math.ceil(root.getBoundingClientRect().height) : (document.documentElement.scrollHeight || document.body.scrollHeight);
+  try{ parent.postMessage({type: 'vizHeight', id: 'iframe-coachscore', height: h}, '*'); }catch(e){}
+}
+window.addEventListener('load', ()=>{ postHeight_coachscore(); setTimeout(postHeight_coachscore,250); });
+window.addEventListener('resize', postHeight_coachscore);
+</script>

@@ -151,6 +151,11 @@
     width: 100%;
     border: none;
   }
+  .viz-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
 
   /* ---- divider ---- */
   .divider {
@@ -245,8 +250,13 @@
       </div>
       <p class="section-desc">This is where it all comes together. Every dot is one team in one World Cup, from the 32-team era (1998&ndash;2022): the x-axis is how far Elo alone predicted that team would go, averaged over 20,000 re-bracketed simulations of that specific year's draw; the y-axis is how far they actually went. The dashed diagonal is perfect calibration &mdash; dots above it overperformed their rating, dots below underperformed. If foreign coaches were meaningfully better (or worse) than their domestic counterparts at extracting results beyond what the numbers alone predict, this is the chart where it should show up as a color skew above or below the line. Points are jittered slightly within each row so overlapping teams stay legible; the overall correlation between expected and real round here is 0.49.</p>
     </div>
-    <div class="viz-frame">
-      <iframe id="iframe-scatter" src="expected_vs_real_scatter.html" height="1100" scrolling="no" title="Simulated vs. actual round scatter plot"></iframe>
+    <div class="viz-stack">
+      <div class="viz-frame">
+        <iframe id="iframe-scatter" src="expected_vs_real_scatter.html" height="1100" scrolling="no" title="Simulated vs. actual round scatter plot"></iframe>
+      </div>
+      <div class="viz-frame">
+        <iframe id="iframe-coachscore" src="coach_performance_score.html" height="500" scrolling="no" title="Coach performance score, one-dimensional scatter plot"></iframe>
+      </div>
     </div>
   </section>
 
