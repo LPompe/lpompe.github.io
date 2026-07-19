@@ -82,6 +82,11 @@
   .dot--mixed    { fill: var(--series-mixed); }
   .dot-hit { fill: transparent; }
 
+  .callout-arrow { stroke: var(--text-secondary); stroke-width: 1.3; fill: none; }
+  .callout-arrowhead { fill: var(--text-secondary); }
+  .callout-box { fill: var(--surface-1); stroke: var(--border); stroke-width: 1; }
+  .callout-label { font-size: 10.5px; font-weight: 500; fill: var(--text-secondary); }
+
   .tooltip {
     position: absolute;
     top: 0; left: 0;
@@ -288,6 +293,45 @@ function render(data) {
     dotsGroup.appendChild(g);
   });
   svg.appendChild(dotsGroup);
+
+  // ---- callout: Didier Deschamps, 3-for-3 overperforming (tied for the most
+  // consistent record in the dataset alongside Hiddink, Scolari, Tabárez) ----
+  const deschamps = coaches.find(c => c.coach === "Didier Deschamps");
+  if (deschamps) {
+    const arrowX = deschamps.px;
+    const arrowTipY = deschamps.py + deschamps.r + 2;
+    const arrowTailY = arrowTipY + 24;
+
+    svg.appendChild(el("line", {
+      class: "callout-arrow",
+      x1: arrowX, y1: arrowTailY, x2: arrowX, y2: arrowTipY
+    }));
+    svg.appendChild(el("path", {
+      class: "callout-arrowhead",
+      d: `M ${arrowX - 4} ${arrowTipY + 6} L ${arrowX} ${arrowTipY} L ${arrowX + 4} ${arrowTipY + 6} Z`
+    }));
+
+    const calloutLines = ["Didier Deschamps 🇫🇷", "most consistently", "overperforms expectations"];
+    const calloutLineH = 13.5;
+    const calloutPadX = 8, calloutPadY = 7;
+    const calloutTextW = Math.max(...calloutLines.map(l => l.length)) * 5.4;
+    const calloutBoxW = calloutTextW + calloutPadX * 2;
+    const calloutBoxH = calloutLines.length * calloutLineH + calloutPadY * 2 - 3;
+    const calloutBoxX = Math.max(M.left + 4, Math.min(arrowX - calloutBoxW / 2, W - M.right - 4 - calloutBoxW));
+    const calloutBoxY = arrowTailY + 6;
+    const calloutCenterX = calloutBoxX + calloutBoxW / 2;
+
+    svg.appendChild(el("rect", {
+      class: "callout-box",
+      x: calloutBoxX, y: calloutBoxY, width: calloutBoxW, height: calloutBoxH, rx: 6
+    }));
+    calloutLines.forEach((line, i) => {
+      svg.appendChild(text({
+        class: "callout-label",
+        x: calloutCenterX, y: calloutBoxY + calloutPadY + 8 + i * calloutLineH, "text-anchor": "middle"
+      }, line));
+    });
+  }
 
   function showTooltip(c) {
     tooltip.innerHTML = "";
