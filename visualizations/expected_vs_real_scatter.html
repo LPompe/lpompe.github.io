@@ -68,6 +68,20 @@
   .legend__swatch--domestic { background: var(--series-domestic); }
   .legend__swatch--foreign  { background: var(--series-foreign); }
 
+  .line-toggles { display: flex; gap: 14px; flex-shrink: 0; }
+  .line-toggle {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12.5px; color: var(--text-secondary);
+    cursor: pointer; user-select: none;
+  }
+  .line-toggle input { margin: 0; cursor: pointer; }
+  .line-toggle__swatch {
+    display: inline-block;
+    width: 14px; height: 0;
+    border-top: 2px dashed var(--swatch-color);
+    flex-shrink: 0;
+  }
+
   .chart-wrap { position: relative; margin-top: 12px; }
   svg, canvas {
     display: block;
@@ -226,6 +240,18 @@
           <div class="legend__item"><span class="legend__swatch legend__swatch--domestic"></span>Domestic-coached</div>
           <div class="legend__item"><span class="legend__swatch legend__swatch--foreign"></span>Foreign-coached</div>
         </div>
+        <div class="line-toggles">
+          <label class="line-toggle">
+            <input type="checkbox" id="toggleDomesticTrend" checked>
+            <span class="line-toggle__swatch" style="--swatch-color: var(--series-domestic);"></span>
+            Domestic trend
+          </label>
+          <label class="line-toggle">
+            <input type="checkbox" id="toggleForeignTrend" checked>
+            <span class="line-toggle__swatch" style="--swatch-color: var(--series-foreign);"></span>
+            Foreign trend
+          </label>
+        </div>
       </div>
     </div>
 
@@ -338,46 +364,74 @@ function render(data) {
   const dx1 = Math.max(X_MIN, Y_MIN), dx2 = Math.min(X_MAX, Y_MAX);
   svg.appendChild(el("line", { class: "diag-line", x1: xPix(dx1), y1: yPix(dx1), x2: xPix(dx2), y2: yPix(dx2) }));
 
-  // ---- average horizontal lines for domestic vs foreign coaches ----
+  // ---- best-fit trend lines for domestic vs foreign coaches ----
   // Computed from the data at runtime so they always stay in sync with the JSON.
+  // The slope is the visual stand-in for "correlation" here -- we draw the
+  // line itself and deliberately don't print the underlying number.
   const domesticPts = data.filter(d => !d.foreign);
   const foreignPts  = data.filter(d =>  d.foreign);
-  const avgRealDomestic = domesticPts.reduce((s, d) => s + d.real_round, 0) / domesticPts.length;
-  const avgRealForeign  = foreignPts .reduce((s, d) => s + d.real_round, 0) / foreignPts.length;
 
-  const lineX1 = M.left;
-  const lineX2 = W - M.right;
-  const labelX = lineX2 + 4;
+  function linreg(pts) {
+    const n = pts.length;
+    const sx = pts.reduce((s, d) => s + d.expected_round, 0);
+    const sy = pts.reduce((s, d) => s + d.real_round, 0);
+    const sxy = pts.reduce((s, d) => s + d.expected_round * d.real_round, 0);
+    const sxx = pts.reduce((s, d) => s + d.expected_round * d.expected_round, 0);
+    const slope = (n * sxy - sx * sy) / (n * sxx - sx * sx);
+    const intercept = (sy - slope * sx) / n;
+    return { slope, intercept };
+  }
 
-  // domestic average line
-  svg.appendChild(el("line", {
-    class: "avg-line-domestic",
-    x1: lineX1, x2: lineX2,
-    y1: yPix(avgRealDomestic), y2: yPix(avgRealDomestic)
-  }));
-  const domLabel = text({
-    class: "avg-line-label",
-    x: lineX2 - 4,
-    y: yPix(avgRealDomestic) - 4,
-    "text-anchor": "end",
-    fill: "var(--series-domestic)"
-  }, `Avg. national coach (${avgRealDomestic.toFixed(2)})`);
-  svg.appendChild(domLabel);
+  // Clip a y = slope*x + intercept line to the visible [X_MIN,X_MAX] x [Y_MIN,Y_MAX] box.
+  function clipTrendLine(slope, intercept) {
+    if (Math.abs(slope) < 1e-9) {
+      if (intercept < Y_MIN || intercept > Y_MAX) return null;
+      return { x1: X_MIN, y1: intercept, x2: X_MAX, y2: intercept };
+    }
+    const xAtYMin = (Y_MIN - intercept) / slope;
+    const xAtYMax = (Y_MAX - intercept) / slope;
+    const xLo = Math.max(X_MIN, Math.min(xAtYMin, xAtYMax));
+    const xHi = Math.min(X_MAX, Math.max(xAtYMin, xAtYMax));
+    if (xLo >= xHi) return null;
+    return { x1: xLo, y1: slope * xLo + intercept, x2: xHi, y2: slope * xHi + intercept };
+  }
 
-  // foreign average line
-  svg.appendChild(el("line", {
-    class: "avg-line-foreign",
-    x1: lineX1, x2: lineX2,
-    y1: yPix(avgRealForeign), y2: yPix(avgRealForeign)
-  }));
-  const fgnLabel = text({
-    class: "avg-line-label",
-    x: lineX2 - 4,
-    y: yPix(avgRealForeign) + 12,
-    "text-anchor": "end",
-    fill: "var(--series-foreign)"
-  }, `Avg. foreign coach (${avgRealForeign.toFixed(2)})`);
-  svg.appendChild(fgnLabel);
+  function drawTrendLine(pts, cls, labelText, labelDy) {
+    const { slope, intercept } = linreg(pts);
+    const seg = clipTrendLine(slope, intercept);
+    if (!seg) return;
+    const g = el("g", { class: "trend-line-group" });
+    g.appendChild(el("line", {
+      class: cls,
+      x1: xPix(seg.x1), y1: yPix(seg.y1),
+      x2: xPix(seg.x2), y2: yPix(seg.y2)
+    }));
+    g.appendChild(text({
+      class: "avg-line-label",
+      x: xPix(seg.x2) - 4,
+      y: yPix(seg.y2) + labelDy,
+      "text-anchor": "end",
+      fill: `var(--${cls === "avg-line-domestic" ? "series-domestic" : "series-foreign"})`
+    }, labelText));
+    svg.appendChild(g);
+    return g;
+  }
+
+  const domTrendGroup = drawTrendLine(domesticPts, "avg-line-domestic", "Domestic-coached", -4);
+  const fgnTrendGroup = drawTrendLine(foreignPts, "avg-line-foreign", "Foreign-coached", 12);
+
+  const domToggle = document.getElementById("toggleDomesticTrend");
+  const fgnToggle = document.getElementById("toggleForeignTrend");
+  if (domTrendGroup && domToggle) {
+    domToggle.addEventListener("change", () => {
+      domTrendGroup.style.display = domToggle.checked ? "" : "none";
+    });
+  }
+  if (fgnTrendGroup && fgnToggle) {
+    fgnToggle.addEventListener("change", () => {
+      fgnTrendGroup.style.display = fgnToggle.checked ? "" : "none";
+    });
+  }
 
   // ---- deterministic jitter per point (seeded by index, so it's stable across renders/hovers) ----
   function seededJitter(i) {
