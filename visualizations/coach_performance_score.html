@@ -207,7 +207,7 @@ function render(data) {
     svg.appendChild(el("line", { class: "axis-line", x1: xPix(v), x2: xPix(v), y1: H - M.bottom, y2: H - M.bottom + 4 }));
     svg.appendChild(text({ class: "tick-label", x: xPix(v), y: H - M.bottom + 16 }, (v > 0 ? "+" : "") + v));
   }
-  svg.appendChild(text({ class: "axis-title", x: M.left + plotW / 2, y: H - 4 }, "Performance score (avg. actual round − expected round)"));
+  svg.appendChild(text({ class: "axis-title", x: M.left + plotW / 2, y: H - 4 }, "Manager performance score"));
 
   // ---- domestic/foreign group-average reference lines ----
   function groupAverage(cat) {
