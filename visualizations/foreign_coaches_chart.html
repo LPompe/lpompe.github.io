@@ -269,8 +269,8 @@
         <p class="subtitle">Nationality of the manager for every team that reached the tournament, 1978&ndash;2022</p>
       </div>
       <div class="legend">
-        <div class="legend__item"><span class="legend__swatch legend__swatch--domestic"></span>Domestic-born manager</div>
-        <div class="legend__item"><span class="legend__swatch legend__swatch--foreign"></span>Foreign-born manager</div>
+        <div class="legend__item"><span class="legend__swatch legend__swatch--domestic"></span>Domestic manager</div>
+        <div class="legend__item"><span class="legend__swatch legend__swatch--foreign"></span>Foreign manager</div>
       </div>
     </div>
 
@@ -509,7 +509,7 @@ function render(modeKey) {
 
     const pct = document.createElement("div");
     pct.className = "tooltip__pct";
-    pct.textContent = d.pct_foreign + "% of managers were foreign-born";
+    pct.textContent = d.pct_foreign + "% of managers were foreign";
     tooltip.appendChild(pct);
 
     const svgRect = svg.getBoundingClientRect();
