@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Foreign vs. domestic coaches at the FIFA World Cup, 1978–2022</title>
+<title>Foreign vs. domestic managers at the FIFA World Cup, 1978–2022</title>
 <style>
   .viz-root {
     color-scheme: light;
@@ -266,7 +266,7 @@
     <div class="card__head">
       <div>
         <h1>Foreign vs. domestic coaches at the World Cup</h1>
-        <p class="subtitle">Nationality of the head coach for every team that reached the tournament, 1978&ndash;2022</p>
+        <p class="subtitle">Nationality of the manager for every team that reached the tournament, 1978&ndash;2022</p>
       </div>
       <div class="legend">
         <div class="legend__item"><span class="legend__swatch legend__swatch--domestic"></span>Domestic-born coach</div>
@@ -288,7 +288,7 @@
     </div>
 
     <div class="foot">
-      <span>Source: World Cup coach data compiled from Wikipedia, 1978&ndash;2022 (12 tournaments)</span>
+      <span>Source: World Cup manager data compiled from Wikipedia, 1978&ndash;2022 (12 tournaments)</span>
       <button class="table-toggle" id="tableToggle">Show table</button>
     </div>
 
@@ -342,7 +342,7 @@ const MODES = {
     data: DATA_QUALIFIED,
     yMax: 36,
     yTicks: [0, 8, 16, 24, 32],
-    subtitle: "Nationality of the head coach for every team that reached the tournament, 1978–2022",
+    subtitle: "Nationality of the manager for every team that reached the tournament, 1978–2022",
     unit: "teams",
     tableHeadCount: "Teams"
   },
@@ -350,7 +350,7 @@ const MODES = {
     data: DATA_ALL,
     yMax: 180,
     yTicks: [0, 40, 80, 120, 160],
-    subtitle: "Every national-team coaching stint during each World Cup cycle, including teams that didn’t qualify — a team that changed coaches counts once per coach, 1978–2022",
+    subtitle: "Every national-team manager stint during each World Cup cycle, including teams that didn’t qualify — a team that changed managers counts once per manager, 1978–2022. (Only includes teams that qualified at some point in this period)",
     unit: "coaching stints",
     tableHeadCount: "Stints"
   }
