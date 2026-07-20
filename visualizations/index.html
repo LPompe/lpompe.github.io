@@ -199,10 +199,30 @@
   }
 
   /* ---- short conclusion before the awards ---- */
+  .conclusion-flank {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 24px;
+    max-width: 920px;
+    margin: 0 auto;
+  }
+  .conclusion-photo {
+    width: 90px;
+    height: 90px;
+    border-radius: 12px;
+    object-fit: contain;
+    flex-shrink: 0;
+    margin-top: 48px;
+  }
+  @media (max-width: 760px) {
+    .conclusion-photo { display: none; }
+  }
   .conclusion {
     max-width: 820px;
-    margin: 0 auto;
     padding: 48px 20px 0;
+    flex: 1;
+    min-width: 0;
   }
   .conclusion-title {
     font-family: 'Fraunces', Georgia, serif;
@@ -398,9 +418,12 @@
   </section>
 
   <!-- ── Conclusion ── -->
-  <div class="conclusion">
-    <div class="conclusion-title">So, was Tuchel actually the problem?</div>
-    <p class="section-desc">Probably not, at least not because he's German. Foreign managers keep getting hired in near-record numbers, and once you strip out how good their team already was, they perform just as well (or just as poorly) as any domestic hire. "No foreign coach has ever won the World Cup" is technically true, but it says more about who gets handed the wheel of a title-contending team than about who's actually good at driving it. Below are a few of the individual managers who made the data fun to dig through along the way.</p>
+  <div class="conclusion-flank">
+    <img class="conclusion-photo" src="tuchel.webp" alt="">
+    <div class="conclusion">
+      <div class="conclusion-title">So, was Tuchel actually the problem?</div>
+      <p class="section-desc">Probably not, at least not because he's German. Foreign managers keep getting hired in near-record numbers, and once you strip out how good their team already was, they perform just as well (or just as poorly) as any domestic hire. "No foreign coach has ever won the World Cup" is technically true, but it says more about who gets handed the wheel of a title-contending team than about who's actually good at driving it. Below are a few of the individual managers who made the data fun to dig through along the way.</p>
+    </div>
   </div>
 
   <hr class="divider">
@@ -408,7 +431,7 @@
   <!-- ── Manager Awards ── -->
   <section class="awards-section" id="awards">
     <div class="awards-title">Manager Awards</div>
-    <p class="awards-desc">A quick recap of the standout names from the data above &mdash; the extremes, the streaks, and the well-traveled.</p>
+    <p class="awards-desc">Standout manager performances, and special mentions</p>
     <div class="awards-grid">
 
       <div class="award-card">
@@ -437,7 +460,7 @@
 
       <div class="award-card">
         <div class="award-title">Best foreign-coach overperformance</div>
-        <div class="award-blurb">Hiddink turned co-host duty into a genuine semifinal run.</div>
+        <div class="award-blurb">Hiddink's at it again</div>
         <div class="award-callout">
           <img src="hiddink.webp" alt="">
           <div class="award-callout-body">
@@ -488,7 +511,7 @@
             <img src="deschamps.png" alt="">
             <div class="award-callout-body">
               <span class="award-callout-name">Didier Deschamps 🇫🇷</span>
-              France '14, '18, '22
+              France '14, '18, '22, (probaly '26)
             </div>
           </div>
         </div>
