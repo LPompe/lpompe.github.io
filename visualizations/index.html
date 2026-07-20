@@ -166,9 +166,9 @@
   }
   .section-num {
     font-family: 'Fraunces', Georgia, serif;
-    font-size: 11px;
+    font-size: 16px;
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
     color: var(--muted);
     margin-bottom: 6px;
@@ -334,7 +334,7 @@
       <div class="section-header">
         <div class="section-num">1 &middot; Foreign Managers</div>
       </div>
-      <p class="section-desc">My first intuition was: let's just see how many foreign managers have been recruited to begin with. Using Wikipedia data, I compiled a list of all managers who took teams to the World Cup between 1978 and 2022. At the peak in 2006 43% of all qualified managers was foreign. While this fraction seemed to be coming down in the last years, 2026 saw another record: 24 of 48 managers were foreign. </p>
+      <p class="section-desc">My first instinct was the boring one: before asking whether foreign coaches win, just count how many of them there even are. So I pulled every manager who took a team to the World Cup between 1978 and 2022 off Wikipedia and tallied nationalities. Turns out the "foreign coach problem" is not exactly a fringe phenomenon &mdash; 2006 peaked at 43% foreign-led squads, and just when you'd expect the trend to be dying down, 2026 quietly broke the record anyway: 24 of 48 managers weren't managing their own country. So much for a fad.</p>
     </div>
     <div class="viz-frame">
       <iframe id="iframe-foreign" src="foreign_coaches_chart.html" height="820" scrolling="no" title="Foreign vs domestic coaches chart"></iframe>
@@ -349,7 +349,7 @@
       <div class="section-header">
         <div class="section-num">2 &middot; Bracket Chart</div>
       </div>
-      <p class="section-desc">The first chart tells you who got hired. This one asks whether it mattered once the tournament started. Each column pools every team that reached a given stage &mdash; Group Stage, Round of 16, Quarterfinal, and so on &mdash; across all 12 World Cups into a single round-wide proportion of foreign- vs. domestic-coached teams. It's drawn to look like a bracket because that's an intuitive way to read "how far did this group get," but to be clear, it isn't any single tournament's actual draw &mdash; it's an aggregate. The "Did Not Qualify" column off to the side is its own separate pool: every campaign that didn't make the tournament at all, shown for comparison so you can see whether foreign coaches skew toward qualifying in the first place, not just advancing once they're in.</p>
+      <p class="section-desc">Next question: does hiring foreign actually help once the tournament starts, or is that 24-of-48 just noise? So I pooled every team's stage-by-stage result across all 12 World Cups &mdash; Group Stage through Champion &mdash; into one bracket-shaped chart, split by coach nationality at each round. To be clear, this isn't any single year's actual draw, just every campaign since 1978 stacked into one composite. I also snuck a "Did Not Qualify" column onto the side, since if foreign coaches mostly wash out before the tournament even begins, that story would never show up in a chart that only looks at teams who made it.</p>
     </div>
     <div class="viz-frame">
       <iframe id="iframe-bracket" src="bracket_chart.html" height="900" scrolling="no" title="World Cup bracket chart"></iframe>
