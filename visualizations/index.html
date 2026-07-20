@@ -251,8 +251,14 @@
     letter-spacing: -0.005em;
     line-height: 1.4;
     color: var(--text);
-    margin-bottom: 12px;
+    margin-bottom: 4px;
     min-height: 34px;
+  }
+  .award-blurb {
+    font-size: 11.5px;
+    color: var(--muted);
+    line-height: 1.4;
+    margin-bottom: 10px;
   }
   .award-callouts {
     display: flex;
@@ -366,7 +372,9 @@
   <!-- ── 4. Scatter ── -->
   <section class="section" id="scatter">
     <div class="section-text">
-      <div class="section-header">Deep runs or plane rides home</div>
+      <div class="section-header">
+        <div class="section-num">4 &middot; Deep Runs or Plane Rides Home</div>
+      </div>
       <p class="section-desc"> Now that we have an estimate of team quality <i>without</i> their managers, it's time to re-sign their managers and see if they improved things or made things worse. By comparing the manager-free simulation data to the real tournament outcomes, we can get a sense of what managers generally produce deeper runs, and which managers are most effective at producing plane rides home. The figure shows the expected performance on the horizontal axis, and the real run on the vertical axis for all teams between 1998 and 2022. If a manager beat the simulation result, I classified them as "outperformer". <strong>Joachim L&ouml;w</strong> 🇩🇪 appears to have had one of those large positive influences on the team.  <br> Note that statistically, semifinal and final runs almost always outperform according to this metric. That is because of the knockout structure: there are many more ways to lose than to win the tournament. </p>
     </div>
     <div class="viz-frame">
@@ -392,7 +400,7 @@
   <!-- ── Conclusion ── -->
   <div class="conclusion">
     <div class="conclusion-title">So, was Tuchel actually the problem?</div>
-    <p class="section-desc">Probably not, at least not because he's German. Foreign managers keep getting hired in near-record numbers, and once you strip out how good their team already was, they perform just as well &mdash; or just as poorly &mdash; as any domestic hire. "No foreign coach has ever won the World Cup" is technically true, but it says more about who gets handed the wheel of a title-contending team than about who's actually good at driving it. Below are a few of the individual managers who made the data fun to dig through along the way.</p>
+    <p class="section-desc">Probably not, at least not because he's German. Foreign managers keep getting hired in near-record numbers, and once you strip out how good their team already was, they perform just as well (or just as poorly) as any domestic hire. "No foreign coach has ever won the World Cup" is technically true, but it says more about who gets handed the wheel of a title-contending team than about who's actually good at driving it. Below are a few of the individual managers who made the data fun to dig through along the way.</p>
   </div>
 
   <hr class="divider">
@@ -405,6 +413,7 @@
 
       <div class="award-card">
         <div class="award-title">Biggest single-tournament overperformance</div>
+        <div class="award-blurb">Deschamps talked his way to a title the model never saw coming.</div>
         <div class="award-callout">
           <img src="deschamps.png" alt="">
           <div class="award-callout-body">
@@ -416,6 +425,7 @@
 
       <div class="award-card">
         <div class="award-title">Biggest single-tournament underperformance</div>
+        <div class="award-blurb">Domenech somehow undershot a team that was supposed to go somewhere.</div>
         <div class="award-callout">
           <img src="domenech.webp" alt="">
           <div class="award-callout-body">
@@ -427,6 +437,7 @@
 
       <div class="award-card">
         <div class="award-title">Best foreign-coach overperformance</div>
+        <div class="award-blurb">Hiddink turned co-host duty into a genuine semifinal run.</div>
         <div class="award-callout">
           <img src="hiddink.webp" alt="">
           <div class="award-callout-body">
@@ -438,6 +449,7 @@
 
       <div class="award-card">
         <div class="award-title">Worst foreign-coach underperformance</div>
+        <div class="award-blurb">Capello's Russia never got close to the number the model gave them.</div>
         <div class="award-callout">
           <img src="capello.webp" alt="">
           <div class="award-callout-body">
@@ -449,6 +461,7 @@
 
       <div class="award-card">
         <div class="award-title">Most consistently overperforming, career-wide (3-for-3, four-way tie)</div>
+        <div class="award-blurb">Hiddink, Scolari, Tab&aacute;rez, and Deschamps all beat the odds every single time out.</div>
         <div class="award-callouts">
           <div class="award-callout">
             <img src="hiddink.webp" alt="">
@@ -483,6 +496,7 @@
 
       <div class="award-card">
         <div class="award-title">Most consistently underperforming, career-wide (4-for-4)</div>
+        <div class="award-blurb">Queiroz managed to miss the mark four times running.</div>
         <div class="award-callout">
           <img src="queiroz.webp" alt="">
           <div class="award-callout-body">
@@ -494,6 +508,7 @@
 
       <div class="award-card">
         <div class="award-title">Most well-traveled foreign coach</div>
+        <div class="award-blurb">Four World Cups, three passports' worth of teams &mdash; Queiroz just kept getting rehired.</div>
         <div class="award-callout">
           <img src="queiroz.webp" alt="">
           <div class="award-callout-body">
