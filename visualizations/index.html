@@ -189,11 +189,6 @@
     width: 100%;
     border: none;
   }
-  .viz-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-  }
 
   /* ---- divider ---- */
   .divider {
@@ -362,13 +357,23 @@
       </div>
       <p class="section-desc"> Now that we have an estimate of team quality <i>without</i> their managers, it's time to re-sign their managers and see if they improved things or made things worse. By comparing the manager-free simulation data to the real tournament outcomes, we can get a sense of what managers generally produce deeper runs, and which managers are most effective at producing plane rides home. The figure shows the expected performance on the horizontal axis, and the real run on the vertical axis for all teams between 1998 and 2022. If a manager beat the simulation result, I classified them as "outperformer". <strong>Joachim Low</strong> appears to have had one of those large positive influences on the team.  <br> Note that statistically, semifinal and final runs almost always outperform according to this metric. That because of the knockout structure: there are many more ways to lose than to win the tournament. </p>
     </div>
-    <div class="viz-stack">
-      <div class="viz-frame">
-        <iframe id="iframe-scatter" src="expected_vs_real_scatter.html" height="1100" scrolling="no" title="Simulated vs. actual round scatter plot"></iframe>
+    <div class="viz-frame">
+      <iframe id="iframe-scatter" src="expected_vs_real_scatter.html" height="1100" scrolling="no" title="Simulated vs. actual round scatter plot"></iframe>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ── 4b. Coach performance score ── -->
+  <section class="section" id="coachscore">
+    <div class="section-text">
+      <div class="section-header">
+        <div class="section-num">4b &middot; Coach Performance Score</div>
       </div>
-      <div class="viz-frame">
-        <iframe id="iframe-coachscore" src="coach_performance_score.html" height="500" scrolling="no" title="Coach performance score, one-dimensional scatter plot"></iframe>
-      </div>
+      <p class="section-desc">The scatter above is one tournament per dot; this one collapses each coach down to a single number &mdash; their career average of that same over/underperformance metric, so someone who managed three World Cups gets one score, not three. Domestic-coached careers cluster in the top half, foreign-coached in the bottom half (the vertical position is just there to keep the swarm readable, it isn't a real axis), and the two dashed lines mark each group's average. They land almost on top of each other, which is really the whole argument of this piece in one picture: whichever side of the line a coach's dot falls on, nationality alone barely moves it.</p>
+    </div>
+    <div class="viz-frame">
+      <iframe id="iframe-coachscore" src="coach_performance_score.html" height="500" scrolling="no" title="Coach performance score, one-dimensional scatter plot"></iframe>
     </div>
   </section>
 
