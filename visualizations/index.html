@@ -231,6 +231,8 @@
     letter-spacing: -0.01em;
     margin-bottom: 10px;
   }
+  .contact-line { margin-top: 14px; }
+  .contact-line a { color: inherit; text-underline-offset: 2px; }
 
   /* ---- manager awards (full-width closing section) ---- */
   .awards-section {
@@ -423,6 +425,7 @@
     <div class="conclusion">
       <div class="conclusion-title">So, was Tuchel actually the problem?</div>
       <p class="section-desc">Probably not, at least not because he's German. Foreign managers keep getting hired in near-record numbers, and once you strip out how good their team already was, they perform just as well (or just as poorly) as any domestic hire. "No foreign coach has ever won the World Cup" is technically true, but it says more about who gets handed the wheel of a title-contending team than about who's actually good at driving it. Below are a few of the individual managers who made the data fun to dig through along the way.</p>
+      <p class="section-desc contact-line">Feel free to reach out: <span id="contact-email"></span></p>
     </div>
   </div>
 
@@ -558,6 +561,19 @@ window.addEventListener('message', (e) => {
     // ignore malformed messages
   }
 }, false);
+
+// Assemble the contact email at runtime instead of printing it as plain text
+// in the page source, so basic scrapers reading raw HTML don't pick it up.
+(function () {
+  const user = "lucasvhspompe", domain = "gmail.com";
+  const address = user + "@" + domain;
+  const el = document.getElementById("contact-email");
+  if (!el) return;
+  const a = document.createElement("a");
+  a.href = "mailto:" + address;
+  a.textContent = address;
+  el.appendChild(a);
+})();
 </script>
 
   <div class="foot">
