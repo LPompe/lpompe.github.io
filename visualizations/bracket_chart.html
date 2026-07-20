@@ -32,7 +32,7 @@
   }
   .card {
     width: 100%;
-    max-width: 950px;
+    max-width: 1120px;
     background: var(--surface-1);
     border: none;
     border-radius: 0;
@@ -263,7 +263,7 @@ const plotW = W - M.left - M.right;
 const plotH = H - M.top - M.bottom;
 
 const nCols = STAGES.length;
-const colGap = plotW / (nCols + 0.65); // one extra slot reserved for the DNQ column, plus room for the champion box
+const colGap = plotW / (nCols + 1); // one extra slot reserved for the DNQ column, plus room for the champion box (0.65 wasn't enough -- the box was landing past the right edge of the viewBox and getting clipped)
 const barW = 108;
 const barH = 10;
 
