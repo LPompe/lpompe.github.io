@@ -255,7 +255,7 @@
     </div>
 
     <div class="foot">
-      Left: this is the exact calculation run for every match, at every round, in the simulation on the right &mdash; the stronger-rated team wins more often, but never certainly. In reality, the 2022 quarterfinal finished 2&ndash;2 after extra time; Argentina won 4&ndash;3 on penalties and went on to win the tournament. Right: each column pools every simulated tournament's outcome at that stage into one round-wide proportion; icons are a unit count (enough solid-foreign icons to cover the round's foreign share, one icon split for the remainder, the rest solid domestic) not individual teams. Elo ratings and win-probability formula: eloratings.net.
+      Top: this is the exact calculation run for every match, at every round, in the simulation on the right &mdash; the stronger-rated team wins more often, but never certainly. In reality, the 2022 quarterfinal finished 2&ndash;2 after extra time; Argentina won 4&ndash;3 on penalties and went on to win the tournament. Bottom: each column pools every simulated tournament's outcome at that stage into one round-wide proportion; icons are a unit count (enough solid-foreign icons to cover the round's foreign share, one icon split for the remainder, the rest solid domestic) not individual teams. Elo ratings and win-probability formula: eloratings.net.
     </div>
   </div>
 </div>
@@ -328,7 +328,7 @@ function text(attrs, content) {
   connector(nlBox, "connector--nl");
   connector(argBox, "connector--arg");
 
-  svg.appendChild(text({ class: "col-label", x: iconColX + iconW / 2, y: iconColTop - 18, "text-anchor": "middle" }, "10 replays"));
+  svg.appendChild(text({ class: "col-label", x: iconColX + iconW / 2, y: iconColTop - 18, "text-anchor": "middle" }, "10,000 replays"));
   svg.appendChild(text({ class: "col-sub", x: iconColX + iconW / 2, y: iconColTop - 4, "text-anchor": "middle" }, "who advances"));
 
   const target = N_REPLAYS * P_ARG;
