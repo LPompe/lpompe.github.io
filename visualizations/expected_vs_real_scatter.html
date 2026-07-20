@@ -239,8 +239,8 @@
           <div class="dropdown-list" id="dropdownList"></div>
         </div>
         <div class="legend">
-          <div class="legend__item"><span class="legend__swatch legend__swatch--domestic"></span>Domestic-coached</div>
-          <div class="legend__item"><span class="legend__swatch legend__swatch--foreign"></span>Foreign-coached</div>
+          <div class="legend__item"><span class="legend__swatch legend__swatch--domestic"></span>Domestic-managed</div>
+          <div class="legend__item"><span class="legend__swatch legend__swatch--foreign"></span>Foreign-managed</div>
         </div>
         <div class="line-toggles">
           <label class="line-toggle">
@@ -267,7 +267,7 @@
     </div>
 
     <div class="foot">
-      Points are jittered slightly within each real-round row so overlapping teams stay visible; the dashed line marks perfect calibration (expected = actual). Above the line: teams that overperformed their Elo-implied odds. Below: teams that underperformed. Simulation: pre-coach Elo ratings, per-year re-bracketed Monte Carlo (compute_expected_rounds.py). Correlation between expected and real round: 0.49.
+      Points are jittered slightly within each real-round row so overlapping teams stay visible; the dashed line marks perfect calibration (expected = actual). Above the line: teams that overperformed their Elo-implied odds. Below: teams that underperformed. Simulation: pre-manager Elo ratings, per-year re-bracketed Monte Carlo (compute_expected_rounds.py). Correlation between expected and real round: 0.49.
     </div>
   </div>
 </div>
@@ -371,12 +371,12 @@ function render(data) {
     svg.appendChild(xTickLabel);
   }
 
-  svg.appendChild(text({ class: "axis-title", x: M.left + plotW / 2, y: H - 4, "text-anchor": "middle" }, "Expected round (simulated, pre-coach Elo)"));
+  svg.appendChild(text({ class: "axis-title", x: M.left + plotW / 2, y: H - 4, "text-anchor": "middle" }, "Expected round (simulated, pre-manager Elo)"));
   const yTitle = text({ class: "axis-title", x: 0, y: 0, "text-anchor": "middle" }, "Actual round reached");
   yTitle.setAttribute("transform", `translate(12, ${M.top + plotH / 2}) rotate(-90)`);
   svg.appendChild(yTitle);
 
-  // ---- best-fit trend lines for domestic vs foreign coaches ----
+  // ---- best-fit trend lines for domestic vs foreign managers ----
   // Computed from the data at runtime so they always stay in sync with the JSON.
   // The slope is the visual stand-in for "correlation" here -- we draw the
   // line itself and deliberately don't print the underlying number.
@@ -429,8 +429,8 @@ function render(data) {
     return g;
   }
 
-  const domTrendGroup = drawTrendLine(domesticPts, "avg-line-domestic", "Domestic-coached", -4);
-  const fgnTrendGroup = drawTrendLine(foreignPts, "avg-line-foreign", "Foreign-coached", 12);
+  const domTrendGroup = drawTrendLine(domesticPts, "avg-line-domestic", "Domestic-managed", -4);
+  const fgnTrendGroup = drawTrendLine(foreignPts, "avg-line-foreign", "Foreign-managed", 12);
 
   const domToggle = document.getElementById("toggleDomesticTrend");
   const fgnToggle = document.getElementById("toggleForeignTrend");
@@ -688,7 +688,7 @@ function render(data) {
 
   drawAnnotation(
     "Germany", 2014,
-    ["Given their pre-coach Elo, Joachim Löw", "led Germany to an unlikely", `victory in 2014 ${FLAGS["Germany"]}.`],
+    ["Given their pre-manager Elo, Joachim Löw", "led Germany to an unlikely", `victory in 2014 ${FLAGS["Germany"]}.`],
     480, 45,
     "low.webp"
   );

@@ -265,12 +265,12 @@
   <div class="card">
     <div class="card__head">
       <div>
-        <h1>Foreign vs. domestic coaches at the World Cup</h1>
+        <h1>Foreign vs. domestic managers at the World Cup</h1>
         <p class="subtitle">Nationality of the manager for every team that reached the tournament, 1978&ndash;2022</p>
       </div>
       <div class="legend">
-        <div class="legend__item"><span class="legend__swatch legend__swatch--domestic"></span>Domestic-born coach</div>
-        <div class="legend__item"><span class="legend__swatch legend__swatch--foreign"></span>Foreign-born coach</div>
+        <div class="legend__item"><span class="legend__swatch legend__swatch--domestic"></span>Domestic-born manager</div>
+        <div class="legend__item"><span class="legend__swatch legend__swatch--foreign"></span>Foreign-born manager</div>
       </div>
     </div>
 
@@ -302,7 +302,7 @@
 </div>
 
 <script>
-// "Qualified teams only" — one coach per team per cycle, the one who actually
+// "Qualified teams only" — one manager per team per cycle, the one who actually
 // took them to the tournament. Totals equal the fixed field size (16/24/32).
 const DATA_QUALIFIED = [
   {"year":1978,"domestic":14,"foreign":2,"total":16,"pct_foreign":12.5},
@@ -319,9 +319,9 @@ const DATA_QUALIFIED = [
   {"year":2022,"domestic":23,"foreign":9,"total":32,"pct_foreign":28.1}
 ];
 
-// "Include non-qualifiers" — every coaching stint across every entrant that
+// "Include non-qualifiers" — every management stint across every entrant that
 // attempted to qualify for that cycle, including teams that didn't make it
-// (a team that changed coaches mid-campaign contributes one count per coach).
+// (a team that changed managers mid-campaign contributes one count per manager).
 const DATA_ALL = [
   {"year":1978,"domestic":88,"foreign":32,"total":120,"pct_foreign":26.7},
   {"year":1982,"domestic":94,"foreign":22,"total":116,"pct_foreign":19.0},
@@ -351,7 +351,7 @@ const MODES = {
     yMax: 180,
     yTicks: [0, 40, 80, 120, 160],
     subtitle: "Every national-team manager stint during each World Cup cycle, including teams that didn’t qualify — a team that changed managers counts once per manager, 1978–2022. (Only includes teams that qualified at some point in this period)",
-    unit: "coaching stints",
+    unit: "manager stints",
     tableHeadCount: "Stints"
   }
 };
@@ -509,7 +509,7 @@ function render(modeKey) {
 
     const pct = document.createElement("div");
     pct.className = "tooltip__pct";
-    pct.textContent = d.pct_foreign + "% of coaches were foreign-born";
+    pct.textContent = d.pct_foreign + "% of managers were foreign-born";
     tooltip.appendChild(pct);
 
     const svgRect = svg.getBoundingClientRect();

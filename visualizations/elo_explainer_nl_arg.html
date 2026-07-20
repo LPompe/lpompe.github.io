@@ -228,7 +228,7 @@
 <div class="viz-root">
   <div class="card">
   <h1>How the Elo simulation works, end to end</h1>
-    <p class="subtitle">One real matchup, worked through by hand &mdash; then the same coin-flip-by-rating logic run across a full simulated tournament, 140,000 times, using each team's Elo rating from before their current coach arrived</p>
+    <p class="subtitle">One real matchup, worked through by hand &mdash; then the same coin-flip-by-rating logic run across a full simulated tournament, 140,000 times, using each team's Elo rating from before their current manager arrived</p>
 
     <div class="panels">
       <div class="panel panel-left">
@@ -242,10 +242,10 @@
 
       <div class="panel panel-right">
         <div class="panel__head">One simulated tournament, run 20,000&times; per year</div>
-        <div class="panel__sub">32-team era (1998&ndash;2022), pre-coach Elo, re-bracketed and replayed each trial</div>
+        <div class="panel__sub">32-team era (1998&ndash;2022), pre-manager Elo, re-bracketed and replayed each trial</div>
         <div class="legend">
-          <div class="legend__item"><span class="legend__swatch legend__swatch--domestic"></span>Domestic-coached</div>
-          <div class="legend__item"><span class="legend__swatch legend__swatch--foreign"></span>Foreign-coached</div>
+          <div class="legend__item"><span class="legend__swatch legend__swatch--domestic"></span>Domestic-managed</div>
+          <div class="legend__item"><span class="legend__swatch legend__swatch--foreign"></span>Foreign-managed</div>
         </div>
         <div class="chart-wrap" id="chartWrapRight">
           <svg id="chartRight" viewBox="0 0 620 341" preserveAspectRatio="xMidYMid meet"></svg>
@@ -426,12 +426,12 @@ function positionTooltip(svg, wrap, tooltip, W, H, cx, topY) {
 }
 
 // =====================================================================
-// RIGHT PANEL: full simulated bracket, pre-coach Elo, foreign vs domestic
+// RIGHT PANEL: full simulated bracket, pre-manager Elo, foreign vs domestic
 // =====================================================================
 (function () {
   // From coach_bracket_montecarlo_elo_precoach.py -- 140,000 trials
   // (20,000 per year x 7 years, 1998-2022), matches decided by real Elo
-  // ratings from before each team's current coach arrived.
+  // ratings from before each team's current manager arrived.
   const STAGES = [
     { key: "group", label: "Group Stage",   pct: 36.2, bars: 16 },
     { key: "r16",   label: "Round of 16",   pct: 29.9, bars: 8  },
@@ -546,7 +546,7 @@ function positionTooltip(svg, wrap, tooltip, W, H, cx, topY) {
     addStageInteraction(box, championData, bx, by, boxW, boxH, bx + boxW / 2, by);
     svg.appendChild(box);
 
-    // ---- callout: highest simulated title chance of any foreign-coached
+    // ---- callout: highest simulated title chance of any foreign-managed
     // team-year in this dataset -- Portugal 2006 under Luiz Felipe Scolari
     // (Brazilian), 8.4%, per the same per-year re-bracketed Monte Carlo run
     // (coach_bracket_montecarlo_elo_precoach.py).
@@ -554,7 +554,7 @@ function positionTooltip(svg, wrap, tooltip, W, H, cx, topY) {
     const arrowTipY = by + boxH + 2;
     const arrowTailY = arrowTipY + 34;
 
-    const calloutLines = ["Portugal 🇵🇹, 2006", "coach: Luiz Felipe Scolari 🇧🇷", "8.4% simulated title chance"];
+    const calloutLines = ["Portugal 🇵🇹, 2006", "manager: Luiz Felipe Scolari 🇧🇷", "8.4% simulated title chance"];
     const calloutLineH = 13.5;
     const calloutPadX = 7, calloutPadY = 7;
     // tightened from 5.4 to free up horizontal room so the whole callout+photo
@@ -629,7 +629,7 @@ function positionTooltip(svg, wrap, tooltip, W, H, cx, topY) {
 
     const pctRow = document.createElement("div");
     pctRow.className = "tooltip__pct";
-    pctRow.textContent = "simulated share of teams still in at this stage that are foreign-coached";
+    pctRow.textContent = "simulated share of teams still in at this stage that are foreign-managed";
     tooltip.appendChild(pctRow);
 
     positionTooltip(svg, wrap, tooltip, W, H, cx, topY);

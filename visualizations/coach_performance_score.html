@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Coach performance score: over/underperformance across every World Cup coached</title>
+<title>Manager performance score: over/underperformance across every World Cup managed</title>
 <style>
   .viz-root {
     color-scheme: light;
@@ -121,12 +121,12 @@
   <div class="card">
     <div class="card__head">
       <div style="flex: 1; min-width: 280px;">
-        <h1>Coach performance score</h1>
-        <p class="subtitle">Each dot is one coach. Score = their average (actual round &minus; Elo-expected round) across every World Cup they coached &mdash; positive means they beat their teams' Elo-implied odds on average, negative means they fell short. The vertical spread has no meaning; it only keeps overlapping dots readable.</p>
+        <h1>Manager performance score</h1>
+        <p class="subtitle">Each dot is one manager. Score = their average (actual round &minus; Elo-expected round) across every World Cup they managed &mdash; positive means they beat their teams' Elo-implied odds on average, negative means they fell short. The vertical spread has no meaning; it only keeps overlapping dots readable.</p>
       </div>
       <div class="legend">
-        <div class="legend__item"><span class="legend__swatch legend__swatch--domestic"></span>Domestic-coached</div>
-        <div class="legend__item"><span class="legend__swatch legend__swatch--foreign"></span>Foreign-coached</div>
+        <div class="legend__item"><span class="legend__swatch legend__swatch--domestic"></span>Domestic-managed</div>
+        <div class="legend__item"><span class="legend__swatch legend__swatch--foreign"></span>Foreign-managed</div>
         <div class="legend__item"><span class="legend__swatch legend__swatch--mixed"></span>Both (different teams)</div>
       </div>
     </div>
@@ -137,7 +137,7 @@
     </div>
 
     <div class="foot">
-      Reuses the per-team-year expected/actual rounds already computed for the "Simulated vs. actual" chart (no re-simulation needed) &mdash; a coach's score is just the mean of their own rows, grouped by coach name across every team and year they appear with. Dot size scales gently with how many World Cups that coach appears in. Vertical position is a deterministic beeswarm packing (fixed step size, not random jitter) so dots never overlap.
+      Reuses the per-team-year expected/actual rounds already computed for the "Simulated vs. actual" chart (no re-simulation needed) &mdash; a manager's score is just the mean of their own rows, grouped by manager name across every team and year they appear with. Dot size scales gently with how many World Cups that manager appears in. Vertical position is a deterministic beeswarm packing (fixed step size, not random jitter) so dots never overlap.
     </div>
   </div>
 </div>
@@ -175,7 +175,7 @@ function render(data) {
   const plotH = H - M.top - M.bottom;
   const midY = M.top + plotH / 2;
 
-  // ---- group per-team-year rows into one score per coach ----
+  // ---- group per-team-year rows into one score per manager ----
   const byCoach = new Map();
   data.forEach(d => {
     if (!byCoach.has(d.coach)) byCoach.set(d.coach, []);
@@ -230,11 +230,11 @@ function render(data) {
   drawAvgLine(avgForeign, "avg-line-foreign", `Foreign avg ${avgForeign >= 0 ? "+" : ""}${avgForeign.toFixed(2)}`, 26, "var(--series-foreign)");
 
   // ---- deterministic beeswarm: fixed-step collision avoidance, not random jitter ----
-  // All coaches share one compact clump (same vertical range as a plain
-  // beeswarm), but domestic-coached dots exhaust upward offsets before ever
-  // trying downward, and foreign-coached dots do the mirror image -- so the
+  // All managers share one compact clump (same vertical range as a plain
+  // beeswarm), but domestic-managed dots exhaust upward offsets before ever
+  // trying downward, and foreign-managed dots do the mirror image -- so the
   // two groups separate cleanly by y-position without the plot getting any
-  // taller. Coaches who did both start from the center line outward in both
+  // taller. Managers who did both start from the center line outward in both
   // directions, landing naturally between the two groups.
   coaches.sort((a, b) => a.score - b.score);
   const step = 9;

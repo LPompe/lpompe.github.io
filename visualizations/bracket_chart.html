@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>How far foreign-coached teams make it at the World Cup</title>
+<title>How far foreign-managed teams make it at the World Cup</title>
 <style>
   .viz-root {
     color-scheme: light;
@@ -217,12 +217,12 @@
   <div class="card">
     <div class="card__head">
       <div>
-        <h1>How far do foreign-coached teams get?</h1>
-        <p class="subtitle">Share of foreign- vs. domestic-born coaches among teams still standing at each stage, pooled across all 12 World Cups, 1978&ndash;2022</p>
+        <h1>How far do foreign-managed teams get?</h1>
+        <p class="subtitle">Share of foreign- vs. domestic-born managers among teams still standing at each stage, pooled across all 12 World Cups, 1978&ndash;2022</p>
       </div>
       <div class="legend">
-        <div class="legend__item"><span class="legend__swatch legend__swatch--domestic"></span>Domestic-born coach</div>
-        <div class="legend__item"><span class="legend__swatch legend__swatch--foreign"></span>Foreign-born coach</div>
+        <div class="legend__item"><span class="legend__swatch legend__swatch--domestic"></span>Domestic-born manager</div>
+        <div class="legend__item"><span class="legend__swatch legend__swatch--foreign"></span>Foreign-born manager</div>
       </div>
     </div>
 
@@ -232,7 +232,7 @@
     </div>
 
     <div class="foot">
-      Illustrative bracket &mdash; each column pools every team that reached that stage across all 12 tournaments into one round-wide proportion; it is not a single tournament's actual draw. Icons within a column aren't individual teams &mdash; they're a unit count: enough solid-foreign icons to cover the round's foreign share, one icon split to carry the remainder, the rest solid domestic, so the total colored area across the column matches the real percentage. "Did Not Qualify" is a separate pool of every non-qualifying campaign (not connected into the bracket, since those teams never advanced to Group Stage) shown alongside for comparison. Source: World Cup coach data compiled from Wikipedia, 1978&ndash;2022.
+      Illustrative bracket &mdash; each column pools every team that reached that stage across all 12 tournaments into one round-wide proportion; it is not a single tournament's actual draw. Icons within a column aren't individual teams &mdash; they're a unit count: enough solid-foreign icons to cover the round's foreign share, one icon split to carry the remainder, the rest solid domestic, so the total colored area across the column matches the real percentage. "Did Not Qualify" is a separate pool of every non-qualifying campaign (not connected into the bracket, since those teams never advanced to Group Stage) shown alongside for comparison. Source: World Cup manager data compiled from Wikipedia, 1978&ndash;2022.
     </div>
   </div>
 </div>
@@ -474,7 +474,7 @@ function showTooltip(s, cx, topY) {
 
   const pct = document.createElement("div");
   pct.className = "tooltip__pct";
-  pct.textContent = s.pct + "% of coaches at this stage were foreign-born";
+  pct.textContent = s.pct + "% of managers at this stage were foreign-born";
   tooltip.appendChild(pct);
 
   const svgRect = svg.getBoundingClientRect();
