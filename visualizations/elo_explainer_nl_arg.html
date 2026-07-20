@@ -556,14 +556,21 @@ function positionTooltip(svg, wrap, tooltip, W, H, cx, topY) {
 
     const calloutLines = ["Portugal 🇵🇹, 2006", "coach: Luiz Felipe Scolari 🇧🇷", "8.4% simulated title chance"];
     const calloutLineH = 13.5;
-    const calloutPadX = 8, calloutPadY = 7;
-    const calloutTextW = Math.max(...calloutLines.map(l => l.length)) * 5.4;
+    const calloutPadX = 7, calloutPadY = 7;
+    // tightened from 5.4 to free up horizontal room so the whole callout+photo
+    // group can sit further right (it was pinned flush against the viewBox's
+    // safe edge before)
+    const calloutTextW = Math.max(...calloutLines.map(l => l.length)) * 4.7;
     const calloutBoxW = calloutTextW + calloutPadX * 2;
     const calloutBoxH = calloutLines.length * calloutLineH + calloutPadY * 2 - 3;
     const calloutBoxY = arrowTailY + 6;
-    // centered directly below the champion box, clamped so it can't run
-    // past the viewBox edge (the champion box sits close to the right side)
-    const calloutBoxX = Math.max(8, Math.min(arrowX - calloutBoxW / 2, W - 8 - calloutBoxW));
+    const calloutImgSize = 46;
+    const calloutImgGap = 6;
+    // centered directly below the champion box, clamped so it can't run past
+    // the viewBox edge -- also reserving room to its right for the photo,
+    // since the champion box (and so this callout) sits close to the right
+    // side of the viewBox
+    const calloutBoxX = Math.max(8, Math.min(arrowX - calloutBoxW / 2, W - 4 - calloutImgSize - calloutImgGap - calloutBoxW));
     const tailX = calloutBoxX + calloutBoxW / 2;
 
     svg.appendChild(el("path", {
@@ -586,6 +593,14 @@ function positionTooltip(svg, wrap, tooltip, W, H, cx, topY) {
         x: tailX, y: calloutBoxY + calloutPadY + 8 + i * calloutLineH, "text-anchor": "middle"
       }, line));
     });
+
+    // photo docked to the right of the box -- natural aspect ratio, no crop, no border
+    svg.appendChild(el("image", {
+      href: "scolari.webp",
+      x: calloutBoxX + calloutBoxW + calloutImgGap, y: calloutBoxY + (calloutBoxH - calloutImgSize) / 2,
+      width: calloutImgSize, height: calloutImgSize,
+      preserveAspectRatio: "xMidYMid meet"
+    }));
   }
 
   function showStageTooltip(s, cx, topY) {

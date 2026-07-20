@@ -331,6 +331,16 @@ function render(data) {
         x: calloutCenterX, y: calloutBoxY + calloutPadY + 8 + i * calloutLineH, "text-anchor": "middle"
       }, line));
     });
+
+    // photo docked to the left of the box -- natural aspect ratio, no crop, no border
+    const calloutImgSize = calloutBoxH;
+    const calloutImgGap = 8;
+    svg.appendChild(el("image", {
+      href: "deschamps.png",
+      x: calloutBoxX - calloutImgGap - calloutImgSize, y: calloutBoxY,
+      width: calloutImgSize, height: calloutImgSize,
+      preserveAspectRatio: "xMidYMid meet"
+    }));
   }
 
   function showTooltip(c) {

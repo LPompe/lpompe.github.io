@@ -630,7 +630,7 @@ function render(data) {
   // box is centered on (boxCenterX, boxCenterY); the arrow autodetects which
   // side of the box faces the dot, bows into a curve, and stops short of the
   // dot's ring instead of running into it
-  function drawAnnotation(team, year, lines, boxCenterX, boxCenterY) {
+  function drawAnnotation(team, year, lines, boxCenterX, boxCenterY, imgSrc) {
     const p = points.find(pt => pt.team === team && pt.year === year);
     if (!p) return;
 
@@ -670,12 +670,27 @@ function render(data) {
         class: "annotation-text", x: boxX + padX, y: boxY + padY + i * lineH + 9
       }, line));
     });
+
+    // optional small photo docked to the side of the box, opposite whichever
+    // side the arrow exits from so it never crosses the arrow -- shown at its
+    // natural aspect ratio (no crop, no border), just fit within a bounding square
+    if (imgSrc) {
+      const imgSize = boxH;
+      const gap = 8;
+      const imgX = exitRight ? boxX - gap - imgSize : boxX + boxW + gap;
+      const imgY = boxY;
+      annoSvg.appendChild(el("image", {
+        href: imgSrc, x: imgX, y: imgY, width: imgSize, height: imgSize,
+        preserveAspectRatio: "xMidYMid meet"
+      }));
+    }
   }
 
   drawAnnotation(
     "Germany", 2014,
     ["Given their pre-coach Elo, Joachim Löw", "led Germany to an unlikely", `victory in 2014 ${FLAGS["Germany"]}.`],
-    480, 45
+    480, 45,
+    "low.webp"
   );
   // ---- "over/underperformance" labels, planted in opposite corners of their shaded region ----
   annoSvg.appendChild(text({
