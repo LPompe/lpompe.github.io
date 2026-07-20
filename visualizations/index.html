@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Foreign managers have never won the World Cup &mdash; Lucas Pompe</title>
-<meta name="description" content="Foreign coaches have never won the World Cup. Is that because they're worse, or because they're managing the wrong teams? A data-driven look at 12 tournaments, 1978&ndash;2022.">
+<meta name="description" content="Foreign managers have never won the World Cup. Is that because they're worse, or because they're managing the wrong teams? A data-driven look at 12 tournaments, 1978&ndash;2022.">
 
 <!-- Open Graph / social preview -->
 <meta property="og:type" content="article">
 <meta property="og:title" content="Foreign managers have never won the World Cup. They're managing the wrong teams.">
-<meta property="og:description" content="Foreign coaches have never won the World Cup. Is that because they're worse, or because they're managing the wrong teams? A data-driven look at 12 tournaments, 1978&ndash;2022.">
+<meta property="og:description" content="Foreign managers have never won the World Cup. Is that because they're worse, or because they're managing the wrong teams? A data-driven look at 12 tournaments, 1978&ndash;2022.">
 <meta property="og:image" content="https://lpompe.github.io/visualizations/og-thumbnail.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -19,7 +19,7 @@
 <!-- Twitter card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Foreign managers have never won the World Cup. They're managing the wrong teams.">
-<meta name="twitter:description" content="Foreign coaches have never won the World Cup. Is that because they're worse, or because they're managing the wrong teams? A data-driven look at 12 tournaments, 1978&ndash;2022.">
+<meta name="twitter:description" content="Foreign managers have never won the World Cup. Is that because they're worse, or because they're managing the wrong teams? A data-driven look at 12 tournaments, 1978&ndash;2022.">
 <meta name="twitter:image" content="https://lpompe.github.io/visualizations/og-thumbnail.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -358,22 +358,22 @@
       <div class="byline">by Lucas Pompe, PhD 🇳🇱</div>
     </div>
     <p class="section-desc">
-      With England's exit from the 2026 world cup, the last foreign coach in the tournament, <strong>Thomas Tuchel</strong> 🇩🇪, was eliminated. Tuchel was quickly blamed for his poor bus driving. Some British outlets then published: foreign coaches have never won the World Cup. The argument is thinly veiled: why are we wasting our time on Tuchel at all? This argument is an empirical one, and it set off my statistics spidey senses. Foreign coaches never won the whole tournament, but maybe they just got unlucky? Maybe there are just very few foreign coaches? Either way, while <strong>Luis de la Fuente</strong> 🇪🇸's Spain lifted the trophy over the weekend, I crunched the numbers on foreign coaches between 1978 and 2022 to see if the claim holds up. This article comes with a warning: I know very little about football. So take this thing with a grain of salt.
+      With England's exit from the 2026 world cup, the last foreign manager in the tournament, <strong>Thomas Tuchel</strong> 🇩🇪, was eliminated. Tuchel was quickly blamed for his poor bus driving. Some British outlets then published: foreign managers have never won the World Cup. The argument is thinly veiled: why are we wasting our time on Tuchel at all? This argument is an empirical one, and it set off my statistics spidey senses. Foreign managers never won the whole tournament, but maybe they just got unlucky? Maybe there are just very few foreign managers? Either way, while <strong>Luis de la Fuente</strong> 🇪🇸's Spain lifted the trophy over the weekend, I crunched the numbers on foreign managers between 1978 and 2022 to see if the claim holds up. This article comes with a warning: I know very little about football. So take this thing with a grain of salt.
     </p>
   </div>
   <img class="intro-photo intro-photo--wiegman" src="wiegman.png" alt="">
 </div>
 
-  <!-- ── 1. Foreign coaches ── -->
+  <!-- ── 1. Foreign managers ── -->
   <section class="section" id="foreign">
     <div class="section-text">
       <div class="section-header">
         <div class="section-num">1 &middot; Not statistical oddities</div>
       </div>
-      <p class="section-desc">Before asking whether foreign managers win, I wanted to count how many of them even participate. So I pulled every manager who took a team to the World Cup between 1978 and 2022 off Wikipedia and tallied nationalities. Turns out "foreign coaches" are not exactly statistical oddities &mdash; 2006 peaked at 43% foreign-led squads, and just when you'd expect the trend to be dying down, 2026 quietly broke the record anyway: 24 of 48 managers weren't managing teams from their own country. So why haven't they won yet?</p>
+      <p class="section-desc">Before asking whether foreign managers win, I wanted to count how many of them even participate. So I pulled every manager who took a team to the World Cup between 1978 and 2022 off Wikipedia and tallied nationalities. Turns out "foreign managers" are not exactly statistical oddities &mdash; 2006 peaked at 43% foreign-led squads, and just when you'd expect the trend to be dying down, 2026 quietly broke the record anyway: 24 of 48 managers weren't managing teams from their own country. So why haven't they won yet?</p>
     </div>
     <div class="viz-frame">
-      <iframe id="iframe-foreign" src="foreign_coaches_chart.html" height="820" scrolling="no" title="Foreign vs domestic coaches chart"></iframe>
+      <iframe id="iframe-foreign" src="foreign_coaches_chart.html" height="820" scrolling="no" title="Foreign vs domestic managers chart"></iframe>
     </div>
   </section>
 
@@ -401,7 +401,7 @@
       <div class="section-header">
         <div class="section-num">3 &middot; A team without a manager</div>
       </div>
-      <p class="section-desc">To decide if foreign managers are truly underperforming, we need to define "performance". To me, "performance" means how well a managed team does, relative to a how well that <i>same</i> team would do <i>without</i> said manager. Here is where the statistics get interesting: estimating a team's performance <i>without</i> a manager is not an obvious procedure, but not impossible either. To do this, I collected ELO ratings for each of the teams, from eloratings.net . ELO ratings are used to create the FIFA rankings (nowadays), and allow us to estimate how often one team would win over another. For example: In the 2022 Qatar world cup, the Netherlands (ELO rating: 2040) faced Argentina (ELO rating: 2143) in the quarterfinal. Using these ratings, we can simulate the outcome of the match. For this specific match, the ELO ratings predict that Argentina wins about 64% of the time. In reality, the match went to penalties, and common knowledge (not statistics) dictates that the Netherlands loses those 100% of the time. <br> By running 20,000 simulations per year, we can get an idea how far foreign managers are expected to get, based on the ELO ratings of their respective teams. Still, to some degree, ELO ratings can be high because of good coaching. That's why this model uses the last known rating from before a manager's tenure: it simulates teams without a manager. <br> The results are pretty similar to the real outcomes: foreign managed teams (with a simulated manager removal), drop out of the tournament way faster. That suggests that foreign coaches <i>on average</i> manage worse teams. Without their managers, foreign-managed teams were expected to win the world cup about once between 1998 and 2022. The most likely candidate was Portugal in 2006, who were eliminated in the semifinals by France. The next figure will tell us if that elimination was the manager's fault. </p>
+      <p class="section-desc">To decide if foreign managers are truly underperforming, we need to define "performance". To me, "performance" means how well a managed team does, relative to a how well that <i>same</i> team would do <i>without</i> said manager. Here is where the statistics get interesting: estimating a team's performance <i>without</i> a manager is not an obvious procedure, but not impossible either. To do this, I collected ELO ratings for each of the teams, from eloratings.net . ELO ratings are used to create the FIFA rankings (nowadays), and allow us to estimate how often one team would win over another. For example: In the 2022 Qatar world cup, the Netherlands (ELO rating: 2040) faced Argentina (ELO rating: 2143) in the quarterfinal. Using these ratings, we can simulate the outcome of the match. For this specific match, the ELO ratings predict that Argentina wins about 64% of the time. In reality, the match went to penalties, and common knowledge (not statistics) dictates that the Netherlands loses those 100% of the time. <br> By running 20,000 simulations per year, we can get an idea how far foreign managers are expected to get, based on the ELO ratings of their respective teams. Still, to some degree, ELO ratings can be high because of good management. That's why this model uses the last known rating from before a manager's tenure: it simulates teams without a manager. <br> The results are pretty similar to the real outcomes: foreign managed teams (with a simulated manager removal), drop out of the tournament way faster. That suggests that foreign managers <i>on average</i> manage worse teams. Without their managers, foreign-managed teams were expected to win the world cup about once between 1998 and 2022. The most likely candidate was Portugal in 2006, who were eliminated in the semifinals by France. The next figure will tell us if that elimination was the manager's fault. </p>
     </div>
     <div class="viz-frame">
       <iframe id="iframe-elo" src="elo_explainer_nl_arg.html" height="900" scrolling="no" title="Elo ratings explainer"></iframe>
@@ -419,19 +419,19 @@
       <p class="section-desc"> Now that we have an estimate of team quality <i>without</i> their managers, it's time to re-sign their managers and see if they improved things or made things worse. By comparing the manager-free simulation data to the real tournament outcomes, we can get a sense of what managers generally produce deeper runs, and which managers are most effective at producing plane rides home. The figure shows the expected performance on the horizontal axis, and the real run on the vertical axis for all teams between 1998 and 2022. If a manager beat the simulation result, I classified them as "outperformer". <strong>Joachim L&ouml;w</strong> 🇩🇪 appears to have had one of those large positive influences on the team.  <br> Note that statistically, semifinal and final runs almost always outperform according to this metric. That is because of the knockout structure: there are many more ways to lose than to win the tournament. </p>
     </div>
     <div class="viz-frame">
-      <iframe id="iframe-scatter" src="expected_vs_real_scatter.html" height="1100" scrolling="no" title="Simulated without a coach vs. with a coach"></iframe>
+      <iframe id="iframe-scatter" src="expected_vs_real_scatter.html" height="1100" scrolling="no" title="Simulated without a manager vs. with a manager"></iframe>
     </div>
   </section>
 
   <hr class="divider">
 
-  <!-- ── 4b. Coach performance score ── -->
+  <!-- ── 4b. Manager performance score ── -->
   <section class="section" id="coachscore">
     <div class="section-text">
       <div class="section-header">
         <div class="section-num">4b &middot; Manager Scorecard: Didier Deschamps gets an A+</div>
       </div>
-      <p class="section-desc">Using the amount of over/under performance, we can create a "performance score" for each of the coaches in this dataset. For all managers, this figure shows on average, how much they overperformed or underperformed relative to the model without a manager. This highlights the absolute <i> dominance </i> of <strong>Didier Deschamps</strong> 🇫🇷. Having outperformed the model 3 times in a row, with 2026 probably adding a 4th (Note that this is intertwined with the emergence of Kylian Mbappé and other French talent). On average, there does seem to be very little difference between the effect of foreign and domestic managers on their teams. On average, both foreign and domestic managers have similar impacts on their teams.  </p>
+      <p class="section-desc">Using the amount of over/under performance, we can create a "performance score" for each of the managers in this dataset. For all managers, this figure shows on average, how much they overperformed or underperformed relative to the model without a manager. This highlights the absolute <i> dominance </i> of <strong>Didier Deschamps</strong> 🇫🇷. Having outperformed the model 3 times in a row, with 2026 probably adding a 4th (Note that this is intertwined with the emergence of Kylian Mbappé and other French talent). On average, there does seem to be very little difference between the effect of foreign and domestic managers on their teams. On average, both foreign and domestic managers have similar impacts on their teams.  </p>
     </div>
     <div class="viz-frame">
       <iframe id="iframe-coachscore" src="coach_performance_score.html" height="500" scrolling="no" title="Manager performance scores"></iframe>
@@ -443,7 +443,7 @@
     <img class="conclusion-photo" src="tuchel.webp" alt="">
     <div class="conclusion">
       <div class="conclusion-title">So, was Tuchel actually the problem?</div>
-      <p class="section-desc">Probably not, at least not because he's German. Foreign managers keep getting hired in near-record numbers, and once you strip out how good their team already was, they perform just as well (or just as poorly) as any domestic hire. "No foreign coach has ever won the World Cup" is technically true, but it says more about who gets handed the wheel of a title-contending team than about who's actually good at driving it. Below are a few of the individual managers who made the data fun to dig through along the way.</p>
+      <p class="section-desc">Probably not, at least not because he's German. Foreign managers keep getting hired in near-record numbers, and once you strip out how good their team already was, they perform just as well (or just as poorly) as any domestic hire. "No foreign manager has ever won the World Cup" is technically true, but it says more about who gets handed the wheel of a title-contending team than about who's actually good at driving it. Below are a few of the individual managers who made the data fun to dig through along the way.</p>
       <p class="section-desc contact-line">Feel free to reach out: <span id="contact-email"></span></p>
     </div>
   </div>
@@ -481,7 +481,7 @@
       </div>
 
       <div class="award-card">
-        <div class="award-title">Best foreign-coach overperformance</div>
+        <div class="award-title">Best foreign-manager overperformance</div>
         <div class="award-blurb">Hiddink's at it again</div>
         <div class="award-callout">
           <img src="hiddink.webp" alt="">
@@ -493,7 +493,7 @@
       </div>
 
       <div class="award-card">
-        <div class="award-title">Worst foreign-coach underperformance</div>
+        <div class="award-title">Worst foreign-manager underperformance</div>
         <div class="award-blurb">Capello's Russia never got close to the number the model gave them.</div>
         <div class="award-callout">
           <img src="capello.webp" alt="">
@@ -552,7 +552,7 @@
       </div>
 
       <div class="award-card">
-        <div class="award-title">Most well-traveled foreign coach</div>
+        <div class="award-title">Most well-traveled foreign manager</div>
         <div class="award-blurb">Four World Cups, three passports' worth of teams &mdash; Queiroz just kept getting rehired.</div>
         <div class="award-callout">
           <img src="queiroz.webp" alt="">
