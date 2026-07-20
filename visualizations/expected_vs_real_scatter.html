@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Simulated vs. actual: how far did teams really get?</title>
+<title>Simulated with and without managers: how far would teams reach?</title>
 <style>
   .viz-root {
     color-scheme: light;
@@ -228,7 +228,7 @@
   <div class="card">
     <div class="card__head">
       <div style="flex: 1; min-width: 280px; margin-bottom: 8px;">
-        <h1>Simulated vs. actual: how far did teams really get?</h1>
+        <h1>Simulated with and without managers: how far would teams reach?</h1>
         <p class="subtitle">Every dot is one team in one World Cup (1998&ndash;2022, 32-team era). X: the round Elo alone predicted, on average, across 20,000 re-bracketed replays of that specific year. Y: the round they actually reached.</p>
       </div>
       <div class="controls-wrap">
@@ -267,7 +267,7 @@
     </div>
 
     <div class="foot">
-      Points are jittered slightly within each real-round row so overlapping teams stay visible; the dashed line marks perfect calibration (expected = actual). Above the line: teams that overperformed their Elo-implied odds. Below: teams that underperformed. Simulation: pre-manager Elo ratings, per-year re-bracketed Monte Carlo (compute_expected_rounds.py). Correlation between expected and real round: 0.49.
+      Points are jittered slightly within each real-round row so overlapping teams stay visible; the dashed line marks perfect calibration (expected = actual). Above the line: teams that overperformed their Elo-implied odds. Below: teams that underperformed. Simulation: pre-manager Elo ratings, per-year re-bracketed Monte Carlo.
     </div>
   </div>
 </div>
@@ -371,8 +371,8 @@ function render(data) {
     svg.appendChild(xTickLabel);
   }
 
-  svg.appendChild(text({ class: "axis-title", x: M.left + plotW / 2, y: H - 4, "text-anchor": "middle" }, "Expected round (simulated, pre-manager Elo)"));
-  const yTitle = text({ class: "axis-title", x: 0, y: 0, "text-anchor": "middle" }, "Actual round reached");
+  svg.appendChild(text({ class: "axis-title", x: M.left + plotW / 2, y: H - 4, "text-anchor": "middle" }, "Expected round without manager"));
+  const yTitle = text({ class: "axis-title", x: 0, y: 0, "text-anchor": "middle" }, "Actual round reached with manager");
   yTitle.setAttribute("transform", `translate(12, ${M.top + plotH / 2}) rotate(-90)`);
   svg.appendChild(yTitle);
 
