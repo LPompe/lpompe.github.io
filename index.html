@@ -215,37 +215,31 @@ layout: none
   }
   .news-text a { color: var(--accent); text-underline-offset: 2px; }
 
-  /* ── viz card ── */
+  /* ── viz thumbnail card ── */
   .viz-card {
-    display: flex;
-    align-items: center;
-    gap: 20px;
+    display: block;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 20px 22px;
     text-decoration: none;
     color: inherit;
     transition: box-shadow .18s, transform .18s;
-    position: relative;
     overflow: hidden;
   }
-  .viz-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #bd6b4a, #c9a227, #5b8fa8, #6a9e6f);
-    opacity: 0;
-    transition: opacity .18s;
-  }
   .viz-card:hover { box-shadow: 0 8px 28px rgba(0,0,0,0.10); transform: translateY(-2px); }
-  .viz-card:hover::before { opacity: 1; }
-  .viz-card__icon { font-size: 32px; flex-shrink: 0; }
-  .viz-card__body { flex: 1; }
+  .viz-card__thumb {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1200 / 630;
+    object-fit: cover;
+    border-bottom: 1px solid var(--border);
+  }
+  .viz-card__body { display: flex; align-items: center; gap: 14px; padding: 16px 20px; }
+  .viz-card__text { flex: 1; }
   .viz-card__title { font-size: 15px; font-weight: 600; margin-bottom: 4px; letter-spacing: -0.01em; }
   .viz-card__desc { font-size: 12.5px; color: var(--muted); line-height: 1.5; }
-  .viz-card__arrow { font-size: 18px; color: var(--muted); transition: transform .18s, color .18s; }
+  .viz-card__arrow { font-size: 18px; color: var(--muted); transition: transform .18s, color .18s; flex-shrink: 0; }
   .viz-card:hover .viz-card__arrow { transform: translateX(4px); color: var(--text); }
 
   /* ── footer ── */
@@ -267,7 +261,7 @@ layout: none
   <a class="nav-brand" href="/">Lucas Pompe</a>
   <ul class="nav-links">
     <li><a href="/" class="active">About</a></li>
-    <li><a href="/visualizations/" class="nav-viz">✦ Visualizations</a></li>
+    <li><a href="/wc_coaches_26/" class="nav-viz">✦ Visualizations</a></li>
   </ul>
 </nav>
 
@@ -307,13 +301,15 @@ layout: none
   <!-- ── viz card ── -->
   <div class="section">
     <p class="section-label">Interactive visualizations</p>
-    <a class="viz-card" href="/visualizations/">
-      <span class="viz-card__icon">📊</span>
+    <a class="viz-card" href="/wc_coaches_26/">
+      <img class="viz-card__thumb" src="/wc_coaches_26/og-thumbnail.png" alt="Foreign managers have never won the World Cup — they're managing the wrong teams">
       <div class="viz-card__body">
-        <div class="viz-card__title">World Cup coaching &amp; Elo visualizations</div>
-        <div class="viz-card__desc">Four interactive charts exploring foreign vs. domestic coaches, bracket outcomes, Elo ratings, and simulation vs. reality (1998–2022).</div>
+        <div class="viz-card__text">
+          <div class="viz-card__title">World Cup coaching &amp; Elo visualizations</div>
+          <div class="viz-card__desc">Interactive charts on foreign vs. domestic managers, bracket outcomes, Elo ratings, and manager performance (1978&ndash;2022).</div>
+        </div>
+        <span class="viz-card__arrow">→</span>
       </div>
-      <span class="viz-card__arrow">→</span>
     </a>
   </div>
 
